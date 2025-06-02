@@ -1,0 +1,88 @@
+using System.Linq.Expressions;
+using EFCore.BulkExtensions;
+using Marketing.Domain.Interfaces.Repositorio;
+using Marketing.Domain.PagedResponse;
+using Marketing.Infraestrutura.Contexto;
+using Microsoft.EntityFrameworkCore;
+
+namespace Marketing.Infraestrutura.Repositorio
+{
+    public class Repository<T> : IRepository<T> where T : class
+    {
+        private readonly DataContext _dataContext;
+
+        public Repository(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
+
+        public async Task AddAsync(T entity)
+        {
+            await _dataContext.Set<T>().AddAsync(entity);
+        }
+
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _dataContext.BulkInsertAsync<T>(entities);
+        }
+
+        public async Task<bool> Any(Expression<Func<T, bool>> expression)
+        {
+            return await _dataContext.Set<T>().AnyAsync(expression);
+        }
+
+        public async Task<int> Count(Expression<Func<T, bool>> expression)
+        {
+            return await _dataContext.Set<T>().CountAsync(expression);
+        }
+
+        public void Delete(T entity)
+        {
+            _dataContext.Set<T>().Remove(entity);
+        }
+
+        public async Task<T?> FindByPredicate(Expression<Func<T, bool>> expression)
+        {
+            return await _dataContext.Set<T>().
+                                      Where(expression).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await _dataContext.Set<T>().AsNoTracking().ToListAsync();
+        }
+
+        public async Task<PagedResponse<T>> GetAllAsync(int pageNumber, int pageSize,
+                                        Expression<Func<T, bool>>? filtros = null,
+                                        params Expression<Func<T, object>>[] includes) 
+        {
+            var query = _dataContext.Set<T>().AsNoTracking();
+            if (filtros != null)
+            {
+                query.Where(filtros);
+            }
+            if (includes != null)
+            {
+                includes.Aggregate(query, (current, includes) => current.Include(includes));
+            }
+            var totalRecords = await query.CountAsync();
+            query = query.Skip(pageNumber - 1).Take(pageSize);
+            return new PagedResponse<T>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
+        }
+
+        public async Task<T?> GetByIdAsync(int id)
+        {
+            return await _dataContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<T?> GetByIdStringAsync(string id)
+        {
+            return await _dataContext.Set<T>().FindAsync(id);
+        }
+
+        public void Update(T entity)
+        {
+            _dataContext.Set<T>().Update(entity);
+        }
+    }
+}

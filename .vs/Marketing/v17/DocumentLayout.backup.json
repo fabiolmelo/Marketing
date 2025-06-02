@@ -1,0 +1,87 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Projeto\\Marketing\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F7506F38-773C-4265-A662-CC569AA3044F}|Marketing.Application\\Marketing.Application.csproj|d:\\projeto\\marketing\\marketing.application\\servicos\\servicoprocessamentomensal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F7506F38-773C-4265-A662-CC569AA3044F}|Marketing.Application\\Marketing.Application.csproj|solutionrelative:marketing.application\\servicos\\servicoprocessamentomensal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F7506F38-773C-4265-A662-CC569AA3044F}|Marketing.Application\\Marketing.Application.csproj|d:\\projeto\\marketing\\marketing.application\\servicos\\servicoarquivo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F7506F38-773C-4265-A662-CC569AA3044F}|Marketing.Application\\Marketing.Application.csproj|solutionrelative:marketing.application\\servicos\\servicoarquivo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B6B6EB6D-CC36-4C1E-8B09-95598482F699}|Marketing.Infraestrutura\\Marketing.Infraestrutura.csproj|d:\\projeto\\marketing\\marketing.infraestrutura\\repositorio\\repositorioestabelecimento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6B6EB6D-CC36-4C1E-8B09-95598482F699}|Marketing.Infraestrutura\\Marketing.Infraestrutura.csproj|solutionrelative:marketing.infraestrutura\\repositorio\\repositorioestabelecimento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B6B6EB6D-CC36-4C1E-8B09-95598482F699}|Marketing.Infraestrutura\\Marketing.Infraestrutura.csproj|d:\\projeto\\marketing\\marketing.infraestrutura\\repositorio\\repositoriofechamentomensal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6B6EB6D-CC36-4C1E-8B09-95598482F699}|Marketing.Infraestrutura\\Marketing.Infraestrutura.csproj|solutionrelative:marketing.infraestrutura\\repositorio\\repositoriofechamentomensal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ServicoArquivo.cs",
+              "DocumentMoniker": "D:\\Projeto\\Marketing\\Marketing.Application\\Servicos\\ServicoArquivo.cs",
+              "RelativeDocumentMoniker": "Marketing.Application\\Servicos\\ServicoArquivo.cs",
+              "ToolTip": "D:\\Projeto\\Marketing\\Marketing.Application\\Servicos\\ServicoArquivo.cs*",
+              "RelativeToolTip": "Marketing.Application\\Servicos\\ServicoArquivo.cs*",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAwwDUAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-30T00:51:02.754Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RepositorioEstabelecimento.cs",
+              "DocumentMoniker": "D:\\Projeto\\Marketing\\Marketing.Infraestrutura\\Repositorio\\RepositorioEstabelecimento.cs",
+              "RelativeDocumentMoniker": "Marketing.Infraestrutura\\Repositorio\\RepositorioEstabelecimento.cs",
+              "ToolTip": "D:\\Projeto\\Marketing\\Marketing.Infraestrutura\\Repositorio\\RepositorioEstabelecimento.cs",
+              "RelativeToolTip": "Marketing.Infraestrutura\\Repositorio\\RepositorioEstabelecimento.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAABoAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T01:50:30.414Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RepositorioFechamentoMensal.cs",
+              "DocumentMoniker": "D:\\Projeto\\Marketing\\Marketing.Infraestrutura\\Repositorio\\RepositorioFechamentoMensal.cs",
+              "RelativeDocumentMoniker": "Marketing.Infraestrutura\\Repositorio\\RepositorioFechamentoMensal.cs",
+              "ToolTip": "D:\\Projeto\\Marketing\\Marketing.Infraestrutura\\Repositorio\\RepositorioFechamentoMensal.cs",
+              "RelativeToolTip": "Marketing.Infraestrutura\\Repositorio\\RepositorioFechamentoMensal.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABgAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T00:32:42.927Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ServicoProcessamentoMensal.cs",
+              "DocumentMoniker": "D:\\Projeto\\Marketing\\Marketing.Application\\Servicos\\ServicoProcessamentoMensal.cs",
+              "RelativeDocumentMoniker": "Marketing.Application\\Servicos\\ServicoProcessamentoMensal.cs",
+              "ToolTip": "D:\\Projeto\\Marketing\\Marketing.Application\\Servicos\\ServicoProcessamentoMensal.cs*",
+              "RelativeToolTip": "Marketing.Application\\Servicos\\ServicoProcessamentoMensal.cs*",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACIAAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T00:24:46.441Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

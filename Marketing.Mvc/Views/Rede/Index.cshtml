@@ -1,0 +1,29 @@
+﻿@model Marketing.Domain.PagedResponse.PagedResponse<Marketing.Domain.Entidades.Rede>
+
+<h1>Redes</h1>
+
+<p>
+    <button class="btn btn-success" asp-action="Create">Adicionar Rede</button>
+</p>
+<table class="table table-responsive table-primary">
+    <thead>
+        <tr>
+            <th>
+                Nome
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Dados) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

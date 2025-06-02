@@ -1,0 +1,60 @@
+﻿@model Marketing.Domain.PagedResponse.PagedResponse<Marketing.Domain.Entidades.Estabelecimento>
+
+@{
+    ViewData["Title"] = "Lojas";
+}
+
+<h1>Lojas</h1>
+
+<p>
+    <button class="btn btn-primary" asp-action="Create">Nova Loja</button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Cnpj</th>
+            <th>Razão Social</th>
+            <th>Rede</th>
+            <th>Cidade</th>
+            <th>Uf</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Dados) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cnpj)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RazaoSocial)
+            </td>
+            <td>
+                @if (item.Rede != null) {
+                    @Html.DisplayFor(modelItem => item.Rede.Nome)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cidade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Uf)
+            </td>
+            <td>
+                <button class="btn btn-danger" asp-action="Edit" asp-route-id="@item.Cnpj">Edit</button> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col col-12">
+        <input class="btn btn-primary" type="button" value="<<" onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = 1 })'" />|
+        <input class="btn btn-primary" type="button" value="<" onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.PageNumber - 1 })'" />|
+        <input class="btn btn-primary" type="button" value=">" onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.PageNumber + 1 })'" />|
+        <input class="btn btn-primary" type="button" value=">>" onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.TotalPages })'" />|
+    </div>
+    <div class="col col-12">
+        <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
+    </div>
+</div>

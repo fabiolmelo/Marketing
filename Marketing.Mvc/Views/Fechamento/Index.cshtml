@@ -1,0 +1,20 @@
+@model Marketing.Application.DTOs.ProcessamentoMensalDto
+<div class="row">
+    <form asp-action="Gerar" asp-antiforgery="true" method="post">
+        <div class="form-group">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <label asp-asp-for="Competencia" >Data Competência</label>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3">
+                <input asp-for="Competencia" class="form-control" type="date" asp-format="{0:MMMM/yyyy}" placeholder="Informe a competência:">
+            </div>
+        </div>
+        <input type="submit" value="Processar" class="btn btn-primary">        
+    </form>
+    <div>
+        @if (ViewBag.Mensagem != null)
+        {
+            <p class="btn btn-danger">@ViewBag.Messagem</p>
+        }
+    </div>
+</div>

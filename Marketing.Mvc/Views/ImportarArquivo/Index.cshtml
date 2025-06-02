@@ -1,0 +1,10 @@
+<div>
+    <form method="post" enctype="multipart/form-data" asp-controller="ImportarArquivo"  
+        asp-action="Index"> 
+        <span>Selecionar planilha:</span> 
+        <input type="file" name="arquivoEnviado" /> 
+        <input type="submit" value="Upload" /> 
+        <br /> 
+        <span>@Html.Raw(ViewBag.Message)</span> 
+    </form> 
+</div>

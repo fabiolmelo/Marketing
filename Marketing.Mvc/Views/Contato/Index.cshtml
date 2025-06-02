@@ -1,0 +1,45 @@
+﻿@model Marketing.Domain.PagedResponse.PagedResponse<Marketing.Domain.Entidades.Contato>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>View</h1>
+
+<p>
+    <button class="btn btn-primary" asp-action="Create">Adicionar Contato</button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Telefone
+            </th>
+            <th>
+                Nome
+            </th>
+            <th>
+                Email
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Dados) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                <a asp-action="Editar" asp-route-id="@item.Telefone">Edit</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
