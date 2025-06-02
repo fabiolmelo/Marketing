@@ -15,17 +15,16 @@ namespace Marketing.Application.Servicos
 
         public async Task AtualizarContatosViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
         {
-            var telefones = dadosPlanilhas.Select(x => x.Fone).Distinct();
-            foreach (string fone in telefones)
+            foreach (DadosPlanilha linhaPlanilha in dadosPlanilhas)
             {
-                if (!fone.IsNullOrEmpty())
+                if (!linhaPlanilha.Fone.IsNullOrEmpty())
                 {
-                    var foneCadastrado = await _unitOfWork.GetRepository<Contato>().
-                                            GetByIdStringAsync(fone);
-                    if (foneCadastrado == null)
+                    var contato = await _unitOfWork.GetRepository<Contato>().
+                                            GetByIdStringAsync(linhaPlanilha.Fone);
+                    if (contato == null)
                     {
-                        await _unitOfWork.GetRepository<Contato>().
-                                            AddAsync(new Contato(fone));
+                        contato = new Contato(linhaPlanilha.Fone);
+                        await _unitOfWork.GetRepository<Contato>().AddAsync(contato);
                         await _unitOfWork.CommitAsync();
                     }
                 }

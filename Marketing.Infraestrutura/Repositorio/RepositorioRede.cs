@@ -19,12 +19,19 @@ namespace Marketing.Infraestrutura.Repositorio
             var ano = competencia.Year;
             var mes = competencia.Month;
 
-            var rede = await _context.Redes.AsNoTracking().
-                                Include(x => x.Estabelecimentos.Where(x => x.RedeId == estabelecimento.RedeId)).
-                                ThenInclude(x => x.ExtratoVendas.Where(x => x.Ano == ano && x.Mes <= mes).
-                                OrderByDescending(x => x.IncidenciaReal)).FirstAsync();
-            return rede.Estabelecimentos.ToList().IndexOf(estabelecimento) + 1;
-            
+            var rede = await (from r in _context.Redes
+                       join es in _context.Estabelecimentos on r.Nome equals es.RedeNome
+                       join ex in _context.ExtratosVendas on es.Cnpj equals ex.EstabelecimentoCnpj
+                       where ex.Ano == ano && ex.Mes <= mes && r.Nome == estabelecimento.RedeNome
+                       orderby es.IncidenciaMedia descending
+                       select  r).Take(1).FirstOrDefaultAsync();
+
+
+            if (rede == null) return 1;
+            List<Estabelecimento> listaEstabelecimentos = rede.Estabelecimentos.ToList();
+            if (listaEstabelecimentos == null) return 1;
+            int ? posicaoNaRede = listaEstabelecimentos.IndexOf(estabelecimento) + 1;
+            return posicaoNaRede ?? 1;
         }
     }
 }

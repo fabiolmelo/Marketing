@@ -8,8 +8,12 @@ namespace Marketing.Infraestrutura.Configuracao
     {
         public void Configure(EntityTypeBuilder<Rede> builder)
         {
-            builder.HasKey(x=>x.Id);
-            builder.Property(x=>x.Nome).HasMaxLength(50);
+            builder.HasKey(x => x.Nome);
+            builder.Property(x => x.Nome).HasMaxLength(50);
+
+            builder.HasMany(x => x.Estabelecimentos).
+                    WithOne(x => x.Rede).
+                    HasForeignKey(x => x.RedeNome);
         }
     }
 }

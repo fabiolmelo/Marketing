@@ -4,7 +4,6 @@ using Marketing.Domain.Interfaces.Servicos;
 using Marketing.Domain.Interfaces.UnitOfWork;
 using Marketing.Domain.PagedResponse;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Immutable;
 
 namespace Marketing.Application.Servicos
 {
@@ -27,29 +26,33 @@ namespace Marketing.Application.Servicos
 
         public async Task AtualizarEstabelecimentoViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
         {
-            var estabelecimentosPlanilha = dadosPlanilhas.Where(x=>!x.Cnpj.IsNullOrEmpty()).
-                                            GroupBy(g => new { g.Cnpj, g.Restaurante, g.Cidade, g.Uf }).
+            var estabelecimentosPlanilha = dadosPlanilhas.
+                                            GroupBy(g => new { g.Cnpj, g.Restaurante, g.Cidade, g.Uf, g.Rede }).
                                             Select(x => new
                                             {
                                                 Cnpj = x.Key.Cnpj,
                                                 Restaurante = x.Key.Restaurante,
                                                 Cidade = x.Key.Cidade,
-                                                Uf = x.Key.Uf
+                                                Uf = x.Key.Uf,
+                                                NomeRede = x.Key.Rede 
                                             });
 
-            foreach(var grupo in estabelecimentosPlanilha)
+            foreach (var grupo in estabelecimentosPlanilha)
             {
                 if (grupo.Cnpj != null)
                 {
                     var estabelecimento = await _repositorioEstabelecimento.GetByIdStringAsync(grupo.Cnpj);
-                    if (estabelecimento == null)
+                    var rede = await _unitOfWork.GetRepository<Rede>().GetByIdStringAsync(grupo.NomeRede);
+                    if (estabelecimento == null && rede != null)
                     {
                         estabelecimento = new Estabelecimento()
                         {
                             Cnpj = grupo.Cnpj,
                             RazaoSocial = grupo.Restaurante ?? "",
                             Cidade = grupo.Cidade ?? "",
-                            Uf = grupo.Uf ?? ""
+                            Uf = grupo.Uf ?? "",
+                            Rede = rede,
+                            RedeNome = rede.Nome
                         };
                         await _unitOfWork.GetRepository<Estabelecimento>().AddAsync(estabelecimento);
                         await _unitOfWork.CommitAsync();
@@ -60,49 +63,42 @@ namespace Marketing.Application.Servicos
         
         public async Task AtualizarAssociacaoEstabelecimentoContato(List<DadosPlanilha> dadosPlanilhas)
         {
-            var estabelecimentos = dadosPlanilhas.Where(x => !x.Fone.IsNullOrEmpty()).ToList();
-
-            foreach (DadosPlanilha linha in estabelecimentos)
+            
+            foreach (DadosPlanilha linhaPlanilha in dadosPlanilhas)
             {
-                if (linha.Cnpj != null && linha.Fone != null)
+                if (linhaPlanilha.Fone != String.Empty && linhaPlanilha.Fone != null)
                 {
                     var estabelecimento = await _repositorioEstabelecimento.
-                                            FindEstabelecimentoIncludeContatoRede(linha.Cnpj);
-                    var contato = await _servicoContato.GetByIdStringAsync(linha.Fone);
+                                            FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
 
-                    if (estabelecimento == null || contato == null)
+                    var contato = await _servicoContato.GetByIdStringAsync(linhaPlanilha.Fone);
+                    if (estabelecimento != null && contato != null)
                     {
-                        throw new Exception("Erro fatal");
-                    }
-                    if (!estabelecimento.Contatos.Contains(contato))
-                    {
-                        estabelecimento.Contatos.Add(contato);
-                        _unitOfWork.GetRepository<Estabelecimento>().
-                                Update(estabelecimento);
-                        await _unitOfWork.CommitAsync();
-                    }
+                        if (!estabelecimento.Contatos.Contains(contato))
+                        {
+                            estabelecimento.Contatos.Add(contato);
+                            _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimento);
+                            await _unitOfWork.CommitAsync();
+                        }
+                    }    
                 }
             }
         }
 
         public async Task AtualizarAssociacaoEstabelecimentoRede(List<DadosPlanilha> dadosPlanilhas)
         {
-            var estabelecimentos = dadosPlanilhas.Where(x => !x.Rede.IsNullOrEmpty()).ToList();
-            foreach (DadosPlanilha linha in estabelecimentos)
+            foreach (DadosPlanilha linhaPlanilha in dadosPlanilhas)
             {
-                if (linha.Cnpj != null  && linha.Rede != null)
+                if (linhaPlanilha.Rede != String.Empty && linhaPlanilha.Rede != null)
                 {
                     var estabelecimento = await _repositorioEstabelecimento.
-                                            FindEstabelecimentoIncludeContatoRede(linha.Cnpj);
-                    var rede = await _servicoRede.FindByPredicate(x => x.Nome == linha.Rede);
+                                FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
+                    var rede = await _servicoRede.GetByIdStringAsync(linhaPlanilha.Rede);
 
-                    if (estabelecimento == null || rede == null)
-                    {
-                        throw new Exception("Erro fatal");
-                    }
-                    if (estabelecimento.RedeId == null)
+                    if (estabelecimento != null && rede != null)
                     {
                         estabelecimento.Rede = rede;
+                        estabelecimento.RedeNome = rede.Nome;
                         _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimento);
                         await _unitOfWork.CommitAsync();
                     }

@@ -18,18 +18,16 @@ namespace Marketing.Domain.Interfaces.Servicos
 
         public async Task AtualizarRedesViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
         {
-            var redes = await _unitOfWork.GetRepository<Rede>().GetAllAsync(1,999999);
-            var redesCadastradas = redes.Dados.Select(x=>x.Nome).Distinct().ToArray();
-            var redesNaoCadastradas = dadosPlanilhas.
-                                      Where(x =>!redesCadastradas.Contains(x.Rede) && !x.Rede.IsNullOrEmpty()).
-                                      Select(x=>x.Rede).Distinct().
-                                      ToList();
-            
-            foreach(string redeString in redesNaoCadastradas){
-                var rede = new Rede(redeString);
-                await _unitOfWork.GetRepository<Rede>().AddAsync(rede);
-            } 
-            await _unitOfWork.CommitAsync();
+            foreach (DadosPlanilha linhaPlanilha in dadosPlanilhas)
+            {
+                var rede = await _unitOfWork.GetRepository<Rede>().GetByIdStringAsync(linhaPlanilha.Rede);
+                if (rede == null)
+                {
+                    rede = new Rede(linhaPlanilha.Rede);
+                    await _unitOfWork.GetRepository<Rede>().AddAsync(rede);
+                    await _unitOfWork.CommitAsync();
+                }
+            }
         }
 
         public async Task<int> BuscarRankingDoEstabelecimentoNaRede(DateTime competencia, Estabelecimento estabelecimento)

@@ -18,7 +18,7 @@ namespace Marketing.Infraestrutura.Configuracao
                    .HasForeignKey(e=>e.EstabelecimentoCnpj);
             builder.HasOne(x=>x.Rede).
                     WithMany(x=>x.Estabelecimentos).
-                    HasPrincipalKey(x=>x.Id);
+                    HasPrincipalKey(x=>x.Nome);
             builder.HasMany(x=>x.Contatos).
                     WithMany(x=>x.Estabelecimentos).
                     UsingEntity("EstabelecimentoContato");

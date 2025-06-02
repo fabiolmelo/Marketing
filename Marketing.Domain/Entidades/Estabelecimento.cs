@@ -4,10 +4,9 @@ namespace Marketing.Domain.Entidades
 {
     public class Estabelecimento 
     {
-        public string Cnpj { get; set; } = String.Empty; 
-        public int? RedeId { get; set; }
-        public virtual Rede? Rede { get; set; }
-
+        public string Cnpj { get; set; } = String.Empty;
+        public string RedeNome { get; set; } 
+        public virtual Rede Rede { get; set; }
         public string RazaoSocial { get; set; } = String.Empty;
         public string Cidade { get; set; } = String.Empty; 
         public string Uf { get; set; } = String.Empty; 
@@ -18,12 +17,11 @@ namespace Marketing.Domain.Entidades
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.
                                                      OrderByDescending(x=>x.Mes).
                                                      ElementAt(0); 
-        public decimal IncidenciaMedia { 
-            get 
-            { 
-                return this.ExtratoVendas.Count == 0 ? 0 : this.ExtratoVendas.Sum(x => x.PedidosComCocaCola) / 
-                           this.ExtratoVendas.Sum(x => x.TotalPedidos);
-            }
+        public decimal IncidenciaMedia
+        {
+            get
+            //{ return (decimal)this.ExtratoVendas.Count == 0 ? 0 : this.ExtratoVendas.Sum(x => x.PedidosComCocaCola) / this.ExtratoVendas.Sum(x => x.TotalPedidos); }
+            {return (decimal) this.ExtratoVendas.Average(x => x.IncidenciaReal) ;}
         } 
         public Estabelecimento()
         {

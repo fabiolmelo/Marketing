@@ -30,7 +30,7 @@ namespace Marketing.Application.Servicos
 
             
             foreach(Estabelecimento estabelecimento in estabelecimentos){
-                var posicaoNaRede = 1;  //await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
+                var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);    
                 var arquivoPdf = $"{estabelecimento.RazaoSocial}-{mes}.pdf";
                 _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf, posicaoNaRede, contentRootPath);
             }

@@ -142,8 +142,9 @@ namespace Marketing.Infraestrutura.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("RedeId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RedeNome")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Uf")
                         .IsRequired()
@@ -152,7 +153,7 @@ namespace Marketing.Infraestrutura.Migrations
 
                     b.HasKey("Cnpj");
 
-                    b.HasIndex("RedeId");
+                    b.HasIndex("RedeNome");
 
                     b.ToTable("Estabelecimentos");
                 });
@@ -239,16 +240,11 @@ namespace Marketing.Infraestrutura.Migrations
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("Nome");
 
                     b.ToTable("Redes");
                 });
@@ -282,8 +278,10 @@ namespace Marketing.Infraestrutura.Migrations
             modelBuilder.Entity("Marketing.Domain.Entidades.Estabelecimento", b =>
                 {
                     b.HasOne("Marketing.Domain.Entidades.Rede", "Rede")
-                        .WithMany("Restaurantes")
-                        .HasForeignKey("RedeId");
+                        .WithMany("Estabelecimentos")
+                        .HasForeignKey("RedeNome")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Rede");
                 });
@@ -330,7 +328,7 @@ namespace Marketing.Infraestrutura.Migrations
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>
                 {
-                    b.Navigation("Restaurantes");
+                    b.Navigation("Estabelecimentos");
                 });
 #pragma warning restore 612, 618
         }
