@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketing.Infraestrutura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250602191843_Inicial")]
+    [Migration("20250604122645_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -191,22 +191,22 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("IncidenciaReal")
-                        .HasPrecision(2)
+                        .HasPrecision(8, 4)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Meta")
-                        .HasPrecision(2)
+                        .HasPrecision(18, 4)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PedidosComCocaCola")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("PrecoUnitarioMedio")
-                        .HasPrecision(2)
+                        .HasPrecision(8, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("ReceitaNaoCapturada")
-                        .HasPrecision(2)
+                        .HasPrecision(8, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TotalPedidos")

@@ -165,11 +165,11 @@ namespace Marketing.Infraestrutura.Migrations
                     Competencia = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TotalPedidos = table.Column<int>(type: "INTEGER", nullable: false),
                     PedidosComCocaCola = table.Column<int>(type: "INTEGER", nullable: false),
-                    IncidenciaReal = table.Column<decimal>(type: "TEXT", precision: 2, nullable: false),
-                    Meta = table.Column<decimal>(type: "TEXT", precision: 2, nullable: false),
-                    PrecoUnitarioMedio = table.Column<decimal>(type: "TEXT", precision: 2, nullable: false),
+                    IncidenciaReal = table.Column<decimal>(type: "TEXT", precision: 8, scale: 4, nullable: false),
+                    Meta = table.Column<decimal>(type: "TEXT", precision: 18, scale: 4, nullable: false),
+                    PrecoUnitarioMedio = table.Column<decimal>(type: "TEXT", precision: 8, scale: 2, nullable: false),
                     TotalPedidosNaoCapturados = table.Column<int>(type: "INTEGER", nullable: false),
-                    ReceitaNaoCapturada = table.Column<decimal>(type: "TEXT", precision: 2, nullable: false)
+                    ReceitaNaoCapturada = table.Column<decimal>(type: "TEXT", precision: 8, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {

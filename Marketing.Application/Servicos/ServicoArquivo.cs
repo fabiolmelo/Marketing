@@ -112,10 +112,5 @@ namespace Marketing.Application.Servicos
             }
             return dadosPlanilha;
         }
-
-        public byte[] GerarArquivoPdf(Estabelecimento restaurante)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

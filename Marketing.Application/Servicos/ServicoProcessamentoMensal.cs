@@ -24,7 +24,7 @@ namespace Marketing.Application.Servicos
         public async Task GerarProcessamentoMensal(DateTime competencia, String contentRootPath)
         {
             var estabelecimentos = await _repositorioProcessamentoMensal.GetAllEstabelecimentosParaGerarPdf(competencia);
-            string mes = competencia.ToString("MMM-yyyy").ToLower().PriMaiuscula();
+            string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
 
             //var fechamentoMensal = new FechamentoMensal();
 
