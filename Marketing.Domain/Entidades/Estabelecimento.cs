@@ -5,8 +5,8 @@ namespace Marketing.Domain.Entidades
     public class Estabelecimento 
     {
         public string Cnpj { get; set; } = String.Empty;
-        public string RedeNome { get; set; } 
-        public virtual Rede Rede { get; set; }
+        public string RedeNome { get; set; } = String.Empty;
+        public virtual Rede Rede { get; set; } = new Rede("");
         public string RazaoSocial { get; set; } = String.Empty;
         public string Cidade { get; set; } = String.Empty; 
         public string Uf { get; set; } = String.Empty; 
