@@ -189,22 +189,22 @@ namespace Marketing.Infraestrutura.Migrations
 
                     b.Property<decimal>("IncidenciaReal")
                         .HasPrecision(8, 4)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NUMERIC");
 
                     b.Property<decimal>("Meta")
                         .HasPrecision(18, 4)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NUMERIC");
 
                     b.Property<int>("PedidosComCocaCola")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("PrecoUnitarioMedio")
                         .HasPrecision(8, 2)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NUMERIC");
 
                     b.Property<decimal>("ReceitaNaoCapturada")
                         .HasPrecision(8, 2)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NUMERIC");
 
                     b.Property<int>("TotalPedidos")
                         .HasColumnType("INTEGER");

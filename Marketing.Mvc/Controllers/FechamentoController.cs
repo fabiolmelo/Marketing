@@ -29,9 +29,17 @@ namespace Marketing.Mvc.Controllers
         [HttpPost]
         public IActionResult Gerar(ProcessamentoMensalDto processamentoMensalDto)
         {
-            var sucesso = _servicoProcessamentoMensal.GerarProcessamentoMensal(processamentoMensalDto.Competencia,
+            try
+            {
+                var sucesso = _servicoProcessamentoMensal.GerarProcessamentoMensal(processamentoMensalDto.Competencia,
                                 _webHostEnviroment.ContentRootPath);
-            ViewBag.Mensagem = "Arquivo processado com sucesso!";
+                ViewBag.Mensagem = "Arquivo processado com sucesso!";
+            }
+            catch (System.Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            } 
             return RedirectToAction("Index", new {gerou = 1});
         }
     }

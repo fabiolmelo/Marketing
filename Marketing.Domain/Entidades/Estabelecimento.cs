@@ -20,7 +20,6 @@ namespace Marketing.Domain.Entidades
         public decimal IncidenciaMedia
         {
             get
-            //{ return (decimal)this.ExtratoVendas.Count == 0 ? 0 : this.ExtratoVendas.Sum(x => x.PedidosComCocaCola) / this.ExtratoVendas.Sum(x => x.TotalPedidos); }
             {return (decimal) this.ExtratoVendas.Average(x => x.IncidenciaReal) ;}
         } 
         public Estabelecimento()

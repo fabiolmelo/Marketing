@@ -2,6 +2,7 @@
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Marketing.Infraestrutura.Repositorio
 {
@@ -19,19 +20,32 @@ namespace Marketing.Infraestrutura.Repositorio
             var ano = competencia.Year;
             var mes = competencia.Month;
 
-            var rede = await (from r in _context.Redes
-                       join es in _context.Estabelecimentos on r.Nome equals es.RedeNome
-                       join ex in _context.ExtratosVendas on es.Cnpj equals ex.EstabelecimentoCnpj
-                       where ex.Ano == ano && ex.Mes <= mes && r.Nome == estabelecimento.RedeNome
-                       orderby es.IncidenciaMedia descending
-                       select  r).Take(1).FirstOrDefaultAsync();
+            // var estabelecimentos = await (
+            //     from r in _context.Redes
+            //     join es in _context.Estabelecimentos on r.Nome equals es.RedeNome
+            //     join ex in _context.ExtratosVendas on es.Cnpj equals ex.EstabelecimentoCnpj
+            //     where ex.Ano == ano && ex.Mes <= mes && r.Nome == estabelecimento.RedeNome
+            //     select es
+            //     ).ToListAsync();
 
+            var rede = await _context.Set<Rede>().
+                Include(es => es.Estabelecimentos).
+                    ThenInclude(es => es.ExtratoVendas.
+                                    Where(ex=>ex.Ano == ano && ex.Mes <= mes)).
+                Where(r => r.Nome == estabelecimento.RedeNome).
+                FirstOrDefaultAsync();
 
             if (rede == null) return 1;
-            List<Estabelecimento> listaEstabelecimentos = rede.Estabelecimentos.ToList();
-            if (listaEstabelecimentos == null) return 1;
-            int ? posicaoNaRede = listaEstabelecimentos.IndexOf(estabelecimento) + 1;
-            return posicaoNaRede ?? 1;
+            var estabelecimentoSort = rede.Estabelecimentos.
+                                      OrderByDescending(x => x.IncidenciaMedia).
+                                      ToList();
+            if (estabelecimento.RedeNome == "DOMINOS")
+            {
+                Console.WriteLine("");
+            }
+            int posicaoNaRede = 0;
+            posicaoNaRede = estabelecimentoSort.FindIndex(x=>x.Cnpj == estabelecimento.Cnpj);
+            return posicaoNaRede == -1 ? 1 : ++posicaoNaRede;
         }
     }
 }

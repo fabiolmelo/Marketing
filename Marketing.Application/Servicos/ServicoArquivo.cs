@@ -48,25 +48,58 @@ namespace Marketing.Application.Servicos
                     var worker = PdfWriter.GetInstance(document, filestream);
                     document.Open();
 
+                    // FONTES
+                    Font fontDadosEstabelecimento = FontFactory.GetFont("Calibri", 6, BaseColor.WHITE);
+                    Font fontPosicaoRede = FontFactory.GetFont("Arial Black", 28, Font.BOLD, BaseColor.WHITE);
+
                     //GRAVA O FUNDO NO ARQUIVO
                     var pic = Image.GetInstance(caminhoFundo);
                     pic.SetAbsolutePosition(0, 0);
                     pic.ScaleToFit(document.PageSize);
                     document.Add(pic);
 
-                    var chunckDadosEstabelecimento = new Chunk();
-
                     // DADOS DO ESTABELECIMENTO
-                    var directContent = worker.DirectContent;
+                    var dadosEstabelecimento1 = $"Franqueado: {estabelecimento.RazaoSocial}";
+                    var dadosEstabelecimento2 = $"Cidade: {estabelecimento.Cidade} - {estabelecimento.Uf}";
+                    var dadosEstabelecimento3 = $"Endereço: ";
+                    var dadosEstabelecimento4 = $"Código:        CO";
+
+                    //DADOS 1
+                    PdfContentByte directContent = worker.DirectContent;
                     ColumnText columnText = new ColumnText(directContent);
-                    Phrase phrase = new Phrase();
-                    columnText.SetSimpleColumn(phrase, 50, 250, 580, 317, 15, Element.ALIGN_LEFT);
-                    Paragraph razaoSocial = new Paragraph(estabelecimento.RazaoSocial, FontFactory.GetFont("Calibri", 10, BaseColor.BLUE));
-                    razaoSocial.Add(chunckDadosEstabelecimento);
-                    columnText.AddText(razaoSocial);
+                    var posicaoDados = new Phrase(new Chunk(dadosEstabelecimento1, fontDadosEstabelecimento)); 
+                    columnText.SetSimpleColumn(posicaoDados, 450, 100, 50, 700, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
                     columnText.Go();
 
-                    
+                    //DADOS 2
+                    ColumnText columnText2 = new ColumnText(directContent);
+                    var posicaoDados2 = new Phrase(new Chunk(dadosEstabelecimento2, fontDadosEstabelecimento)); 
+                    columnText2.SetSimpleColumn(posicaoDados2, 450, 100, 50, 690, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
+                    columnText2.Go();
+
+                    //DADOS 3
+                    ColumnText columnText3 = new ColumnText(directContent);
+                    var posicaoDados3 = new Phrase(new Chunk(dadosEstabelecimento3, fontDadosEstabelecimento)); 
+                    columnText3.SetSimpleColumn(posicaoDados3, 450, 100, 50, 680, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
+                    columnText3.Go();
+
+                    //DADOS 4
+                    ColumnText columnText4 = new ColumnText(directContent);
+                    var posicaoDados4 = new Phrase(new Chunk(dadosEstabelecimento4, fontDadosEstabelecimento)); 
+                    columnText4.SetSimpleColumn(posicaoDados4, 450, 100, 50, 670, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
+                    columnText4.Go();
+
+                    // DADOS DA POSICAO
+                    var posicaoTexto = $"{posicao.ToString()}º";
+                    PdfContentByte cb = worker.DirectContent;
+                    ColumnText ct = new ColumnText(cb);
+                    var posicaoPhrase = new Phrase(new Chunk($"{posicao.ToString()}º", fontPosicaoRede)); 
+                    ct.SetSimpleColumn(posicaoPhrase, 775, 290, 200, 580, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    ct.Go();
+
+                    // FUTURO TEXTO EXPLICATIVO
+                    document.NewPage();
+
                     filestream.Flush();
                     document.CloseDocument();
                 }
