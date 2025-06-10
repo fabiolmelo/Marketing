@@ -37,8 +37,7 @@ namespace Marketing.Application.Servicos
                                       int posicao, String contentRootPath)
         {
             var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "CocaColaFundo.jpeg");
-            var caminhoPdf = Path.Combine(contentRootPath, "DadosApp", "Fechamentos",
-                                          $"{arquivoPdf}");
+            var caminhoPdf = Path.Combine("wwwroot", "images", $"{arquivoPdf}");
             using (var image = File.OpenRead(caminhoFundo))
             {
                 if (File.Exists(caminhoPdf)) File.Delete(caminhoPdf);
@@ -49,8 +48,10 @@ namespace Marketing.Application.Servicos
                     document.Open();
 
                     // FONTES
-                    Font fontDadosEstabelecimento = FontFactory.GetFont("Calibri", 6, BaseColor.WHITE);
+                    Font fontDadosEstabelecimento = FontFactory.GetFont("Calibri", 6, Font.NORMAL, BaseColor.WHITE);
                     Font fontPosicaoRede = FontFactory.GetFont("Arial Black", 28, Font.BOLD, BaseColor.WHITE);
+                    Font fontMesReferencia = FontFactory.GetFont("TCCC Unity", 12, Font.BOLD, BaseColor.BLACK);
+                    Font fontVendas = FontFactory.GetFont("TCCC Unity", 14, Font.NORMAL, BaseColor.BLACK);
 
                     //GRAVA O FUNDO NO ARQUIVO
                     var pic = Image.GetInstance(caminhoFundo);
@@ -89,12 +90,36 @@ namespace Marketing.Application.Servicos
                     columnText4.SetSimpleColumn(posicaoDados4, 450, 100, 50, 670, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
                     columnText4.Go();
 
+                    //MES REFERENCIA
+                    string textoMesReferencia = $"{estabelecimento.MesCompetencia} (META DE INCIDÊNCIA: ";
+                    textoMesReferencia += $"{(int)(estabelecimento.ExtratoMesCompetencia.Meta * 100)}%)";
+                    ColumnText mesReferencia = new ColumnText(directContent);
+                    var mesReferenciaPhrase = new Phrase(new Chunk(textoMesReferencia, fontMesReferencia)); 
+                    mesReferencia.SetSimpleColumn(mesReferenciaPhrase, 350, 50, 5, 635, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    mesReferencia.Go();
+
+
+                    //TOTAL DE PEDIDOS
+                    ColumnText totalPedido = new ColumnText(directContent);
+                    string totalPedidos = estabelecimento.ExtratoMesCompetencia.TotalPedidos.ToString("N0");
+                    var totalPedidoPhrase = new Phrase(new Chunk(totalPedidos, fontVendas)); 
+                    totalPedido.SetSimpleColumn(totalPedidoPhrase, 100, 560, 25, 595, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    totalPedido.Go();
+
+                    //TOTAL DE PEDIDOS COM COCA
+                    ColumnText totalPedidoCoca = new ColumnText(directContent);
+                    string totalPedidosCoca = estabelecimento.ExtratoMesCompetencia.PedidosComCocaCola.ToString("N0");
+                    var totalPedidoCocaPhrase = new Phrase(new Chunk(totalPedidosCoca, fontVendas)); 
+                    totalPedidoCoca.SetSimpleColumn(totalPedidoCocaPhrase, 190, 560, 105, 595, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    totalPedidoCoca.Go();
+
+
                     // DADOS DA POSICAO
                     var posicaoTexto = $"{posicao.ToString()}º";
                     PdfContentByte cb = worker.DirectContent;
                     ColumnText ct = new ColumnText(cb);
                     var posicaoPhrase = new Phrase(new Chunk($"{posicao.ToString()}º", fontPosicaoRede)); 
-                    ct.SetSimpleColumn(posicaoPhrase, 775, 290, 200, 580, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    ct.SetSimpleColumn(posicaoPhrase,  920, 100, 50, 580, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     ct.Go();
 
                     // FUTURO TEXTO EXPLICATIVO

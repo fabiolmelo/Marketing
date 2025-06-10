@@ -19,13 +19,12 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<List<Estabelecimento>> GetAllEstabelecimentosParaGerarPdf(DateTime competencia)
         {
-            var ano = competencia.Year;
-            var mes = competencia.Month;
+            var dozeMesesAnteriores = competencia.AddYears(-1);
             var estabelecimentos = await _context.Estabelecimentos.
                                         AsNoTracking().
                                         Include(x=>x.Rede).
                                         Include(x=>x.Contatos).
-                                        Include(x => x.ExtratoVendas.Where(e => e.Ano == ano && e.Mes <= mes)).
+                                        Include(x => x.ExtratoVendas.Where(e => e.Competencia > dozeMesesAnteriores)).
                                         Where(x=>x.ExtratoVendas.Count > 0).
                                         ToListAsync();
             var extratos = _context.Set<ExtratoVendas>().ToList();

@@ -187,6 +187,18 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<DateTime>("Competencia")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("CorTransparenteGrafico")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("NUMERIC");
+
+                    b.Property<decimal>("CorVerdeGrafico")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("NUMERIC");
+
+                    b.Property<decimal>("CorVermelhaGrafico")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("NUMERIC");
+
                     b.Property<decimal>("IncidenciaReal")
                         .HasPrecision(8, 4)
                         .HasColumnType("NUMERIC");

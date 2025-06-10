@@ -14,9 +14,11 @@ namespace Marketing.Domain.Entidades
         public decimal ReceitaNaoCapturada { get; set; }
         public string EstabelecimentoCnpj { get; set; }
         public virtual Estabelecimento Estabelecimento { get; set; } = new Estabelecimento();
-
-        public ExtratoVendas(int ano, int mes, DateTime competencia, int totalPedidos, int pedidosComCocaCola, 
-            decimal incidenciaReal, decimal meta, decimal precoUnitarioMedio, int totalPedidosNaoCapturados, 
+        public decimal CorVerdeGrafico { get; set; }
+        public decimal CorTransparenteGrafico { get; set;}
+        public decimal CorVermelhaGrafico { get; set; }
+        public ExtratoVendas(int ano, int mes, DateTime competencia, int totalPedidos, int pedidosComCocaCola,
+            decimal incidenciaReal, decimal meta, decimal precoUnitarioMedio, int totalPedidosNaoCapturados,
             decimal receitaNaoCapturada, string estabelecimentoCnpj)
         {
             Ano = ano;
@@ -30,6 +32,10 @@ namespace Marketing.Domain.Entidades
             TotalPedidosNaoCapturados = totalPedidosNaoCapturados;
             ReceitaNaoCapturada = receitaNaoCapturada;
             EstabelecimentoCnpj = estabelecimentoCnpj;
+
+            CorVerdeGrafico = Meta > IncidenciaReal ? 0 : IncidenciaReal - Meta;
+            CorTransparenteGrafico = IncidenciaReal > Meta ? 0 : Meta - IncidenciaReal;
+            CorVermelhaGrafico =  IncidenciaReal > Meta ? Meta : IncidenciaReal; 
         }
     }
 }

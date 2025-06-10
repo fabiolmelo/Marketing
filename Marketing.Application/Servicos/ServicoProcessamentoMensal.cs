@@ -30,9 +30,12 @@ namespace Marketing.Application.Servicos
 
             
             foreach(Estabelecimento estabelecimento in estabelecimentos){
-                var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);    
-                var arquivoPdf = $"{estabelecimento.RazaoSocial}-{mes}.pdf";
-                _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf, posicaoNaRede, contentRootPath);
+                if (estabelecimento.ExtratoVendas.Count > 0)
+                {
+                    var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);    
+                    var arquivoPdf = $"{estabelecimento.RazaoSocial}-{mes}.pdf";
+                    _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf, posicaoNaRede, contentRootPath);    
+                }
             }
         }
     }
