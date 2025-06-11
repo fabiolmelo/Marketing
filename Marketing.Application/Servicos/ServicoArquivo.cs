@@ -52,6 +52,9 @@ namespace Marketing.Application.Servicos
                     Font fontPosicaoRede = FontFactory.GetFont("Arial Black", 28, Font.BOLD, BaseColor.WHITE);
                     Font fontMesReferencia = FontFactory.GetFont("TCCC Unity", 12, Font.BOLD, BaseColor.BLACK);
                     Font fontVendas = FontFactory.GetFont("TCCC Unity", 14, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasBold = FontFactory.GetFont("TCCC Unity", 14, Font.BOLD, BaseColor.BLACK);
+                    Font fontVendasReceita = FontFactory.GetFont("TCCC Unity", 14, Font.BOLD, BaseColor.RED);
+                    Font fontMes = FontFactory.GetFont("TCCC Unity", 9, Font.NORMAL, BaseColor.BLACK);
 
                     //GRAVA O FUNDO NO ARQUIVO
                     var pic = Image.GetInstance(caminhoFundo);
@@ -112,6 +115,27 @@ namespace Marketing.Application.Servicos
                     var totalPedidoCocaPhrase = new Phrase(new Chunk(totalPedidosCoca, fontVendas)); 
                     totalPedidoCoca.SetSimpleColumn(totalPedidoCocaPhrase, 190, 560, 105, 595, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     totalPedidoCoca.Go();
+
+                    //INCIDENCIA
+                    ColumnText incidenciaMes = new ColumnText(directContent);
+                    string incidenciaText = ((int)(estabelecimento.ExtratoMesCompetencia.IncidenciaReal * 100)).ToString() + "%";
+                    var incidenciaMesPhrase = new Phrase(new Chunk(incidenciaText, fontVendasBold)); 
+                    incidenciaMes.SetSimpleColumn(incidenciaMesPhrase, 270, 560, 185, 595, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    incidenciaMes.Go();
+
+                    //RECEITA NAO CAPTURADA
+                    ColumnText receitaMes = new ColumnText(directContent);
+                    string receitaMesText = (estabelecimento.ExtratoMesCompetencia.ReceitaNaoCapturada * -1).ToString("C2");
+                    var receitaMesPhrase = new Phrase(new Chunk(receitaMesText, fontVendasReceita)); 
+                    receitaMes.SetSimpleColumn(receitaMesPhrase, 380, 560, 290, 595, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
+                    receitaMes.Go();
+
+                    //MES COMPETENCIA
+                    ColumnText mesCompetencia = new ColumnText(directContent);
+                    string mesCompetenciaText = estabelecimento.Periodo();
+                    var mesCompetenciaPhrase = new Phrase(new Chunk(mesCompetenciaText, fontMes)); 
+                    mesCompetencia.SetSimpleColumn(mesCompetenciaPhrase, 350, 500, 45, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
+                    mesCompetencia.Go();
 
 
                     // DADOS DA POSICAO
