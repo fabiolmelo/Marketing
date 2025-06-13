@@ -10,8 +10,8 @@ namespace Marketing.Domain.Entidades
         public string RazaoSocial { get; set; } = String.Empty;
         public string Cidade { get; set; } = String.Empty;
         public string Uf { get; set; } = String.Empty;
-        public ICollection<Contato> Contatos { get; } = [];
-        public ICollection<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
+        public List<Contato> Contatos { get; } = [];
+        public List<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.
                                                 ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.

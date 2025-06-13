@@ -4,6 +4,8 @@ using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Http;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Azure.Core.Pipeline;
+using Marketing.Domain.Extensoes;
 
 namespace Marketing.Application.Servicos
 {
@@ -36,7 +38,9 @@ namespace Marketing.Application.Servicos
         public string GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf,
                                       int posicao, String contentRootPath)
         {
-            var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "CocaColaFundo.jpeg");
+            var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "fundo_export.png");
+            var caminhoFontes = Path.Combine(contentRootPath, "DadosApp", "Fonts");
+            //var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "CocaColaFundo.jpeg");
             var caminhoPdf = Path.Combine("wwwroot", "images", $"{arquivoPdf}");
             using (var image = File.OpenRead(caminhoFundo))
             {
@@ -47,14 +51,37 @@ namespace Marketing.Application.Servicos
                     var worker = PdfWriter.GetInstance(document, filestream);
                     document.Open();
 
+                    //REGISTRAR FONTES 
+                    try
+                    {
+                        if (!FontFactory.IsRegistered("TCCCHolidays23-Curated")) FontFactory.Register(caminhoFontes + "\\TCCCHolidays23-Curated.otf");
+                        if (!FontFactory.IsRegistered("TCCCHolidays23-Narrow")) FontFactory.Register(caminhoFontes + "\\TCCCHolidays23-Narrow.otf");
+                        if (!FontFactory.IsRegistered("TCCCHolidays23-Normal")) FontFactory.Register(caminhoFontes + "\\TCCCHolidays23-Normal.otf");
+                        if (!FontFactory.IsRegistered("TCCCUnity-Black")) FontFactory.Register(caminhoFontes + "\\TCCCUnity-Black.ttf");
+                        if (!FontFactory.IsRegistered("TCCCUnity-Bold")) FontFactory.Register(caminhoFontes + "\\TCCCUnity-Bold.ttf");
+                        if (!FontFactory.IsRegistered("TCCC-UnityCondensed-Bold")) FontFactory.Register(caminhoFontes + "\\TCCC-UnityCondensed-Bold.ttf");
+                        if (!FontFactory.IsRegistered("TCCCUnity-Regular")) FontFactory.Register(caminhoFontes + "\\TCCCUnity-Regular.ttf");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    
+
                     // FONTES
-                    Font fontDadosEstabelecimento = FontFactory.GetFont("Calibri", 6, Font.NORMAL, BaseColor.WHITE);
-                    Font fontPosicaoRede = FontFactory.GetFont("Arial Black", 28, Font.BOLD, BaseColor.WHITE);
-                    Font fontMesReferencia = FontFactory.GetFont("TCCC Unity", 12, Font.BOLD, BaseColor.BLACK);
-                    Font fontVendas = FontFactory.GetFont("TCCC Unity", 14, Font.NORMAL, BaseColor.BLACK);
-                    Font fontVendasBold = FontFactory.GetFont("TCCC Unity", 14, Font.BOLD, BaseColor.BLACK);
-                    Font fontVendasReceita = FontFactory.GetFont("TCCC Unity", 14, Font.BOLD, BaseColor.RED);
-                    Font fontMes = FontFactory.GetFont("TCCC Unity", 9, Font.NORMAL, BaseColor.BLACK);
+                    var fontes = FontFactory.RegisteredFonts;
+                    Font fontDadosEstabelecimento = FontFactory.GetFont("TCCC-UnityCondensed Bold", 6, Font.NORMAL, BaseColor.WHITE);
+                    Font fontPosicaoRede = FontFactory.GetFont("TCCC Unity Black", 28, Font.NORMAL, BaseColor.WHITE);
+                    Font fontMesReferencia = FontFactory.GetFont($@"{caminhoFontes}\TCCC-UnityCondensed-Bold.ttf", 12,
+                                                            Font.NORMAL, BaseColor.BLACK);
+                    
+                    Font fontVendas = FontFactory.GetFont("TCCC-UnityText", 14, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasBold = FontFactory.GetFont("TCCC-UnityHeadline", 14, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasReceita = FontFactory.GetFont("TCCC-UnityText", 14, Font.NORMAL, BaseColor.RED);
+                    Font fontMes = FontFactory.GetFont("tccc unity regular", 9, Font.NORMAL, BaseColor.BLACK);
+                    Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", 7, Font.NORMAL, BaseColor.BLACK);
+                    Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", 7, Font.NORMAL, BaseColor.RED);
+                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", 7, Font.NORMAL, BaseColor.GREEN);
 
                     //GRAVA O FUNDO NO ARQUIVO
                     var pic = Image.GetInstance(caminhoFundo);
@@ -137,6 +164,13 @@ namespace Marketing.Application.Servicos
                     mesCompetencia.SetSimpleColumn(mesCompetenciaPhrase, 350, 500, 45, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
                     mesCompetencia.Go();
 
+                    //RECEITA TOTAL NAO CAPTURADA
+                    ColumnText receitaTotalMes = new ColumnText(directContent);
+                    string receitaTotalMesText = (estabelecimento.ExtratoVendas.Sum(x=>x.ReceitaNaoCapturada) * -1).ToString("C2");
+                    var receitaTotalMesPhrase = new Phrase(new Chunk(receitaTotalMesText, fontVendasReceita)); 
+                    receitaTotalMes.SetSimpleColumn(receitaTotalMesPhrase, 380, 510, 290, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
+                    receitaTotalMes.Go();
+
 
                     // DADOS DA POSICAO
                     var posicaoTexto = $"{posicao.ToString()}º";
@@ -145,6 +179,119 @@ namespace Marketing.Application.Servicos
                     var posicaoPhrase = new Phrase(new Chunk($"{posicao.ToString()}º", fontPosicaoRede)); 
                     ct.SetSimpleColumn(posicaoPhrase,  920, 100, 50, 580, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     ct.Go();
+
+                    const int FATOR_FIXO = 31;
+
+                    // VOLUME PEDIDO
+                    int qtdExtrato = estabelecimento.ExtratoVendas.Count;
+                    ColumnText[] volumePedido = new ColumnText[qtdExtrato];
+                    string[] volumePedidoText = new string[qtdExtrato];
+                    Phrase[] volumePedidoPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        volumePedido[index] = new ColumnText(directContent);
+                        volumePedidoText[index] = estabelecimento.ExtratoVendas[index].TotalPedidos.ToString("N0");
+                        volumePedidoPhrase[index] = new Phrase(new Chunk(volumePedidoText[index], fontValoresGraf));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 285 + fatorPosicao, 382, 200 + fatorPosicao, 432, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedido[index].Go();    
+                    }
+                    
+                    // VOLUME PEDIDO COM COCA
+                    ColumnText[] volumePedidoCoca = new ColumnText[qtdExtrato];
+                    string[] volumePedidoCocaText = new string[qtdExtrato];
+                    Phrase[] volumePedidoCocaPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        volumePedidoCoca[index] = new ColumnText(directContent);
+                        volumePedidoCocaText[index] = estabelecimento.ExtratoVendas[index].PedidosComCocaCola.ToString("N0");
+                        volumePedidoCocaPhrase[index] = new Phrase(new Chunk(volumePedidoCocaText[index], fontValoresGraf));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 285 + fatorPosicao, 367, 200 + fatorPosicao, 417, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedidoCoca[index].Go();    
+                    }
+
+                    // MESES
+                    ColumnText[] meses = new ColumnText[qtdExtrato];
+                    string[] mesesText = new string[qtdExtrato];
+                    Phrase[] mesesPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        meses[index] = new ColumnText(directContent);
+                        mesesText[index] = estabelecimento.ExtratoVendas[index].Competencia.ToString("MMM yy").PriMaiuscula();
+                        mesesPhrase[index] = new Phrase(new Chunk(mesesText[index], fontValoresGraf));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        meses[index].SetSimpleColumn(mesesPhrase[index], 285 + fatorPosicao, 212, 200 + fatorPosicao, 272, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        meses[index].Go();    
+                    }
+
+                    // APROVEITAMENTO
+                    ColumnText[] aproveitamento = new ColumnText[qtdExtrato];
+                    string[] aproveitamentoText = new string[qtdExtrato];
+                    Phrase[] aproveitamentoPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        decimal aprovMeta = estabelecimento.ExtratoVendas[index].IncidenciaReal - estabelecimento.ExtratoVendas[index].Meta;
+                        aproveitamento[index] = new ColumnText(directContent);
+                        aproveitamentoText[index] = aprovMeta.ToString("P0");
+                        aproveitamentoPhrase[index] = new Phrase(new Chunk(aproveitamentoText[index], fontValoresGraf));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        aproveitamento[index].SetSimpleColumn(aproveitamentoPhrase[index], 197 + fatorPosicao, 195, 217 + fatorPosicao, 252, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        aproveitamento[index].Go();    
+                    }
+
+                    // PEDIDOS NAO CAPTURADOS
+                    ColumnText[] naoCapiturados = new ColumnText[qtdExtrato];
+                    string[] naoCapituradosText = new string[qtdExtrato];
+                    Phrase[] naoCapituradosPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        int qtde = estabelecimento.ExtratoVendas[index].TotalPedidosNaoCapturados * -1;
+                        Font fontNaoCap = qtde < 0 ? fontValoresGrafRed : qtde == 0 ? fontValoresGraf : fontValoresGrafGreen;
+                        naoCapiturados[index] = new ColumnText(directContent);
+                        naoCapituradosText[index] = qtde.ToString("N0");
+                        naoCapituradosPhrase[index] = new Phrase(new Chunk(naoCapituradosText[index], fontNaoCap));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        naoCapiturados[index].SetSimpleColumn(naoCapituradosPhrase[index], 197 + fatorPosicao, 173, 217 + fatorPosicao, 228, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        naoCapiturados[index].Go();    
+                    }
+
+                    // PREÇO MÉDIO UNITÁRIO
+                    ColumnText[] precoMedio = new ColumnText[qtdExtrato];
+                    string[] precoMedioText = new string[qtdExtrato];
+                    Phrase[] precoMedioPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        precoMedio[index] = new ColumnText(directContent);
+                        precoMedioText[index] = estabelecimento.ExtratoVendas[index].PrecoUnitarioMedio.ToString("C2");
+                        precoMedioPhrase[index] = new Phrase(new Chunk(precoMedioText[index], fontValoresGraf));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 197 + fatorPosicao, 173, 217 + fatorPosicao, 211, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        precoMedio[index].Go();    
+                    }
+
+                    // RECEITA NAO CAPTURADOS
+                    ColumnText[] receitaNaoCapiturados = new ColumnText[qtdExtrato];
+                    string[] receitaNaoCapituradosText = new string[qtdExtrato];
+                    Phrase[] receitaNaoCapituradosPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        decimal receita = estabelecimento.ExtratoVendas[index].ReceitaNaoCapturada * -1;
+                        Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
+                        receitaNaoCapiturados[index] = new ColumnText(directContent);
+                        receitaNaoCapituradosText[index] = receita.ToString("C2");
+                        receitaNaoCapituradosPhrase[index] = new Phrase(new Chunk(receitaNaoCapituradosText[index], fontNaoCap));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 197 + fatorPosicao, 150, 227 + fatorPosicao, 187, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
+                        receitaNaoCapiturados[index].Go();    
+                    }
 
                     // FUTURO TEXTO EXPLICATIVO
                     document.NewPage();
