@@ -4,15 +4,16 @@ using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Http;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Azure.Core.Pipeline;
 using Marketing.Domain.Extensoes;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoArquivo : Servico<ImportacaoEfetuada>, IServicoArquivos
     {
-        public ServicoArquivo(IUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly IServicoGrafico servicoGrafico;
+        public ServicoArquivo(IUnitOfWork unitOfWork, IServicoGrafico servicoGrafico) : base(unitOfWork)
         {
+            this.servicoGrafico = servicoGrafico;
         }
 
         public async Task<string?> UploadArquivo(IFormFile arquivo)
@@ -276,6 +277,23 @@ namespace Marketing.Application.Servicos
                         precoMedio[index].Go();    
                     }
 
+                    // CRIFRÃO FIXO
+                    ColumnText[] crifaofixo = new ColumnText[qtdExtrato];
+                    string[] crifaofixoText = new string[qtdExtrato];
+                    Phrase[] crifaofixoPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        decimal receita = estabelecimento.ExtratoVendas[index].ReceitaNaoCapturada * -1;
+                        Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
+                        crifaofixo[index] = new ColumnText(directContent);
+                        crifaofixoText[index] = "R$";
+                        crifaofixoPhrase[index] = new Phrase(new Chunk(crifaofixoText[index], fontNaoCap));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        crifaofixo[index].SetSimpleColumn(crifaofixoPhrase[index], 203 + fatorPosicao, 167, 213 + fatorPosicao, 197, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
+                        crifaofixo[index].Go();    
+                    }
+
                     // RECEITA NAO CAPTURADOS
                     ColumnText[] receitaNaoCapiturados = new ColumnText[qtdExtrato];
                     string[] receitaNaoCapituradosText = new string[qtdExtrato];
@@ -286,10 +304,10 @@ namespace Marketing.Application.Servicos
                         decimal receita = estabelecimento.ExtratoVendas[index].ReceitaNaoCapturada * -1;
                         Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
                         receitaNaoCapiturados[index] = new ColumnText(directContent);
-                        receitaNaoCapituradosText[index] = receita.ToString("C2");
+                        receitaNaoCapituradosText[index] = receita.ToString("N2");
                         receitaNaoCapituradosPhrase[index] = new Phrase(new Chunk(receitaNaoCapituradosText[index], fontNaoCap));
                         int fatorPosicao = (index * FATOR_FIXO);
-                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 197 + fatorPosicao, 150, 227 + fatorPosicao, 187, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
+                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 197 + fatorPosicao, 157, 227 + fatorPosicao, 187, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
                         receitaNaoCapiturados[index].Go();    
                     }
 
