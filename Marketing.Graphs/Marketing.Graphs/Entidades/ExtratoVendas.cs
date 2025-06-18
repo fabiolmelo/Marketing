@@ -35,7 +35,7 @@ namespace Marketing.Graphs.Entidades
             ReceitaNaoCapturada = receitaNaoCapturada;
             EstabelecimentoCnpj = estabelecimentoCnpj;
 
-            CorVerdeGrafico = Meta > IncidenciaReal ? 0 : IncidenciaReal - Meta;
+            CorVerdeGrafico = IncidenciaReal > Meta ? IncidenciaReal - Meta : 0;
             CorTransparenteGrafico = IncidenciaReal > Meta ? 0 : Meta - IncidenciaReal;
             CorVermelhaGrafico =  IncidenciaReal > Meta ? Meta : IncidenciaReal; 
         }
