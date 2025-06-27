@@ -17,6 +17,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IServicoArquivos, ServicoArquivo>();
             servicos.AddScoped<IServicoContato, ServicoContato>();
             servicos.AddScoped<IServicoRede, ServicoRede>();
+            servicos.AddScoped<IServicoGrafico, ServicoGrafico>();
             servicos.AddScoped<IServicoEstabelecimento, ServicoEstabelecimento>();
             servicos.AddScoped<IServicoExtratoVendas, ServicoExtratoVenda>();
             servicos.AddScoped<IServicoImportarPlanilha, ServicoImportarPlanilha>();

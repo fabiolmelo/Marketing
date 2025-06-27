@@ -303,9 +303,9 @@ namespace Marketing.Application.Servicos
 
                     //PLOTAR A IMAGEM DO GRAFICO
                     var graficoImage = Image.GetInstance(caminhoGrafico);
-                    graficoImage.SetAbsolutePosition(185, 258);
+                    graficoImage.SetAbsolutePosition(190, 262);
                     graficoImage.ScaleAbsoluteHeight(125);
-                    graficoImage.ScaleAbsoluteWidth(385);
+                    graficoImage.ScaleAbsoluteWidth(380);
                     document.Add(graficoImage);
 
 

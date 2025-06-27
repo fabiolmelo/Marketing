@@ -1,9 +1,11 @@
+using System;
+
 namespace Marketing.Domain.Entidades
 {
     public class DadosPlanilha
     {
         public int ImportacaoEfetuadaId { get; set; } = 0;
-        public virtual ImportacaoEfetuada ImportacaoEfetuada { get; set; } = new ImportacaoEfetuada();
+        public virtual ImportacaoEfetuada ImportacaoEfetuada { get; set; }
         public DateTime AnoMes { get; set; }
         public string Uf { get; set; }
         public string Cidade { get; set; }
@@ -35,6 +37,7 @@ namespace Marketing.Domain.Entidades
             ReceitaNaoCapturada = receitaNaoCapturada;
             Rede = rede;
             Fone = fone;
+            ImportacaoEfetuada = new ImportacaoEfetuada();
         }
     }
 }

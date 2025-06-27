@@ -1,11 +1,14 @@
+using System;
+using System.Collections.Generic;
+
 namespace Marketing.Domain.Entidades
 {
     public class ImportacaoEfetuada
     {
-        public int Id { get; set; } 
-        public string? NomeArquivoServer  { get; set; } 
+        public int Id { get; set; }
+        public string? NomeArquivoServer { get; set; } = String.Empty; 
         public DateTime DataImportacao { get; private set; } = DateTime.UtcNow; 
-        public ICollection<DadosPlanilha> DadosPlanilha { get; private set; } = new List<DadosPlanilha>();
+        public List<DadosPlanilha> DadosPlanilha { get; private set; } = new List<DadosPlanilha>();
         public ImportacaoEfetuada()
         {
         }

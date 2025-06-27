@@ -1,3 +1,5 @@
+using System;
+
 namespace Marketing.Domain.Entidades
 {
     public class ExtratoVendas

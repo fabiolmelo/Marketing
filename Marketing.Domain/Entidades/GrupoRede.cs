@@ -5,10 +5,10 @@ namespace Marketing.Domain.Entidades
         public GrupoRede(string cnpj, decimal incidenciaMedia)
         {
             Cnpj = cnpj;
-            this.incidenciaMedia = incidenciaMedia;
+            IncidenciaMedia = incidenciaMedia;
         }
 
         public string Cnpj { get; set; }
-        public decimal incidenciaMedia { get; set; }
+        public decimal IncidenciaMedia { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 using Marketing.Domain.Entidades;
 using Marketing.Domain.PagedResponse;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Marketing.Domain.Interfaces.Servicos
 {

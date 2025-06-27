@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Vml.Spreadsheet;
-using Marketing.Domain.Entidades;
+﻿using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
@@ -11,14 +10,17 @@ namespace Marketing.Application.Servicos
         private readonly IRepositorioProcessamentoMensal _repositorioProcessamentoMensal;
         private readonly IServicoArquivos _servicoArquivos;
         private readonly IServicoRede _servicoRede;
+        private readonly IServicoGrafico _servicoGrafico;
 
         public ServicoProcessamentoMensal(IRepositorioProcessamentoMensal repositorioProcessamentoMensal,
                                           IServicoArquivos servicoArquivos,
-                                          IServicoRede servicoRede)
+                                          IServicoRede servicoRede,
+                                          IServicoGrafico servicoGrafico)
         {
             _repositorioProcessamentoMensal = repositorioProcessamentoMensal;
             _servicoArquivos = servicoArquivos;
             _servicoRede = servicoRede;
+            _servicoGrafico = servicoGrafico;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia, String contentRootPath)
@@ -28,14 +30,22 @@ namespace Marketing.Application.Servicos
 
             //var fechamentoMensal = new FechamentoMensal();
 
-            
-            foreach(Estabelecimento estabelecimento in estabelecimentos){
-                if (estabelecimento.ExtratoVendas.Count > 0)
+            try
+            {
+                foreach (Estabelecimento estabelecimento in estabelecimentos)
                 {
-                    var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);    
-                    var arquivoPdf = $"{estabelecimento.RazaoSocial}-{mes}.pdf";
-                    _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf, posicaoNaRede, contentRootPath);    
+                    if (estabelecimento.ExtratoVendas.Count > 0)
+                    {
+                        var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
+                        var arquivoPdf = $"{estabelecimento.RazaoSocial}-{mes}.pdf";
+                        _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
+                        _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf, posicaoNaRede, contentRootPath);
+                    }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"Erro {ex.Message}");
             }
         }
     }

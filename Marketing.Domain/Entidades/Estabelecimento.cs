@@ -1,4 +1,6 @@
-using Marketing.Domain.Extensoes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Marketing.Domain.Entidades
 {
@@ -10,13 +12,10 @@ namespace Marketing.Domain.Entidades
         public string RazaoSocial { get; set; } = String.Empty;
         public string Cidade { get; set; } = String.Empty;
         public string Uf { get; set; } = String.Empty;
-        public List<Contato> Contatos { get; } = [];
+        public List<Contato> Contatos { get; } = new List<Contato>();
         public List<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
-        public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.
-                                                ToString("MMMM yyyy").ToUpper()}";
-        public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.
-                                                     OrderByDescending(x => x.Competencia).
-                                                     ElementAt(0);
+        public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
+        public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);
         public decimal IncidenciaMedia
         {
             get { return (decimal)this.ExtratoVendas.Average(x => x.IncidenciaReal); }

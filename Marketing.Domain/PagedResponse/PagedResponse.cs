@@ -1,12 +1,15 @@
-﻿namespace Marketing.Domain.PagedResponse
+﻿using System;
+using System.Collections.Generic;
+
+namespace Marketing.Domain.PagedResponse
 {
     public class PagedResponse<T>
     {
-        public int PageNumber { get; init; }
-        public int PageSize { get; init; }
-        public int TotalRecords { get; init; }
-        public int TotalPages { get; init; }
-        public List<T> Dados { get; init; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalRecords { get; set; }
+        public int TotalPages { get; set; }
+        public List<T> Dados { get; set; }
 
         public PagedResponse(List<T> data, int pageNumber, int pageSize, int totalRecords)
         {
