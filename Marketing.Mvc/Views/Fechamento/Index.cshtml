@@ -11,10 +11,18 @@
         </div>
         <input type="submit" value="Processar" class="btn btn-primary">        
     </form>
-    <div>
-        @if (ViewBag.Mensagem != null)
-        {
-            <p class="btn btn-danger">@ViewBag.Messagem</p>
-        }
+    <div class="row">
+        <div class="col">
+            @if (ViewBag.Gerou == true)
+            {
+                <div class="p-3 text-sucess-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
+                    processamento efetuado com sucesso!
+                </div>
+            }
+            @if (ViewBag.Gerou == false)
+            {
+                <p class="btn btn-danger">Erro asp-for Gerar processamento!</p>
+            }
+        </div>
     </div>
 </div>

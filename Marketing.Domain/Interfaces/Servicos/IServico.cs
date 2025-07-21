@@ -9,7 +9,7 @@ namespace Marketing.Domain.Interfaces.Servicos
     {
         Task<T?> GetByIdAsync(int id);
         Task<T?> GetByIdStringAsync(string id);
-        Task<PagedResponse<T>> GetAllAsync(int pageNumber = 1, int pageSize = 10, Expression<Func<T, bool>> filtros = null, params Expression<Func<T, object>>[] includes);
+        Task<PagedResponse<T>> GetAllAsync(int pageNumber = 1, int pageSize = 10, Expression<Func<T, bool>>? filtros = null, params Expression<Func<T, object>>[] includes);
         Task<T?> FindByPredicate(Expression<Func<T, bool>> expression);
         Task AddAsync(T entity);
         void Update(T entity);

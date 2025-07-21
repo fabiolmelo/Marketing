@@ -42,7 +42,7 @@ namespace Marketing.Application.Servicos
             //var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "CocaColaFundo.jpeg");
             var caminhoPdf = Path.Combine(contentRootPath, "DadosApp", "tmp.pdf");
             var caminhoPdfCompleto = Path.Combine("wwwroot", "images", $"{arquivoPdf}");
-            var caminhoPdfPage2 = Path.Combine(contentRootPath, "DadosApp", "Manual_Extrato.pdf");
+            var caminhoPdfPage2 = Path.Combine(contentRootPath, "DadosApp", "Entenda seu extrato Coca-Cola_v3.pdf");
             var caminhoGrafico = Path.Combine(contentRootPath, "DadosApp", "Grafico.jpg");
 
             using (var image = File.OpenRead(caminhoFundo))
@@ -65,14 +65,17 @@ namespace Marketing.Application.Servicos
                     Font fontPosicaoRede = FontFactory.GetFont("TCCC Unity Black", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
                     Font fontMesReferencia = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
 
-                    Font fontVendas = FontFactory.GetFont("TCCC-UnityText", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
-                    Font fontVendasBold = FontFactory.GetFont("TCCC-UnityHeadline", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
-                    Font fontVendasReceita = FontFactory.GetFont("TCCC-UnityText", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.RED);
+                    Font fontVendas = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasBold = FontFactory.GetFont("tccc unity bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasReceita = FontFactory.GetFont("tcccunity-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.RED);
                     Font fontMes = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.BLACK);
                     Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, BaseColor.BLACK);
                     Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, BaseColor.RED);
                     Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, BaseColor.GREEN);
                     Font fontValoresIncidencia = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.WHITE);
+
+                    Font fontTextoIncidencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.GRAY);
+                    Font fontTextoMeta = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.RED);
 
                     //GRAVA O FUNDO NO ARQUIVO
                     var pic = Image.GetInstance(caminhoFundo);
@@ -159,7 +162,7 @@ namespace Marketing.Application.Servicos
                     ColumnText receitaTotalMes = new ColumnText(directContent);
                     string receitaTotalMesText = (estabelecimento.ExtratoVendas.Sum(x => x.ReceitaNaoCapturada) * -1).ToString("C2");
                     var receitaTotalMesPhrase = new Phrase(new Chunk(receitaTotalMesText, fontVendasReceita));
-                    receitaTotalMes.SetSimpleColumn(receitaTotalMesPhrase, 380, 510, 290, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
+                    receitaTotalMes.SetSimpleColumn(receitaTotalMesPhrase, 410, 510, 290, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
                     receitaTotalMes.Go();
 
 
@@ -307,6 +310,49 @@ namespace Marketing.Application.Servicos
                     graficoImage.ScaleAbsoluteHeight(125);
                     graficoImage.ScaleAbsoluteWidth(380);
                     document.Add(graficoImage);
+
+                    // DESENHAR A LINHA TRACEJADA DA META
+                    float posicaoMetaY = 260 + (float)(estabelecimento.ExtratoMesCompetencia.Meta * 110); 
+                    float posicaoIncidenciaY = 260 + (float)(estabelecimento.IncidenciaMedia * 110); 
+                    float posicaoTextoMeta  = (float)(estabelecimento.ExtratoMesCompetencia.Meta >= 
+                                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal ?
+                                              posicaoMetaY + 5 : posicaoMetaY - 5);  
+                    float posicaoTextoIncidencia = (float)(estabelecimento.ExtratoMesCompetencia.IncidenciaReal >= 
+                                              estabelecimento.ExtratoMesCompetencia.Meta ?
+                                              posicaoIncidenciaY + 5 : posicaoIncidenciaY - 5);  
+
+                    cb.SetLineDash(4.5f, 4.5f);
+                    cb.SetRGBColorStroke(237, 34, 36);
+                    cb.SetLineWidth(0.5f);
+                    cb.MoveTo(150, posicaoMetaY);
+                    cb.LineTo(565, posicaoMetaY);
+                    cb.Stroke();
+                    cb.SetColorStroke(BaseColor.BLACK);
+
+                    // DESENHAR A LINHA TRACEJADA DA INCIDENCIA
+                    cb.SetLineDash(4.5f, 4.5f);
+                    cb.SetColorStroke(BaseColor.GRAY) ;
+                    //cb.MoveTo(100, 260);                    
+                    //cb.LineTo(565, 260);
+                    cb.MoveTo(150, posicaoIncidenciaY);
+                    cb.LineTo(565, posicaoIncidenciaY);
+                    cb.Stroke();
+                    cb.SetColorStroke(BaseColor.BLACK);
+
+
+                    // PALAVRA META NO GRAFICO
+                    ColumnText textMeta = new ColumnText(directContent);
+                    var textMetaPhrase = new Phrase(new Chunk("META", fontTextoMeta));
+                    textMeta.SetSimpleColumn(textMetaPhrase, 150, posicaoTextoMeta, 100,
+                                             posicaoTextoMeta, 0, Element.ALIGN_RIGHT);
+                    textMeta.Go();
+
+                    // PALAVRA INCIDENCIA NO GRAFICO
+                    ColumnText textIncidencia = new ColumnText(directContent);
+                    var textIncidenciaPhrase = new Phrase(new Chunk("INCIDÊNCIA REAL", fontTextoIncidencia));
+                    textIncidencia.SetSimpleColumn(textIncidenciaPhrase, 150, posicaoTextoIncidencia-5, 40,
+                                                   posicaoTextoIncidencia-5, 0, Element.ALIGN_RIGHT);
+                    textIncidencia.Go();
 
 
                     // INCIDENCIA GRAFICO

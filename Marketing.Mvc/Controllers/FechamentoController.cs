@@ -17,12 +17,9 @@ namespace Marketing.Mvc.Controllers
             _webHostEnviroment = webHostEnviroment;
         }
 
-        public ActionResult Index(int? gerou = null)
+        public ActionResult Index(bool? gerou)
         {
-            if (gerou != null)
-            {
-                ViewBag.Mensagem = "Arquivo processado com sucesso!";
-            }
+            ViewBag.Gerou = gerou;
             return View();
         }
 
@@ -33,14 +30,15 @@ namespace Marketing.Mvc.Controllers
             {
                 var sucesso = _servicoProcessamentoMensal.GerarProcessamentoMensal(processamentoMensalDto.Competencia,
                                 _webHostEnviroment.ContentRootPath);
-                ViewBag.Mensagem = "Arquivo processado com sucesso!";
+                return RedirectToAction("Index",
+                    new { gerou = true });
             }
             catch (System.Exception ex)
             {
-
                 Console.WriteLine(ex.Message);
+                return RedirectToAction("Index",
+                    new { gerou = false });
             } 
-            return RedirectToAction("Index", new {gerou = 1});
         }
     }
 }
