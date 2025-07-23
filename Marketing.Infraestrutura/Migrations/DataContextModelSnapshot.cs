@@ -40,10 +40,10 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<bool>("AceitaMensagem")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("DataAceite")
+                    b.Property<DateTime>("DataAceite")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DataRecusa")
+                    b.Property<DateTime>("DataRecusa")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -59,7 +59,7 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("UltimaCompetenciaEnviada")
+                    b.Property<DateTime>("UltimaCompetenciaEnviada")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Telefone");
@@ -149,6 +149,9 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<string>("Uf")
                         .IsRequired()
                         .HasMaxLength(2)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UltimoPdfGerado")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Cnpj");

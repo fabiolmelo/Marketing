@@ -31,18 +31,19 @@ namespace Marketing.Infraestrutura.Repositorio
             var rede = await _context.Set<Rede>().
                 Include(es => es.Estabelecimentos).
                     ThenInclude(es => es.ExtratoVendas.
-                                    Where(ex=>ex.Ano == ano && ex.Mes <= mes)).
+                                    Where(ex => ex.Competencia > DateTime.Now.AddMonths(-12))).
                 Where(r => r.Nome == estabelecimento.RedeNome).
                 FirstOrDefaultAsync();
+
+            if (estabelecimento.Cnpj == "20289192000105")
+            {
+                Console.WriteLine("Erro");
+            }
 
             if (rede == null) return 1;
             var estabelecimentoSort = rede.Estabelecimentos.
                                       OrderByDescending(x => x.IncidenciaMedia).
                                       ToList();
-            if (estabelecimento.RedeNome == "DOMINOS")
-            {
-                Console.WriteLine("");
-            }
             int posicaoNaRede = 0;
             posicaoNaRede = estabelecimentoSort.FindIndex(x=>x.Cnpj == estabelecimento.Cnpj);
             return posicaoNaRede == -1 ? 1 : ++posicaoNaRede;

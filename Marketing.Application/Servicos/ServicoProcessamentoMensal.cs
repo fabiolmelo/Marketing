@@ -2,6 +2,7 @@
 using Marketing.Domain.Extensoes;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
+using Marketing.Domain.Interfaces.UnitOfWork;
 
 namespace Marketing.Application.Servicos
 {
@@ -11,16 +12,19 @@ namespace Marketing.Application.Servicos
         private readonly IServicoArquivos _servicoArquivos;
         private readonly IServicoRede _servicoRede;
         private readonly IServicoGrafico _servicoGrafico;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ServicoProcessamentoMensal(IRepositorioProcessamentoMensal repositorioProcessamentoMensal,
                                           IServicoArquivos servicoArquivos,
                                           IServicoRede servicoRede,
-                                          IServicoGrafico servicoGrafico)
+                                          IServicoGrafico servicoGrafico,
+                                          IUnitOfWork unitOfWork)
         {
             _repositorioProcessamentoMensal = repositorioProcessamentoMensal;
             _servicoArquivos = servicoArquivos;
             _servicoRede = servicoRede;
             _servicoGrafico = servicoGrafico;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia, String contentRootPath)
@@ -37,11 +41,14 @@ namespace Marketing.Application.Servicos
                     if (estabelecimento.ExtratoVendas.Count > 0)
                     {
                         var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
-                        var arquivoPdf = $"{estabelecimento.RazaoSocial}-{mes}.pdf";
+                        var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial}.pdf";
                         _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
                         _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf, posicaoNaRede, contentRootPath);
+                        // estabelecimento.UltimoPdfGerado = $"{Path.Combine(contentRootPath, arquivoPdf)}";
+                        // _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimento);
                     }
                 }
+                //await _unitOfWork.CommitAsync();
             }
             catch (System.Exception ex)
             {

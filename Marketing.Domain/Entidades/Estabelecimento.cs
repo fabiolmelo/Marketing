@@ -16,9 +16,10 @@ namespace Marketing.Domain.Entidades
         public List<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);
+        public string? UltimoPdfGerado { get; set; }
         public decimal IncidenciaMedia
         {
-            get { return (decimal)this.ExtratoVendas.Average(x => x.IncidenciaReal); }
+            get { return this.ExtratoVendas.Count == 0 ? 0 : (decimal)this.ExtratoVendas.Average(x => x.IncidenciaReal); }
         }
         public Estabelecimento()
         {

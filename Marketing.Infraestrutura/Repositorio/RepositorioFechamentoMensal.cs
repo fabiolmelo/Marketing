@@ -27,7 +27,14 @@ namespace Marketing.Infraestrutura.Repositorio
                                         Include(x => x.ExtratoVendas.Where(e => e.Competencia > dozeMesesAnteriores)).
                                         Where(x=>x.ExtratoVendas.Count > 0).
                                         ToListAsync();
-            var extratos = _context.Set<ExtratoVendas>().ToList();
+
+            // foreach (Estabelecimento estabelecimento in estabelecimentos)
+            // {
+            //     if (estabelecimento.ExtratoVendas.Any(x => x.Competencia == competencia) == false)
+            //     {
+            //         estabelecimentos.Remove(estabelecimento);
+            //     }
+            // }
             return estabelecimentos;
         }
     }
