@@ -66,7 +66,7 @@ namespace Marketing.Application.Servicos
                     Font fontMesReferencia = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
 
                     Font fontVendas = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
-                    Font fontVendasBold = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasBold = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
                     Font fontVendasReceitaMes = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.RED);
                     Font fontVendasReceitaTotal = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.RED);
                     Font fontMes = FontFactory.GetFont("tcccunity-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.BLACK);
