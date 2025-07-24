@@ -32,7 +32,7 @@ namespace Marketing.Infraestrutura.Repositorio
                             Where(x => x.Cnpj == cnpj).FirstOrDefaultAsync();
         }
 
-        public async Task<PagedResponse<Estabelecimento?>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
+        public async Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
         {
             var query = _context.Set<Estabelecimento>().AsNoTracking();
             if (filtro != null)
