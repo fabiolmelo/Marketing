@@ -2,7 +2,6 @@
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace Marketing.Infraestrutura.Repositorio
 {
@@ -19,15 +18,6 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var ano = competencia.Year;
             var mes = competencia.Month;
-
-            // var estabelecimentos = await (
-            //     from r in _context.Redes
-            //     join es in _context.Estabelecimentos on r.Nome equals es.RedeNome
-            //     join ex in _context.ExtratosVendas on es.Cnpj equals ex.EstabelecimentoCnpj
-            //     where ex.Ano == ano && ex.Mes <= mes && r.Nome == estabelecimento.RedeNome
-            //     select es
-            //     ).ToListAsync();
-
             var rede = await _context.Set<Rede>().
                 Include(es => es.Estabelecimentos).
                     ThenInclude(es => es.ExtratoVendas.
@@ -35,13 +25,9 @@ namespace Marketing.Infraestrutura.Repositorio
                 Where(r => r.Nome == estabelecimento.RedeNome).
                 FirstOrDefaultAsync();
 
-            if (estabelecimento.Cnpj == "20289192000105")
-            {
-                Console.WriteLine("Erro");
-            }
-
             if (rede == null) return 1;
             var estabelecimentoSort = rede.Estabelecimentos.
+                                      Where(x=>x.IncidenciaMedia > 0).
                                       OrderByDescending(x => x.IncidenciaMedia).
                                       ToList();
             int posicaoNaRede = 0;

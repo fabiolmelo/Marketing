@@ -29,16 +29,16 @@ namespace Marketing.Application.Servicos
                 {
                     // BARRA VERMELHA
                     float x = margem + i * (larguraBarra + espacamento);
-                    float y = altura - margem - (int)(250 * estabelecimento.ExtratoVendas[i].CorVermelhaGrafico);
-                    var ret = new RectangleF(x, y, larguraBarra, (float)(265 * estabelecimento.ExtratoVendas[i].CorVermelhaGrafico));
+                    float y = altura - margem - (int)(230 * estabelecimento.ExtratoVendas[i].CorVermelhaGrafico);
+                    var ret = new RectangleF(x, y, larguraBarra, (float)(230 * estabelecimento.ExtratoVendas[i].CorVermelhaGrafico));
                     ctx.Fill(Color.FromRgb(237, 34, 36), ret);
 
                     // BARRA VERDE
                     if (estabelecimento.ExtratoVendas[i].CorVerdeGrafico > 0)
                     {
-                        float y2 = altura - margem - (float)(250 * estabelecimento.ExtratoVendas[i].CorVermelhaGrafico) -
-                                   (float)(250 * estabelecimento.ExtratoVendas[i].CorVerdeGrafico * 1);
-                        var ret2 = new RectangleF(x, y2, larguraBarra, (float)(265 * estabelecimento.ExtratoVendas[i].CorVerdeGrafico));
+                        float y2 = altura - margem - (float)(230 * estabelecimento.ExtratoVendas[i].CorVermelhaGrafico) -
+                                   (float)(230 * estabelecimento.ExtratoVendas[i].CorVerdeGrafico * 1);
+                        var ret2 = new RectangleF(x, y2, larguraBarra, (float)(230 * estabelecimento.ExtratoVendas[i].CorVerdeGrafico));
                         ctx.Fill(Color.FromRgb(13, 163, 13), ret2);
                     }
                 }

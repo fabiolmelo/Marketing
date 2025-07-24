@@ -61,17 +61,18 @@ namespace Marketing.Application.Servicos
 
                     // FONTES
                     var fontes = FontFactory.RegisteredFonts;
-                    Font fontDadosEstabelecimento = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.WHITE);
-                    Font fontPosicaoRede = FontFactory.GetFont("TCCC Unity Black", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
-                    Font fontMesReferencia = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
+                    Font fontDadosEstabelecimento = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.WHITE);
+                    Font fontPosicaoRede = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
+                    Font fontMesReferencia = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
 
                     Font fontVendas = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
-                    Font fontVendasBold = FontFactory.GetFont("tccc unity bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
-                    Font fontVendasReceita = FontFactory.GetFont("tcccunity-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.RED);
-                    Font fontMes = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasBold = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasReceitaMes = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.RED);
+                    Font fontVendasReceitaTotal = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.RED);
+                    Font fontMes = FontFactory.GetFont("tcccunity-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.BLACK);
                     Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, BaseColor.BLACK);
                     Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, BaseColor.RED);
-                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, BaseColor.GREEN);
+                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, new BaseColor(13, 163, 13));
                     Font fontValoresIncidencia = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.WHITE);
 
                     Font fontTextoIncidencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.GRAY);
@@ -119,7 +120,7 @@ namespace Marketing.Application.Servicos
                     textoMesReferencia += $"{(int)(estabelecimento.ExtratoMesCompetencia.Meta * 100)}%)";
                     ColumnText mesReferencia = new ColumnText(directContent);
                     var mesReferenciaPhrase = new Phrase(new Chunk(textoMesReferencia, fontMesReferencia));
-                    mesReferencia.SetSimpleColumn(mesReferenciaPhrase, 300, 550, 30, 635, 25, Element.ALIGN_LEFT | Element.ALIGN_CENTER);
+                    mesReferencia.SetSimpleColumn(mesReferenciaPhrase, 300, 550, 50, 635, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
                     mesReferencia.Go();
 
 
@@ -147,8 +148,8 @@ namespace Marketing.Application.Servicos
                     //RECEITA NAO CAPTURADA
                     ColumnText receitaMes = new ColumnText(directContent);
                     string receitaMesText = (estabelecimento.ExtratoMesCompetencia.ReceitaNaoCapturada * -1).ToString("C2");
-                    var receitaMesPhrase = new Phrase(new Chunk(receitaMesText, fontVendasReceita));
-                    receitaMes.SetSimpleColumn(receitaMesPhrase, 380, 560, 290, 595, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
+                    var receitaMesPhrase = new Phrase(new Chunk(receitaMesText, fontVendasReceitaMes));
+                    receitaMes.SetSimpleColumn(receitaMesPhrase, 410, 560, 290, 595, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
                     receitaMes.Go();
 
                     //MES COMPETENCIA
@@ -161,7 +162,7 @@ namespace Marketing.Application.Servicos
                     //RECEITA TOTAL NAO CAPTURADA
                     ColumnText receitaTotalMes = new ColumnText(directContent);
                     string receitaTotalMesText = (estabelecimento.ExtratoVendas.Sum(x => x.ReceitaNaoCapturada) * -1).ToString("C2");
-                    var receitaTotalMesPhrase = new Phrase(new Chunk(receitaTotalMesText, fontVendasReceita));
+                    var receitaTotalMesPhrase = new Phrase(new Chunk(receitaTotalMesText, fontVendasReceitaTotal));
                     receitaTotalMes.SetSimpleColumn(receitaTotalMesPhrase, 410, 510, 290, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
                     receitaTotalMes.Go();
 
@@ -306,7 +307,7 @@ namespace Marketing.Application.Servicos
 
                     //PLOTAR A IMAGEM DO GRAFICO
                     var graficoImage = Image.GetInstance(caminhoGrafico);
-                    graficoImage.SetAbsolutePosition(190, 262);
+                    graficoImage.SetAbsolutePosition(190, 259);
                     graficoImage.ScaleAbsoluteHeight(125);
                     graficoImage.ScaleAbsoluteWidth(380);
                     document.Add(graficoImage);

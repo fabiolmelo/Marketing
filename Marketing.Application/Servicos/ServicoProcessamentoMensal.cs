@@ -44,11 +44,15 @@ namespace Marketing.Application.Servicos
                         var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial}.pdf";
                         _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
                         _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf, posicaoNaRede, contentRootPath);
-                        // estabelecimento.UltimoPdfGerado = $"{Path.Combine(contentRootPath, arquivoPdf)}";
-                        // _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimento);
+                        var estabelecimentoUpdate = await _unitOfWork.GetRepository<Estabelecimento>().
+                                                                      GetByIdStringAsync(estabelecimento.Cnpj);
+                        if (estabelecimentoUpdate != null) {
+                            estabelecimentoUpdate.UltimoPdfGerado = $"{Path.Combine(contentRootPath, arquivoPdf)}";
+                            _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimentoUpdate);
+                            await _unitOfWork.CommitAsync();    
+                        }
                     }
                 }
-                //await _unitOfWork.CommitAsync();
             }
             catch (System.Exception ex)
             {
