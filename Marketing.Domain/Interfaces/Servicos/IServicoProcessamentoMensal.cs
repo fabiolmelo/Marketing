@@ -5,6 +5,7 @@ namespace Marketing.Domain.Interfaces.Servicos
 {
     public interface IServicoProcessamentoMensal
     {
-        Task GerarProcessamentoMensal(DateTime competencia, String webHostEnvironment);
+        Task GerarProcessamentoMensal(DateTime competencia, String webHostEnvironment,
+                                    string caminhoApp);
     }
 }

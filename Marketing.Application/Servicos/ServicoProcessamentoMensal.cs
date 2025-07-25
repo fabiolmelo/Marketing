@@ -27,7 +27,9 @@ namespace Marketing.Application.Servicos
             _unitOfWork = unitOfWork;
         }
 
-        public async Task GerarProcessamentoMensal(DateTime competencia, String contentRootPath)
+        public async Task GerarProcessamentoMensal(DateTime competencia,
+                                                   String contentRootPath,
+                                                   string caminhoApp)
         {
             var estabelecimentos = await _repositorioProcessamentoMensal.GetAllEstabelecimentosParaGerarPdf(competencia);
             string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
@@ -43,7 +45,8 @@ namespace Marketing.Application.Servicos
                         var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
                         var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial}.pdf";
                         _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
-                        _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf, posicaoNaRede, contentRootPath);
+                        _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                                                         posicaoNaRede, contentRootPath, caminhoApp);
                         var estabelecimentoUpdate = await _unitOfWork.GetRepository<Estabelecimento>().
                                                                       GetByIdStringAsync(estabelecimento.Cnpj);
                         if (estabelecimentoUpdate != null) {

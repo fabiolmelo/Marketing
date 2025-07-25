@@ -35,7 +35,8 @@ namespace Marketing.Application.Servicos
             return filePath;
         }
         public string GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf,
-                                      int posicao, String contentRootPath)
+                                      int posicao, String contentRootPath,
+                                      string caminhoApp)
         {
             var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "fundo_export.png");
             var caminhoFontes = Path.Combine(contentRootPath, "DadosApp", "Fonts");
@@ -44,6 +45,8 @@ namespace Marketing.Application.Servicos
             var caminhoPdfCompleto = Path.Combine("wwwroot", "images", $"{arquivoPdf}");
             var caminhoPdfPage2 = Path.Combine(contentRootPath, "DadosApp", "Entenda seu extrato Coca-Cola_v3.pdf");
             var caminhoGrafico = Path.Combine(contentRootPath, "DadosApp", "Grafico.jpg");
+            var caminhoSetaMeta = Path.Combine(contentRootPath, "DadosApp", "SetaMeta.png");
+            var caminhoSetaIncidencia = Path.Combine(contentRootPath, "DadosApp", "SetaIncidencia.png");
 
             using (var image = File.OpenRead(caminhoFundo))
             {
@@ -62,17 +65,17 @@ namespace Marketing.Application.Servicos
                     // FONTES
                     var fontes = FontFactory.RegisteredFonts;
                     Font fontDadosEstabelecimento = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.WHITE);
-                    Font fontPosicaoRede = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
-                    Font fontMesReferencia = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
+                    Font fontPosicaoRede = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
+                    Font fontMesReferencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 11, Font.NORMAL, BaseColor.BLACK);
 
-                    Font fontVendas = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
-                    Font fontVendasBold = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendas = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
+                    Font fontVendasBold = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
                     Font fontVendasReceitaMes = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.RED);
-                    Font fontVendasReceitaTotal = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, BaseColor.RED);
+                    Font fontVendasReceitaTotal = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.RED);
                     Font fontMes = FontFactory.GetFont("tcccunity-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.BLACK);
-                    Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, BaseColor.BLACK);
-                    Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, BaseColor.RED);
-                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED,7, Font.NORMAL, new BaseColor(13, 163, 13));
+                    Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.BLACK);
+                    Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.RED);
+                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, new BaseColor(13, 163, 13));
                     Font fontValoresIncidencia = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.WHITE);
 
                     Font fontTextoIncidencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.GRAY);
@@ -112,7 +115,7 @@ namespace Marketing.Application.Servicos
                     //DADOS 4
                     ColumnText columnText4 = new ColumnText(directContent);
                     var posicaoDados4 = new Phrase(new Chunk(dadosEstabelecimento4, fontDadosEstabelecimento));
-                    columnText4.SetSimpleColumn(posicaoDados4, 450, 100, 50, 670, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
+                    columnText4.SetSimpleColumn(posicaoDados4, 650, 100, 50, 670, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
                     columnText4.Go();
 
                     //MES REFERENCIA
@@ -120,7 +123,7 @@ namespace Marketing.Application.Servicos
                     textoMesReferencia += $"{(int)(estabelecimento.ExtratoMesCompetencia.Meta * 100)}%)";
                     ColumnText mesReferencia = new ColumnText(directContent);
                     var mesReferenciaPhrase = new Phrase(new Chunk(textoMesReferencia, fontMesReferencia));
-                    mesReferencia.SetSimpleColumn(mesReferenciaPhrase, 300, 550, 50, 635, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
+                    mesReferencia.SetSimpleColumn(mesReferenciaPhrase, 600, 550, 50, 635, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
                     mesReferencia.Go();
 
 
@@ -149,7 +152,7 @@ namespace Marketing.Application.Servicos
                     ColumnText receitaMes = new ColumnText(directContent);
                     string receitaMesText = (estabelecimento.ExtratoMesCompetencia.ReceitaNaoCapturada * -1).ToString("C2");
                     var receitaMesPhrase = new Phrase(new Chunk(receitaMesText, fontVendasReceitaMes));
-                    receitaMes.SetSimpleColumn(receitaMesPhrase, 410, 560, 290, 595, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
+                    receitaMes.SetSimpleColumn(receitaMesPhrase, 500, 560, 290, 595, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
                     receitaMes.Go();
 
                     //MES COMPETENCIA
@@ -163,7 +166,7 @@ namespace Marketing.Application.Servicos
                     ColumnText receitaTotalMes = new ColumnText(directContent);
                     string receitaTotalMesText = (estabelecimento.ExtratoVendas.Sum(x => x.ReceitaNaoCapturada) * -1).ToString("C2");
                     var receitaTotalMesPhrase = new Phrase(new Chunk(receitaTotalMesText, fontVendasReceitaTotal));
-                    receitaTotalMes.SetSimpleColumn(receitaTotalMesPhrase, 410, 510, 290, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
+                    receitaTotalMes.SetSimpleColumn(receitaTotalMesPhrase, 500, 510, 290, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
                     receitaTotalMes.Go();
 
 
@@ -312,15 +315,35 @@ namespace Marketing.Application.Servicos
                     graficoImage.ScaleAbsoluteWidth(380);
                     document.Add(graficoImage);
 
+                    //PLOTAR A IMAGEM DA SETA META
+                    var setaMeta = Image.GetInstance(caminhoSetaMeta);
+                    setaMeta.SetAbsolutePosition(400, 365);
+                    setaMeta.ScaleAbsoluteHeight(100);
+                    setaMeta.ScaleAbsoluteWidth(100);
+                    //setaMeta.RotationDegrees = ((float)((estabelecimento.ExtratoMesCompetencia.Meta * -100) / 100 * 180));
+                    var rotacaoMeta = (float)((estabelecimento.ExtratoMesCompetencia.Meta * 100) * 90 / 50) - 90;
+                    setaMeta.RotationDegrees = rotacaoMeta;
+                    document.Add(setaMeta);
+
+                    //PLOTAR A IMAGEM DA SETA INCIDENCIA
+                    var setaIncidencia = Image.GetInstance(caminhoSetaIncidencia);
+                    setaIncidencia.SetAbsolutePosition(260, 365);
+                    setaIncidencia.ScaleAbsoluteHeight(100);
+                    setaIncidencia.ScaleAbsoluteWidth(100);
+                    //setaIncidencia.RotationDegrees = (float)((estabelecimento.ExtratoMesCompetencia.IncidenciaReal * -100) / 100 * 180);
+                    var rotacaoIncidencia = (float)((estabelecimento.ExtratoMesCompetencia.IncidenciaReal * 100) * 90 / 50) - 90;
+                    setaIncidencia.RotationDegrees = rotacaoIncidencia;
+                    document.Add(setaIncidencia);
+
                     // DESENHAR A LINHA TRACEJADA DA META
-                    float posicaoMetaY = 260 + (float)(estabelecimento.ExtratoMesCompetencia.Meta * 110); 
-                    float posicaoIncidenciaY = 260 + (float)(estabelecimento.IncidenciaMedia * 110); 
-                    float posicaoTextoMeta  = (float)(estabelecimento.ExtratoMesCompetencia.Meta >= 
+                    float posicaoMetaY = 260 + (float)(estabelecimento.ExtratoMesCompetencia.Meta * 110);
+                    float posicaoIncidenciaY = 260 + (float)(estabelecimento.IncidenciaMedia * 110);
+                    float posicaoTextoMeta = (float)(estabelecimento.ExtratoMesCompetencia.Meta >=
                                               estabelecimento.ExtratoMesCompetencia.IncidenciaReal ?
-                                              posicaoMetaY + 5 : posicaoMetaY - 5);  
-                    float posicaoTextoIncidencia = (float)(estabelecimento.ExtratoMesCompetencia.IncidenciaReal >= 
+                                              posicaoMetaY + 5 : posicaoMetaY - 5);
+                    float posicaoTextoIncidencia = (float)(estabelecimento.ExtratoMesCompetencia.IncidenciaReal >=
                                               estabelecimento.ExtratoMesCompetencia.Meta ?
-                                              posicaoIncidenciaY + 5 : posicaoIncidenciaY - 5);  
+                                              posicaoIncidenciaY + 5 : posicaoIncidenciaY - 5);
 
                     cb.SetLineDash(4.5f, 4.5f);
                     cb.SetRGBColorStroke(237, 34, 36);
@@ -332,7 +355,7 @@ namespace Marketing.Application.Servicos
 
                     // DESENHAR A LINHA TRACEJADA DA INCIDENCIA
                     cb.SetLineDash(4.5f, 4.5f);
-                    cb.SetColorStroke(BaseColor.GRAY) ;
+                    cb.SetColorStroke(BaseColor.GRAY);
                     //cb.MoveTo(100, 260);                    
                     //cb.LineTo(565, 260);
                     cb.MoveTo(150, posicaoIncidenciaY);
@@ -351,8 +374,8 @@ namespace Marketing.Application.Servicos
                     // PALAVRA INCIDENCIA NO GRAFICO
                     ColumnText textIncidencia = new ColumnText(directContent);
                     var textIncidenciaPhrase = new Phrase(new Chunk("INCIDÊNCIA REAL", fontTextoIncidencia));
-                    textIncidencia.SetSimpleColumn(textIncidenciaPhrase, 150, posicaoTextoIncidencia-5, 40,
-                                                   posicaoTextoIncidencia-5, 0, Element.ALIGN_RIGHT);
+                    textIncidencia.SetSimpleColumn(textIncidenciaPhrase, 150, posicaoTextoIncidencia - 5, 40,
+                                                   posicaoTextoIncidencia - 5, 0, Element.ALIGN_RIGHT);
                     textIncidencia.Go();
 
 
@@ -415,8 +438,8 @@ namespace Marketing.Application.Servicos
                         PdfImportedPage page2 = PDFwriter.GetImportedPage(PDFreader2, 1);
                         PDFwriter.AddPage(page2);
 
-                        PDFreader.Close(); 
-                        PDFreader2.Close(); 
+                        PDFreader.Close();
+                        PDFreader2.Close();
                         PDFdoc.CloseDocument();
                     }
                 }

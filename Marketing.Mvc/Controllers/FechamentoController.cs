@@ -1,6 +1,5 @@
 ﻿using Marketing.Application.DTOs;
 using Marketing.Domain.Interfaces.Servicos;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketing.Mvc.Controllers
@@ -9,12 +8,15 @@ namespace Marketing.Mvc.Controllers
     {
         private readonly IServicoProcessamentoMensal _servicoProcessamentoMensal;
         private readonly IWebHostEnvironment _webHostEnviroment;
+        private readonly IConfiguration _configuration;
 
         public FechamentoController(IServicoProcessamentoMensal servicoProcessamentoMensal,
-                                                IWebHostEnvironment webHostEnviroment)
+                                                IWebHostEnvironment webHostEnviroment,
+                                                IConfiguration configuration)
         {
             _servicoProcessamentoMensal = servicoProcessamentoMensal;
             _webHostEnviroment = webHostEnviroment;
+            _configuration = configuration;
         }
 
         public ActionResult Index(bool? gerou)
@@ -28,8 +30,14 @@ namespace Marketing.Mvc.Controllers
         {
             try
             {
-                var sucesso = _servicoProcessamentoMensal.GerarProcessamentoMensal(processamentoMensalDto.Competencia,
-                                _webHostEnviroment.ContentRootPath);
+                var caminhoApp = _configuration["Aplicacao:Url"];
+                if (caminhoApp == null)
+                {
+                    throw new Exception("Arquivo de configuração inválido");
+                }
+                var sucesso = _servicoProcessamentoMensal.GerarProcessamentoMensal(
+                                processamentoMensalDto.Competencia,
+                                _webHostEnviroment.ContentRootPath, caminhoApp);
                 return RedirectToAction("Index",
                     new { gerou = true });
             }

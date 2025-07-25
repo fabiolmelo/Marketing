@@ -19,7 +19,9 @@ namespace Marketing.Domain.Entidades
         public string? UltimoPdfGerado { get; set; }
         public decimal IncidenciaMedia
         {
-            get { return this.ExtratoVendas.Count == 0 ? 0 : (decimal)this.ExtratoVendas.Average(x => x.IncidenciaReal); }
+            //get { return this.ExtratoVendas.Count == 0 ? 0 : (decimal)this.ExtratoVendas.Average(x => x.IncidenciaReal); }
+            get { return this.ExtratoVendas.Count == 0 ? 0 :
+                (decimal)this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0).IncidenciaReal; }
         }
         public Estabelecimento()
         {
