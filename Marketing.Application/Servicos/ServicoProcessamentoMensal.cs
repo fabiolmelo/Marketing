@@ -54,7 +54,7 @@ namespace Marketing.Application.Servicos
             if (estabelecimento.ExtratoVendas.Count > 0)
             {
                 var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
-                var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial}.pdf";
+                var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial.Replace(" ","_")}.pdf";
                 _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
                 _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                     posicaoNaRede, contentRootPath, caminhoApp);
@@ -62,7 +62,7 @@ namespace Marketing.Application.Servicos
                                                                 GetByIdStringAsync(estabelecimento.Cnpj);
                 if (estabelecimentoUpdate != null)
                 {
-                    estabelecimentoUpdate.UltimoPdfGerado = $"{Path.Combine(contentRootPath, arquivoPdf)}";
+                    estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
                     _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimentoUpdate);
                     await _unitOfWork.CommitAsync();
                 }

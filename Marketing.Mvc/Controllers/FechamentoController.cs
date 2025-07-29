@@ -9,14 +9,17 @@ namespace Marketing.Mvc.Controllers
         private readonly IServicoProcessamentoMensal _servicoProcessamentoMensal;
         private readonly IWebHostEnvironment _webHostEnviroment;
         private readonly IConfiguration _configuration;
+        private readonly IServicoEstabelecimento _servicoEstabelecimento;
 
         public FechamentoController(IServicoProcessamentoMensal servicoProcessamentoMensal,
                                                 IWebHostEnvironment webHostEnviroment,
-                                                IConfiguration configuration)
+                                                IConfiguration configuration,
+                                                IServicoEstabelecimento servicoEstabelecimento)
         {
             _servicoProcessamentoMensal = servicoProcessamentoMensal;
             _webHostEnviroment = webHostEnviroment;
             _configuration = configuration;
+            _servicoEstabelecimento = servicoEstabelecimento;
         }
 
         public ActionResult Index(bool? gerou)
@@ -31,10 +34,7 @@ namespace Marketing.Mvc.Controllers
             try
             {
                 var caminhoApp = _configuration["Aplicacao:Url"];
-                if (caminhoApp == null)
-                {
-                    throw new Exception("Arquivo de configuração inválido");
-                }
+                if (caminhoApp == null) throw new Exception("Arquivo de configuração inválido");
                 var sucesso = _servicoProcessamentoMensal.GerarProcessamentoMensal(
                                 processamentoMensalDto.Competencia,
                                 _webHostEnviroment.ContentRootPath, caminhoApp);
@@ -46,7 +46,17 @@ namespace Marketing.Mvc.Controllers
                 Console.WriteLine(ex.Message);
                 return RedirectToAction("Index",
                     new { gerou = false });
-            } 
+            }
+        }
+
+        [HttpGet("Fechamento/Download/{cnpj}")]
+        public async Task<IActionResult> Download(string cnpj)
+        {
+            var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(cnpj);
+            if (estabelecimento == null || estabelecimento.UltimoPdfGerado == null) return BadRequest();
+            var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "images", estabelecimento.UltimoPdfGerado);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(pathRoot);
+            return File(fileBytes, "application/pdf", $"{estabelecimento.UltimoPdfGerado}");
         }
     }
 }

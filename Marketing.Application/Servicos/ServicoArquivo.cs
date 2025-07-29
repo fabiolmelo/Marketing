@@ -42,15 +42,17 @@ namespace Marketing.Application.Servicos
             var caminhoFontes = Path.Combine(contentRootPath, "DadosApp", "Fonts");
             //var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "CocaColaFundo.jpeg");
             var caminhoPdf = Path.Combine(contentRootPath, "DadosApp", "tmp.pdf");
-            var caminhoPdfCompleto = Path.Combine("wwwroot", "images", $"{arquivoPdf}");
+            var caminhoPdfCompleto = Path.Combine(contentRootPath, "DadosApp", "images", $"{arquivoPdf}");
             var caminhoPdfPage2 = Path.Combine(contentRootPath, "DadosApp", "Entenda seu extrato Coca-Cola_v3.pdf");
             var caminhoGrafico = Path.Combine(contentRootPath, "DadosApp", "Grafico.jpg");
-            var caminhoSetaMeta25 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaMeta25.png");
-            var caminhoSetaMeta50 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaMeta50.png");
-            var caminhoSetaMeta75 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaMeta75.png");
-            var caminhoSetaIncidencia25 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia25.png");
+            var caminhoSetaMeta = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaMeta.png");
+            var caminhoSetaIncidencia5 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia5.png");
+            var caminhoSetaIncidencia20 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia20.png");
+            var caminhoSetaIncidencia40 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia40.png");
             var caminhoSetaIncidencia50 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia50.png");
-            var caminhoSetaIncidencia75 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia75.png");
+            var caminhoSetaIncidencia60 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia60.png");
+            var caminhoSetaIncidencia80 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia80.png");
+            var caminhoSetaIncidencia95 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia95.png");
 
             using (var image = File.OpenRead(caminhoFundo))
             {
@@ -320,38 +322,45 @@ namespace Marketing.Application.Servicos
                     document.Add(graficoImage);
 
                     //PLOTAR A IMAGEM DA SETA META
-                    Image setaMeta;
-
-                    if (estabelecimento.ExtratoMesCompetencia.Meta.CompareTo((decimal)0.45) < 0)
-                    {
-                        setaMeta = Image.GetInstance(caminhoSetaMeta25);
-                    }
-                    else if (estabelecimento.ExtratoMesCompetencia.Meta.CompareTo((decimal)0.55) > 0)
-                    {
-                        setaMeta = Image.GetInstance(caminhoSetaMeta75);
-                    }
-                    else
-                    {
-                        setaMeta = Image.GetInstance(caminhoSetaMeta50);
-                    }
-                     
+                    Image setaMeta = Image.GetInstance(caminhoSetaMeta);
                     setaMeta.SetAbsolutePosition(425, 430);
                     document.Add(setaMeta);
 
                     //PLOTAR A IMAGEM DA SETA INCIDENCIA
                     Image setaIncidencia;
 
-                    if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) < 0)
+                    if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.1) < 0)
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia25);
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia5);
                     }
-                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) > 0)
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.1) > 0 &&
+                             estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) < 0)
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia75);
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia20);
+                    }
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) > 0 &&
+                             estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) < 0)
+                    {
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia40);
+                    }
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) > 0 &&
+                             estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) < 0)
+                    {
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia50);
+                    }
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.65) > 0 &&
+                             estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) < 0)
+                    {
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia60);
+                    }
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) > 0 &&
+                             estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.95) < 0)
+                    {
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia80);
                     }
                     else
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia50);
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia95);
                     }
                     
                     setaIncidencia.SetAbsolutePosition(275, 430);
