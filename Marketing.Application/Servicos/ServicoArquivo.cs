@@ -45,8 +45,12 @@ namespace Marketing.Application.Servicos
             var caminhoPdfCompleto = Path.Combine("wwwroot", "images", $"{arquivoPdf}");
             var caminhoPdfPage2 = Path.Combine(contentRootPath, "DadosApp", "Entenda seu extrato Coca-Cola_v3.pdf");
             var caminhoGrafico = Path.Combine(contentRootPath, "DadosApp", "Grafico.jpg");
-            var caminhoSetaMeta = Path.Combine(contentRootPath, "DadosApp", "SetaMeta.png");
-            var caminhoSetaIncidencia = Path.Combine(contentRootPath, "DadosApp", "SetaIncidencia.png");
+            var caminhoSetaMeta25 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaMeta25.png");
+            var caminhoSetaMeta50 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaMeta50.png");
+            var caminhoSetaMeta75 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaMeta75.png");
+            var caminhoSetaIncidencia25 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia25.png");
+            var caminhoSetaIncidencia50 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia50.png");
+            var caminhoSetaIncidencia75 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia75.png");
 
             using (var image = File.OpenRead(caminhoFundo))
             {
@@ -316,23 +320,41 @@ namespace Marketing.Application.Servicos
                     document.Add(graficoImage);
 
                     //PLOTAR A IMAGEM DA SETA META
-                    var setaMeta = Image.GetInstance(caminhoSetaMeta);
-                    setaMeta.SetAbsolutePosition(400, 365);
-                    setaMeta.ScaleAbsoluteHeight(100);
-                    setaMeta.ScaleAbsoluteWidth(100);
-                    //setaMeta.RotationDegrees = ((float)((estabelecimento.ExtratoMesCompetencia.Meta * -100) / 100 * 180));
-                    var rotacaoMeta = (float)((estabelecimento.ExtratoMesCompetencia.Meta * 100) * 90 / 50) - 90;
-                    setaMeta.RotationDegrees = rotacaoMeta;
+                    Image setaMeta;
+
+                    if (estabelecimento.ExtratoMesCompetencia.Meta.CompareTo((decimal)0.45) < 0)
+                    {
+                        setaMeta = Image.GetInstance(caminhoSetaMeta25);
+                    }
+                    else if (estabelecimento.ExtratoMesCompetencia.Meta.CompareTo((decimal)0.55) > 0)
+                    {
+                        setaMeta = Image.GetInstance(caminhoSetaMeta75);
+                    }
+                    else
+                    {
+                        setaMeta = Image.GetInstance(caminhoSetaMeta50);
+                    }
+                     
+                    setaMeta.SetAbsolutePosition(425, 430);
                     document.Add(setaMeta);
 
                     //PLOTAR A IMAGEM DA SETA INCIDENCIA
-                    var setaIncidencia = Image.GetInstance(caminhoSetaIncidencia);
-                    setaIncidencia.SetAbsolutePosition(260, 365);
-                    setaIncidencia.ScaleAbsoluteHeight(100);
-                    setaIncidencia.ScaleAbsoluteWidth(100);
-                    //setaIncidencia.RotationDegrees = (float)((estabelecimento.ExtratoMesCompetencia.IncidenciaReal * -100) / 100 * 180);
-                    var rotacaoIncidencia = (float)((estabelecimento.ExtratoMesCompetencia.IncidenciaReal * 100) * 90 / 50) - 90;
-                    setaIncidencia.RotationDegrees = rotacaoIncidencia;
+                    Image setaIncidencia;
+
+                    if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) < 0)
+                    {
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia25);
+                    }
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) > 0)
+                    {
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia75);
+                    }
+                    else
+                    {
+                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia50);
+                    }
+                    
+                    setaIncidencia.SetAbsolutePosition(275, 430);
                     document.Add(setaIncidencia);
 
                     // DESENHAR A LINHA TRACEJADA DA META

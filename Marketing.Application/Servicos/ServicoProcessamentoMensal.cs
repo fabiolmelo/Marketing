@@ -34,33 +34,39 @@ namespace Marketing.Application.Servicos
             var estabelecimentos = await _repositorioProcessamentoMensal.GetAllEstabelecimentosParaGerarPdf(competencia);
             string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
 
-            //var fechamentoMensal = new FechamentoMensal();
-
             try
             {
                 foreach (Estabelecimento estabelecimento in estabelecimentos)
                 {
-                    if (estabelecimento.ExtratoVendas.Count > 0)
-                    {
-                        var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
-                        var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial}.pdf";
-                        _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
-                        _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
-                                                         posicaoNaRede, contentRootPath, caminhoApp);
-                        var estabelecimentoUpdate = await _unitOfWork.GetRepository<Estabelecimento>().
-                                                                      GetByIdStringAsync(estabelecimento.Cnpj);
-                        if (estabelecimentoUpdate != null) {
-                            estabelecimentoUpdate.UltimoPdfGerado = $"{Path.Combine(contentRootPath, arquivoPdf)}";
-                            _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimentoUpdate);
-                            await _unitOfWork.CommitAsync();    
-                        }
-                    }
+                    await GerarProcessamentoPorEstabelecimento(estabelecimento, competencia,
+                                                               contentRootPath, caminhoApp);
                 }
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine($"Erro {ex.Message}");
             }
+        }
+
+        public async Task GerarProcessamentoPorEstabelecimento(Estabelecimento estabelecimento,
+                        DateTime competencia, string contentRootPath, string caminhoApp)
+        {
+            if (estabelecimento.ExtratoVendas.Count > 0)
+            {
+                var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
+                var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial}.pdf";
+                _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
+                _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                                                    posicaoNaRede, contentRootPath, caminhoApp);
+                var estabelecimentoUpdate = await _unitOfWork.GetRepository<Estabelecimento>().
+                                                                GetByIdStringAsync(estabelecimento.Cnpj);
+                if (estabelecimentoUpdate != null)
+                {
+                    estabelecimentoUpdate.UltimoPdfGerado = $"{Path.Combine(contentRootPath, arquivoPdf)}";
+                    _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimentoUpdate);
+                    await _unitOfWork.CommitAsync();
+                }
+            }                                    
         }
     }
 }
