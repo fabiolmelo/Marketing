@@ -2,6 +2,8 @@
 using Marketing.Domain.Interfaces.UnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.IdentityModel.Tokens;
+using Marketing.Domain.PagedResponse;
+using System.Linq.Expressions;
 
 namespace Marketing.Application.Servicos
 {
@@ -29,6 +31,16 @@ namespace Marketing.Application.Servicos
                     }
                 }
             }
+        }
+
+        public async Task<PagedResponse<Contato>> GetAllContatos(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null)
+        {
+            return await _unitOfWork.GetRepository<Contato>().GetAllAsync(pageNumber, pageSize, filtros);
+        }
+
+        public Task<PagedResponse<Contato>> GetAllContatos(int pageNumber, int pageSize, string? filtro)
+        {
+            throw new NotImplementedException();
         }
     }
 }

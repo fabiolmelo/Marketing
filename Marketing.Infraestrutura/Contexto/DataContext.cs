@@ -21,8 +21,11 @@ namespace Marketing.Infraestrutura.Contexto
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = "Data Source=DadosApp\\BD\\LocalDatabase.db";
-            optionsBuilder.UseSqlite(connectionString);
+            if (optionsBuilder.IsConfigured == false)
+            {
+                var connectionString = "Data Source=DadosApp\\BD\\LocalDatabase.db";
+                optionsBuilder.UseSqlite(connectionString);
+            }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

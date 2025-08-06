@@ -1,5 +1,8 @@
-﻿using Marketing.Domain.Interfaces.Servicos;
+﻿using System.Linq.Expressions;
+using Marketing.Domain.Entidades;
+using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Marketing.Mvc.Controllers
 {
@@ -12,9 +15,16 @@ namespace Marketing.Mvc.Controllers
             _servicoContato = servicoContato;
         }
 
-        public async Task<ActionResult> Index(int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult> Index(int pageNumber = 1, int pageSize = 5, string? filtro = null)
         {
-            var contatos = await _servicoContato.GetAllAsync(pageNumber, pageSize);
+            Expression<Func<Contato, bool>>? filtroContato = null;
+            if (filtro != null) 
+            {
+                filtroContato = x => (x.Nome != null && x.Nome.Contains(filtro))
+                                                              || (x.Email != null && x.Email.Contains(filtro))  
+                                                              || (x.Telefone != null && x.Telefone.Contains(filtro));
+            }
+            var contatos = await _servicoContato.GetAllAsync(pageNumber, pageSize, filtroContato);
             return View(contatos);
         }
 

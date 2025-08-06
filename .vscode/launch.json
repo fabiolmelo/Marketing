@@ -1,11 +1,11 @@
 {
     "configurations": [
-
-    {
-        "name": "C#: <project-name> Debug",
-        "type": "dotnet",
-        "request": "launch",
-        "projectPath": "${workspaceFolder}/Marketing.Mvc/Marketing.Mvc.csproj"
-    }
+        
+        {
+            "name": "C#: <project-name> Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/Marketing.Mvc/Marketing.Mvc.csproj"
+        }
     ]
 }

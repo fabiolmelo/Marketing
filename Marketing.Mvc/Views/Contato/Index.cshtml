@@ -4,23 +4,17 @@
     ViewData["Title"] = "View";
 }
 
-<h1>View</h1>
+<h1>Contatos</h1>
 
 <p>
-    <button class="btn btn-primary" asp-action="Create">Adicionar Contato</button>
+    <button class="btn btn-primary" asp-action="Create">Novo Contato</button>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                Telefone
-            </th>
-            <th>
-                Nome
-            </th>
-            <th>
-                Email
-            </th>
+            <th>Telefone</th>
+            <th>Nome</th>
+            <th>Email</th>
             <th></th>
         </tr>
     </thead>
@@ -43,3 +37,13 @@
 }
     </tbody>
 </table>
+<div class="row">
+<div class="col col-12">
+    <input class="btn btn-primary" type="button" value="<<" onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = 1 })'" />|
+    <input class="btn btn-primary" type="button" value="<" onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber - 1 })'" />|
+    <input class="btn btn-primary" type="button" value=">" onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber + 1 })'" />|
+    <input class="btn btn-primary" type="button" value=">>" onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.TotalPages })'" />|
+</div>
+<div class="col col-12">
+    <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
+</div>

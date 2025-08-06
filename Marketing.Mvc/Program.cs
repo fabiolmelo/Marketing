@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AdicionarServicosAppIOC();
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlite());
+var connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase");
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
 
 var app = builder.Build();
 
@@ -20,10 +22,10 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
+
+
 
 app.MapControllerRoute(
     name: "default",
