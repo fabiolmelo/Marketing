@@ -333,27 +333,27 @@ namespace Marketing.Application.Servicos
                     {
                         setaIncidencia = Image.GetInstance(caminhoSetaIncidencia5);
                     }
-                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.1) > 0 &&
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.1) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) < 0)
                     {
                         setaIncidencia = Image.GetInstance(caminhoSetaIncidencia20);
                     }
-                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) > 0 &&
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) < 0)
                     {
                         setaIncidencia = Image.GetInstance(caminhoSetaIncidencia40);
                     }
-                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) > 0 &&
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) < 0)
                     {
                         setaIncidencia = Image.GetInstance(caminhoSetaIncidencia50);
                     }
-                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.65) > 0 &&
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) < 0)
                     {
                         setaIncidencia = Image.GetInstance(caminhoSetaIncidencia60);
                     }
-                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) > 0 &&
+                    else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.95) < 0)
                     {
                         setaIncidencia = Image.GetInstance(caminhoSetaIncidencia80);
