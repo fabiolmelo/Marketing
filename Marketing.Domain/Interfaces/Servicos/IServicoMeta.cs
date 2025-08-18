@@ -1,5 +1,4 @@
 using Marketing.Domain.Entidades;
-using System.Threading.Tasks;
 
 namespace Marketing.Domain.Interfaces.Servicos
 {
