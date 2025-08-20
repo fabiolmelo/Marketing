@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Marketing.Application.Servicos;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
@@ -18,6 +19,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IServicoContato, ServicoContato>();
             servicos.AddScoped<IServicoRede, ServicoRede>();
             servicos.AddScoped<IServicoGrafico, ServicoGrafico>();
+            servicos.AddScoped<IServicoMeta, ServicoMeta>();
             servicos.AddScoped<IServicoEstabelecimento, ServicoEstabelecimento>();
             servicos.AddScoped<IServicoExtratoVendas, ServicoExtratoVenda>();
             servicos.AddScoped<IServicoImportarPlanilha, ServicoImportarPlanilha>();
@@ -29,18 +31,19 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
-        public static void ConfigureHttpClient(this IServiceCollection services,
+        public static void ConfigureHttpClient(IServiceCollection services,
                                                IConfiguration configuration)
         {
-            var apiUrl = configuration["Meta:ApiUri"];
+            var apiUrl = configuration["Meta:ApiUrl"];
             var token =  configuration["Meta:Token"];
             if (apiUrl == null || token == null) throw new Exception("Configurations not found");
 
             services.AddHttpClient("MetaHttpClient", client =>
             {
                 client.BaseAddress = new Uri(apiUrl);
-                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
-            }).AddHttpMessageHandler(() => new BearerTokenHandler(token));
+                //client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }).AddHttpMessageHandler(x => new BearerTokenHandler(token));
         }
     }
 }

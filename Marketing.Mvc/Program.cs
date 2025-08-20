@@ -8,8 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AdicionarServicosAppIOC();
-builder.Services.ConfigureHttpClient(builder.Configuration);
-builder.Services.AddHttpClient();
+RegistrarServicos.ConfigureHttpClient(builder.Services, builder.Configuration);
 
 var connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase");
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
