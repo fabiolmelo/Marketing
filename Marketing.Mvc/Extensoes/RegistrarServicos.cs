@@ -41,7 +41,6 @@ namespace Marketing.Mvc.Extensoes
             services.AddHttpClient("MetaHttpClient", client =>
             {
                 client.BaseAddress = new Uri(apiUrl);
-                //client.DefaultRequestHeaders.Add("Content-Type", "application/json");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }).AddHttpMessageHandler(x => new BearerTokenHandler(token));
         }

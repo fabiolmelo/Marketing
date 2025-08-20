@@ -19,17 +19,20 @@ namespace Marketing.Application.Servicos
 
         public async Task<bool> EnviarSolitacaoAceiteContatoASync(Contato contato)
         {
-            WhatsAppMessageTemplate request = new WhatsAppMessageTemplate("5511977515914", "teste_link", "pt_BR");
-            Component body = new Component("body");
-            body.parameters.Add(new Parameter("text", "Fabio"));
-            body.parameters.Add(new Parameter("text", "Melo"));
-            Component footer = new Component("button");
-            footer.parameters.Add(new Parameter("url", "https://www.mob.com.br/teste/"));
-            footer.parameters.Add(new Parameter("text", "21196350000145"));
-            request.template.components.Add(body);
-            request.template.components.Add(footer);
-            var json = JsonSerializer.Serialize<WhatsAppMessageTemplate>(request);
-            var response = await _httpClient.PostAsJsonAsync("", json);
+            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate("5511977515914", "teste_link", "pt_BR");
+            
+            var bodyComponent = new Component("body");
+            bodyComponent.parameters.Add(new Parameter("text", "valor da variável 1"));
+            bodyComponent.parameters.Add(new Parameter("text", "valor da variável 2"));
+            requestBody.template.components.Add(bodyComponent);
+
+            var buttonComponent = new Component("button");
+            buttonComponent.sub_type = "url";
+            buttonComponent.index = "0";
+            buttonComponent.parameters.Add(new Parameter("text", "21196350000145"));
+            requestBody.template.components.Add(buttonComponent);
+            //request.Headers.Add("Content-Type", "text/javascript; charset=UTF-8");
+            var response = await _httpClient.PostAsJsonAsync<WhatsAppMessageTemplate>("", requestBody, JsonSerializerOptions.Default);
             return response.IsSuccessStatusCode;
         }
         
