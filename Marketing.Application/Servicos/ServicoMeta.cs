@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace Marketing.Application.Servicos
@@ -17,22 +18,26 @@ namespace Marketing.Application.Servicos
             _httpClient = httpClientFactory.CreateClient("MetaHttpClient");
         }
 
-        public async Task<bool> EnviarSolitacaoAceiteContatoASync(Contato contato)
+        public async Task<bool> EnviarSolitacaoAceiteContatoASync(Contato contato, string urlExtrato)
         {
-            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate("5511977515914", "teste_link", "pt_BR");
+            if (contato.Telefone == null || contato.Nome == null || contato.Nome == String.Empty)
+            {
+                return false;  
+            } 
+            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone,
+                    "mob", "pt_BR");
             
             var bodyComponent = new Component("body");
-            bodyComponent.parameters.Add(new Parameter("text", "valor da variável 1"));
-            bodyComponent.parameters.Add(new Parameter("text", "valor da variável 2"));
+            bodyComponent.parameters.Add(new Parameter("text", contato.Nome));
             requestBody.template.components.Add(bodyComponent);
 
             var buttonComponent = new Component("button");
             buttonComponent.sub_type = "url";
             buttonComponent.index = "0";
-            buttonComponent.parameters.Add(new Parameter("text", "21196350000145"));
+            buttonComponent.parameters.Add(new Parameter("text", urlExtrato));
             requestBody.template.components.Add(buttonComponent);
-            //request.Headers.Add("Content-Type", "text/javascript; charset=UTF-8");
             var response = await _httpClient.PostAsJsonAsync<WhatsAppMessageTemplate>("", requestBody, JsonSerializerOptions.Default);
+            var responseContent = await response.Content.ReadAsStringAsync();
             return response.IsSuccessStatusCode;
         }
         

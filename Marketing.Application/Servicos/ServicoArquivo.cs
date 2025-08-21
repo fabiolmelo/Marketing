@@ -76,8 +76,8 @@ namespace Marketing.Application.Servicos
 
                     Font fontVendas = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
                     Font fontVendasBold = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
-                    Font fontVendasReceitaMes = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.RED);
-                    Font fontVendasReceitaTotal = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.RED);
+                    Font fontVendasReceitaMes = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, ((estabelecimento.ExtratoMesCompetencia.ReceitaNaoCapturada * -1) < 0) ? BaseColor.RED : new BaseColor(13, 163, 13));
+                    Font fontVendasReceitaTotal = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, ((estabelecimento.ExtratoVendas.Sum(x => x.ReceitaNaoCapturada) * -1)) < 0 ? BaseColor.RED : new BaseColor(13, 163, 13));
                     Font fontMes = FontFactory.GetFont("tcccunity-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.BLACK);
                     Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.BLACK);
                     Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.RED);
