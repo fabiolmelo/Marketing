@@ -1,10 +1,8 @@
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using Marketing.Application.DTOs;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
-using Microsoft.IdentityModel.Tokens;
 
 
 namespace Marketing.Application.Servicos
@@ -18,6 +16,29 @@ namespace Marketing.Application.Servicos
             _httpClient = httpClientFactory.CreateClient("MetaHttpClient");
         }
 
+        public async Task<ServicoExtratoResponseDto> EnviarExtrato(Contato contato, string urlExtrato)
+        {
+            if (contato.Telefone == null || contato.Nome == null || contato.Nome == String.Empty)
+            {
+                throw new Exception("Erro ao enviar extrato");  
+            } 
+            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone,
+                    "extrato", "pt_BR");
+            
+            var bodyComponent = new Component("body");
+            bodyComponent.parameters.Add(new Parameter("text") { text = contato.Nome });
+            requestBody.template.components.Add(bodyComponent);
+
+            var buttonComponent = new Component("button");
+            buttonComponent.sub_type = "url";
+            buttonComponent.index = "0";
+            buttonComponent.parameters.Add(new Parameter("text") { text = urlExtrato });
+            requestBody.template.components.Add(buttonComponent);
+            var response = await _httpClient.PostAsJsonAsync<WhatsAppMessageTemplate>("", requestBody, JsonSerializerOptions.Default);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return new ServicoExtratoResponseDto(response.StatusCode, responseContent);
+        }
+
         public async Task<bool> EnviarSolitacaoAceiteContatoASync(Contato contato, string urlExtrato)
         {
             if (contato.Telefone == null || contato.Nome == null || contato.Nome == String.Empty)
@@ -25,16 +46,21 @@ namespace Marketing.Application.Servicos
                 return false;  
             } 
             WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone,
-                    "mob", "pt_BR");
+                    "mob_img", "pt_BR");
             
+            var headerComponent = new Component("header");
+            headerComponent.parameters.Add(new Parameter("image") {image = new Image("https://i.postimg.cc/kgPt2cjs/img.png")});
+            requestBody.template.components.Add(headerComponent);
+
             var bodyComponent = new Component("body");
-            bodyComponent.parameters.Add(new Parameter("text", contato.Nome));
+            bodyComponent.parameters.Add(new Parameter("text") { text = contato.Nome });
+            bodyComponent.parameters.Add(new Parameter("text") { text = contato.Nome });
             requestBody.template.components.Add(bodyComponent);
 
             var buttonComponent = new Component("button");
             buttonComponent.sub_type = "url";
             buttonComponent.index = "0";
-            buttonComponent.parameters.Add(new Parameter("text", urlExtrato));
+            buttonComponent.parameters.Add(new Parameter("text") { text = urlExtrato });
             requestBody.template.components.Add(buttonComponent);
             var response = await _httpClient.PostAsJsonAsync<WhatsAppMessageTemplate>("", requestBody, JsonSerializerOptions.Default);
             var responseContent = await response.Content.ReadAsStringAsync();

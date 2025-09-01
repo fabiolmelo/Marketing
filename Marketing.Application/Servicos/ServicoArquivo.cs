@@ -88,7 +88,7 @@ namespace Marketing.Application.Servicos
                     Font fontTextoMeta = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.RED);
 
                     //GRAVA O FUNDO NO ARQUIVO
-                    var pic = Image.GetInstance(caminhoFundo);
+                    var pic = iTextSharp.text.Image.GetInstance(caminhoFundo);
                     pic.SetAbsolutePosition(0, 0);
                     pic.ScaleToFit(document.PageSize);
                     document.Add(pic);
@@ -315,52 +315,52 @@ namespace Marketing.Application.Servicos
                     }
 
                     //PLOTAR A IMAGEM DO GRAFICO
-                    var graficoImage = Image.GetInstance(caminhoGrafico);
+                    var graficoImage = iTextSharp.text.Image.GetInstance(caminhoGrafico);
                     graficoImage.SetAbsolutePosition(190, 259);
                     graficoImage.ScaleAbsoluteHeight(125);
                     graficoImage.ScaleAbsoluteWidth(380);
                     document.Add(graficoImage);
 
                     //PLOTAR A IMAGEM DA SETA META
-                    Image setaMeta = Image.GetInstance(caminhoSetaMeta);
+                    iTextSharp.text.Image setaMeta = iTextSharp.text.Image.GetInstance(caminhoSetaMeta);
                     setaMeta.SetAbsolutePosition(425, 430);
                     document.Add(setaMeta);
 
                     //PLOTAR A IMAGEM DA SETA INCIDENCIA
-                    Image setaIncidencia;
+                    iTextSharp.text.Image setaIncidencia;
 
                     if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.1) < 0)
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia5);
+                        setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia5);
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.1) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) < 0)
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia20);
+                        setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia20);
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) < 0)
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia40);
+                        setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia40);
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) < 0)
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia50);
+                        setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia50);
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) < 0)
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia60);
+                        setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia60);
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.95) < 0)
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia80);
+                        setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia80);
                     }
                     else
                     {
-                        setaIncidencia = Image.GetInstance(caminhoSetaIncidencia95);
+                        setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia95);
                     }
                     
                     setaIncidencia.SetAbsolutePosition(275, 430);
