@@ -37,10 +37,6 @@ namespace Marketing.Application.Servicos
         {
             return await _unitOfWork.GetRepository<Contato>().GetAllAsync(pageNumber, pageSize, filtros);
         }
-
-        public Task<PagedResponse<Contato>> GetAllContatos(int pageNumber, int pageSize, string? filtro)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

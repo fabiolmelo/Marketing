@@ -1,4 +1,5 @@
-﻿using Marketing.Domain.Entidades;
+﻿using System.Text.Json;
+using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
@@ -9,22 +10,28 @@ namespace Marketing.Application.Servicos
     public class ServicoProcessamentoMensal : IServicoProcessamentoMensal
     {
         private readonly IRepositorioProcessamentoMensal _repositorioProcessamentoMensal;
+        private readonly IRepositorioContato _repositorioContato;
         private readonly IServicoArquivos _servicoArquivos;
         private readonly IServicoRede _servicoRede;
         private readonly IServicoGrafico _servicoGrafico;
+        private readonly IServicoMeta _servicoMeta;
         private readonly IUnitOfWork _unitOfWork;
 
         public ServicoProcessamentoMensal(IRepositorioProcessamentoMensal repositorioProcessamentoMensal,
                                           IServicoArquivos servicoArquivos,
                                           IServicoRede servicoRede,
                                           IServicoGrafico servicoGrafico,
-                                          IUnitOfWork unitOfWork)
+                                          IUnitOfWork unitOfWork,
+                                          IRepositorioContato repositorioContato,
+                                          IServicoMeta servicoMeta)
         {
             _repositorioProcessamentoMensal = repositorioProcessamentoMensal;
             _servicoArquivos = servicoArquivos;
             _servicoRede = servicoRede;
             _servicoGrafico = servicoGrafico;
             _unitOfWork = unitOfWork;
+            _repositorioContato = repositorioContato;
+            _servicoMeta = servicoMeta;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
@@ -64,6 +71,26 @@ namespace Marketing.Application.Servicos
                 {
                     estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
                     _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimentoUpdate);
+
+                    var contatos = await _repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimentoUpdate.Cnpj);
+                    foreach (Contato contato in contatos)
+                    {
+                        var response = await _servicoMeta.EnviarExtrato(contato, estabelecimentoUpdate.UltimoPdfGerado);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response);
+                            if (json != null && contato.Telefone != null)
+                            {
+                                var mensagemId = json.messages[0].id;
+                                if (mensagemId != null)
+                                {
+                                    var mensagem = new Mensagem(mensagemId, contato.Telefone, competencia);
+                                    mensagem.AdicionarEvento(MensagemStatus.sent);
+                                    await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                                }
+                            }
+                        }
+                    }
                     await _unitOfWork.CommitAsync();
                 }
             }                                    

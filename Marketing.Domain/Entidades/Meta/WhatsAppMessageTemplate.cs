@@ -1,4 +1,4 @@
-namespace Marketing.Domain.Entidades
+namespace Marketing.Domain.Entidades.Meta
 {
     public class WhatsAppMessageTemplate
 {

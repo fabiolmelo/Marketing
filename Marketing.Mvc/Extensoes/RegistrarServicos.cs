@@ -28,6 +28,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IRepositorioEstabelecimento, RepositorioEstabelecimento>();
             servicos.AddScoped<IRepositorioRede, RepositorioRede>();
             servicos.AddScoped<IRepositorioProcessamentoMensal, RepositorioFechamentoMensal>();
+            servicos.AddScoped<IRepositorioContato, RepositorioContato>();
             servicos.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 

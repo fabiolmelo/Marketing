@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Marketing.Domain.Entidades
+namespace Marketing.Domain.Entidades.Meta
 {
     public class WhatsAppWebhookPayload
     {

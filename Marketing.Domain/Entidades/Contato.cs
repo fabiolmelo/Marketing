@@ -15,6 +15,7 @@ namespace Marketing.Domain.Entidades
         public Guid Token { get; set; }
         public DateTime UltimaCompetenciaEnviada { get; set; }
         public List<Estabelecimento> Estabelecimentos { get; }
+        public List<Mensagem>? Mensagens { get; set; }
         public Contato()
         {
             Token = Guid.NewGuid();

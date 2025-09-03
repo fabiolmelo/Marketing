@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
-using Marketing.Application.DTOs;
 using Marketing.Domain.Entidades;
+using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.Servicos;
 
 
@@ -65,11 +65,6 @@ namespace Marketing.Application.Servicos
             var response = await _httpClient.PostAsJsonAsync<WhatsAppMessageTemplate>("", requestBody, JsonSerializerOptions.Default);
             var responseContent = await response.Content.ReadAsStringAsync();
             return response.IsSuccessStatusCode;
-        }
-        
-        public Task<bool> EnviarTesteASync(Contato contato)
-        {
-            throw new NotImplementedException();
         }
     }
 }
