@@ -75,23 +75,34 @@ namespace Marketing.Application.Servicos
                     var contatos = await _repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimentoUpdate.Cnpj);
                     foreach (Contato contato in contatos)
                     {
-                        var response = await _servicoMeta.EnviarExtrato(contato, estabelecimentoUpdate.UltimoPdfGerado);
+                        var response = await _servicoMeta.EnviarExtrato(contato, estabelecimentoUpdate, caminhoApp);
                         if (response.IsSuccessStatusCode)
                         {
                             var json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response);
                             if (json != null && contato.Telefone != null)
                             {
-                                var mensagemId = json.messages[0].id;
-                                if (mensagemId != null)
+                                foreach (Message message in json.messages)
                                 {
-                                    var mensagem = new Mensagem(mensagemId, contato.Telefone, competencia);
-                                    mensagem.AdicionarEvento(MensagemStatus.sent);
-                                    await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                                    var mensagemId = message.id;
+                                    if (mensagemId != null)
+                                    {
+                                        var mensagem = new Mensagem(mensagemId, contato.Telefone, competencia);
+                                        await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                                        await _unitOfWork.CommitAsync();
+                                        var novaMensagem = await _unitOfWork.GetRepository<Mensagem>().GetByIdStringAsync(mensagemId);
+                                        if (novaMensagem != null)
+                                        {
+                                            novaMensagem.AdicionarEvento(MensagemStatus.sent);
+                                            _unitOfWork.GetRepository<Mensagem>().Update(novaMensagem);
+                                             await _unitOfWork.CommitAsync();
+                                        }
+                                    }
                                 }
+                                
                             }
                         }
                     }
-                    await _unitOfWork.CommitAsync();
+                    
                 }
             }                                    
         }

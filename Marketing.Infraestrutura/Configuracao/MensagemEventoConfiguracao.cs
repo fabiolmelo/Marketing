@@ -8,7 +8,9 @@ namespace Marketing.Infraestrutura.Configuracao
     {
         public void Configure(EntityTypeBuilder<MensagemEvento> builder)
         {
-            builder.HasKey(x => new { x.MensagemId, x.MensagemStatus });
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.MensagemStatus).HasConversion<int>();
         }
     }
 }

@@ -16,17 +16,19 @@ namespace Marketing.Application.Servicos
             _httpClient = httpClientFactory.CreateClient("MetaHttpClient");
         }
 
-        public async Task<ServicoExtratoResponseDto> EnviarExtrato(Contato contato, string urlExtrato)
+        public async Task<ServicoExtratoResponseDto> EnviarExtrato(Contato contato,
+                        Estabelecimento estabelecimento, string caminhoApp)
         {
-            if (contato.Telefone == null )//|| contato.Nome == null || contato.Nome == String.Empty)
+            var urlExtrato = Path.Combine(caminhoApp, "Fechamento", "Download", estabelecimento.Cnpj);
+            if (contato.Telefone == null || estabelecimento.RazaoSocial == null)
             {
-                throw new Exception("Erro ao enviar extrato");  
+                throw new Exception("Erro ao enviar extrato");
             } 
             WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone,
                     "extrato", "pt_BR");
             
             var bodyComponent = new Component("body");
-            bodyComponent.parameters.Add(new Parameter("text") { text = contato.Nome });
+            bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.RazaoSocial });
             requestBody.template.components.Add(bodyComponent);
 
             var buttonComponent = new Component("button");
