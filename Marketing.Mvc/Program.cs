@@ -10,11 +10,32 @@ builder.Services.AddControllersWithViews();
 builder.Services.AdicionarServicosAppIOC();
 RegistrarServicos.ConfigureHttpClient(builder.Services, builder.Configuration);
 
-var connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase");
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
+string connectionString;
+var bancoDeDados = builder.Configuration["BancoDeDados"] ?? "";
 
+switch (bancoDeDados)
+{
+    case "SqLite":
+        connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase") ?? "";
+        builder.Services.AddDbContext<DataContext>(
+            dbContextOptions => dbContextOptions
+                .UseSqlite(connectionString));
+        break;
+    default:
+        connectionString = builder.Configuration.GetConnectionString("MySql") ?? "";
+        var serverVersion = new MySqlServerVersion(new Version(10, 2));
+
+        builder.Services.AddDbContext<DataContext>(
+            dbContextOptions => dbContextOptions
+                .UseMySql(connectionString, serverVersion)
+                .LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors()
+        );
+        break;
+}
+     
 var app = builder.Build();
-
 
 if (!app.Environment.IsDevelopment())
 {

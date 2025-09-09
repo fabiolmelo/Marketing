@@ -16,7 +16,9 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj)
         {
-            var estabelecimento = await _context.Set<Estabelecimento>().FirstAsync(x => x.Cnpj == cnpj);
+            var estabelecimento = await _context.Set<Estabelecimento>().
+                                                 Include(x=>x.Contatos).
+                                                 FirstAsync(x => x.Cnpj == cnpj);
             return estabelecimento.Contatos.Where(x=>x.AceitaMensagem).ToList();
         }
     }

@@ -1,6 +1,7 @@
 using Marketing.Domain.Entidades;
 using Marketing.Infraestrutura.Configuracao;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Marketing.Infraestrutura.Contexto
 {
@@ -13,7 +14,6 @@ namespace Marketing.Infraestrutura.Contexto
         public DbSet<ExtratoVendas> ExtratosVendas { get; set; }
         public DbSet<ImportacaoEfetuada> ImportacoesEfetuadas { get; set; }
         public DbSet<Estabelecimento> Estabelecimentos { get; set; }
-        public DbSet<EstabelecimentoContato> EstabelecimentoContatos { get; set; }
         public DbSet<Contato> Contatos { get; set; }
         public DbSet<Rede> Redes { get; set; }
         public DbSet<ImportacaoEfetuada> ImportacaoEfetuada { get; set; }
@@ -25,8 +25,13 @@ namespace Marketing.Infraestrutura.Contexto
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                var connectionString = "Data Source=DadosApp\\BD\\LocalDatabase.db";
-                optionsBuilder.UseSqlite(connectionString);
+                // var connectionString = "Data Source=DadosApp\\BD\\LocalDatabase.db";
+                // var serverVersion = new MySqlServerVersion(new Version(10, 2));
+                // var connectionString = "Server=mysql.mediaonboard.com.br;Database=mediaonboard02;Uid=mediaonboard02;Pwd=Hh8bjdT2Mh82K8u;";
+                // optionsBuilder.UseMySql(connectionString, serverVersion)
+                //                         .LogTo(Console.WriteLine, LogLevel.Information)
+                //                         .EnableSensitiveDataLogging()
+                //                         .EnableDetailedErrors();
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,7 +40,6 @@ namespace Marketing.Infraestrutura.Contexto
             modelBuilder.ApplyConfiguration(new ExtratoVendaConfiguracao());
             modelBuilder.ApplyConfiguration(new EstabelecimentoConfiguracao());
             modelBuilder.ApplyConfiguration(new ContatoConfiguracao());
-            modelBuilder.ApplyConfiguration(new EstabelecimentoContatoConfiguracao());
             modelBuilder.ApplyConfiguration(new RedeConfiguracao());
             modelBuilder.ApplyConfiguration(new DadosPlanilhaConfiguration());
             modelBuilder.ApplyConfiguration(new MensagemConfiguracao());

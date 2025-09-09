@@ -12,7 +12,7 @@ namespace Marketing.Domain.Entidades
         public string RazaoSocial { get; set; } = String.Empty;
         public string Cidade { get; set; } = String.Empty;
         public string Uf { get; set; } = String.Empty;
-        public List<Contato> Contatos { get; } = new List<Contato>();
+        public ICollection<Contato> Contatos { get; set; } = new List<Contato>();
         public List<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);

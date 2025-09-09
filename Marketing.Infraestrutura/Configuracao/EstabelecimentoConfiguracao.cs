@@ -19,9 +19,6 @@ namespace Marketing.Infraestrutura.Configuracao
             builder.HasOne(x=>x.Rede).
                     WithMany(x=>x.Estabelecimentos).
                     HasPrincipalKey(x=>x.Nome);
-            builder.HasMany(x=>x.Contatos).
-                    WithMany(x=>x.Estabelecimentos).
-                    UsingEntity("EstabelecimentoContato");
         }
     }
 }

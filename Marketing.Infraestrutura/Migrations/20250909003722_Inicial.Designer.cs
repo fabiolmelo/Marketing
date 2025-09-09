@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketing.Infraestrutura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250903204009_Inicial3")]
-    partial class Inicial3
+    [Migration("20250909003722_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace Marketing.Infraestrutura.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.16");
 
-            modelBuilder.Entity("EstabelecimentoContato", b =>
+            modelBuilder.Entity("ContatoEstabelecimento", b =>
                 {
                     b.Property<string>("ContatosTelefone")
                         .HasColumnType("TEXT");
@@ -32,7 +32,7 @@ namespace Marketing.Infraestrutura.Migrations
 
                     b.HasIndex("EstabelecimentosCnpj");
 
-                    b.ToTable("EstabelecimentoContato");
+                    b.ToTable("ContatoEstabelecimento");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Contato", b =>
@@ -164,21 +164,6 @@ namespace Marketing.Infraestrutura.Migrations
                     b.ToTable("Estabelecimentos");
                 });
 
-            modelBuilder.Entity("Marketing.Domain.Entidades.EstabelecimentoContato", b =>
-                {
-                    b.Property<string>("EstabelecimentoCnpj")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ContatoTelefone")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("EstabelecimentoCnpj", "ContatoTelefone");
-
-                    b.HasIndex("ContatoTelefone");
-
-                    b.ToTable("EstabelecimentoContatos");
-                });
-
             modelBuilder.Entity("Marketing.Domain.Entidades.ExtratoVendas", b =>
                 {
                     b.Property<int>("Ano")
@@ -307,7 +292,7 @@ namespace Marketing.Infraestrutura.Migrations
                     b.ToTable("Redes");
                 });
 
-            modelBuilder.Entity("EstabelecimentoContato", b =>
+            modelBuilder.Entity("ContatoEstabelecimento", b =>
                 {
                     b.HasOne("Marketing.Domain.Entidades.Contato", null)
                         .WithMany()
@@ -342,25 +327,6 @@ namespace Marketing.Infraestrutura.Migrations
                         .IsRequired();
 
                     b.Navigation("Rede");
-                });
-
-            modelBuilder.Entity("Marketing.Domain.Entidades.EstabelecimentoContato", b =>
-                {
-                    b.HasOne("Marketing.Domain.Entidades.Contato", "Contato")
-                        .WithMany()
-                        .HasForeignKey("ContatoTelefone")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Marketing.Domain.Entidades.Estabelecimento", "Estabelecimento")
-                        .WithMany()
-                        .HasForeignKey("EstabelecimentoCnpj")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contato");
-
-                    b.Navigation("Estabelecimento");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.ExtratoVendas", b =>

@@ -18,7 +18,7 @@ namespace Marketing.Application.Servicos
 
         public async Task<ServicoExtratoResponseDto> EnviarExtrato(Contato contato, string urlExtrato)
         {
-            if (contato.Telefone == null || contato.Nome == null || contato.Nome == String.Empty)
+            if (contato.Telefone == null )//|| contato.Nome == null || contato.Nome == String.Empty)
             {
                 throw new Exception("Erro ao enviar extrato");  
             } 
