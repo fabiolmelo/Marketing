@@ -2,6 +2,9 @@ namespace Marketing.Domain.Entidades
 {
     public class Mensagem
     {
+        public Mensagem()
+        {
+        }
         public Mensagem(string id, string contatoFone, DateTime competencia)
         {
             Id = id;
@@ -9,8 +12,8 @@ namespace Marketing.Domain.Entidades
             Competencia = competencia;
         }
 
-        public string Id { get; set; }
-        public string ContatoTelefone { get; set; }
+        public string Id { get; set; } = string.Empty; 
+        public string ContatoTelefone { get; set; } = string.Empty;
         public DateTime Competencia { get; set; }
         public ICollection<MensagemEvento> MensagemEvento { get; private set; } = new List<MensagemEvento>();
 

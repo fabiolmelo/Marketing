@@ -1,7 +1,6 @@
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.UnitOfWork;
 using Marketing.Infraestrutura.Contexto;
-using Marketing.Infraestrutura.Repositorio;
 using Microsoft.EntityFrameworkCore;
 
 namespace Marketing.Infraestrutura.Repositorio.UnitOfWork

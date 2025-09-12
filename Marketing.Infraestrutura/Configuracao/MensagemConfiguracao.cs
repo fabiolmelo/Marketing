@@ -10,6 +10,7 @@ namespace Marketing.Infraestrutura.Configuracao
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.ContatoTelefone).HasMaxLength(20);
+
             builder.HasMany(me => me.MensagemEvento)
                    .WithOne(m => m.Mensagem)
                    .HasForeignKey(x => x.MensagemId);

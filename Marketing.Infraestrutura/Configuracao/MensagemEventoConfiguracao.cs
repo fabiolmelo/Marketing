@@ -10,7 +10,12 @@ namespace Marketing.Infraestrutura.Configuracao
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.Property(x => x.MensagemStatus).HasConversion<int>();
+            //builder.Property(x => x.MensagemStatus).HasConversion<int>();
+
+                  
+            builder.HasOne(x=>x.Mensagem).
+                    WithMany(x=>x.MensagemEvento).
+                    HasPrincipalKey(x=>x.Id);
         }
     }
 }
