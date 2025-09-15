@@ -8,12 +8,10 @@ namespace Marketing.Infraestrutura.Configuracao
     {
         public void Configure(EntityTypeBuilder<Mensagem> builder)
         {
-            builder.HasKey(x => x.Id);
-            builder.Property(x => x.ContatoTelefone).HasMaxLength(20);
+            builder.HasKey(x => x.IdMessage);
+            builder.Property(x => x.IdMessage).HasColumnType("VARCHAR").HasMaxLength(250);
 
-            builder.HasMany(me => me.MensagemEvento)
-                   .WithOne(m => m.Mensagem)
-                   .HasForeignKey(x => x.MensagemId);
+            builder.HasOne(x => x.Contato).WithMany(x => x.Mensagens).HasPrincipalKey(x => x.Telefone); 
         }
     }
 }

@@ -39,10 +39,5 @@ namespace Marketing.Infraestrutura.Repositorio.UnitOfWork
                 throw new Exception("Ocorreu um erro ao salvar as alterações no banco de dados.", ex);
             }
         }
-
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
     }
 }

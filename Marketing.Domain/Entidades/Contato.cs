@@ -15,16 +15,15 @@ namespace Marketing.Domain.Entidades
         public Guid Token { get; set; }
         public DateTime UltimaCompetenciaEnviada { get; set; }
         public ICollection<Estabelecimento> Estabelecimentos { get; set; } = new List<Estabelecimento>();
+        public ICollection<Mensagem> Mensagens { get; set; } = new List<Mensagem>();
         public Contato()
         {
             Token = Guid.NewGuid();
-            Estabelecimentos = new List<Estabelecimento>();
         }
         public Contato(string telefone)
         {
             Telefone = telefone;
             Token = Guid.NewGuid();
-            Estabelecimentos = new List<Estabelecimento>();
         }
     }
 }

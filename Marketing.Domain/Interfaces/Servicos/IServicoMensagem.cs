@@ -2,8 +2,8 @@ using Marketing.Domain.Entidades;
 
 namespace Marketing.Domain.Interfaces.Servicos
 {
-    public interface IServicoMensagem
+    public interface IServicoMensagem : IServico<Mensagem>
     {
-        Task InserirMensagem(WhatsAppResponseResult whatsAppResponseResult);
+        
     }
 }

@@ -10,13 +10,13 @@ namespace Marketing.Application.Servicos
     public class ServicoProcessamentoMensal : IServicoProcessamentoMensal
     {
         private readonly IRepositorioProcessamentoMensal _repositorioProcessamentoMensal;
-        private readonly IRepositorioMensagem _repositorioMensagem;
         private readonly IRepositorioContato _repositorioContato;
         private readonly IServicoArquivos _servicoArquivos;
         private readonly IServicoRede _servicoRede;
         private readonly IServicoGrafico _servicoGrafico;
         private readonly IServicoMeta _servicoMeta;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IServicoMensagem _servicoMensagem;
 
         public ServicoProcessamentoMensal(IRepositorioProcessamentoMensal repositorioProcessamentoMensal,
                                           IServicoArquivos servicoArquivos,
@@ -25,7 +25,7 @@ namespace Marketing.Application.Servicos
                                           IUnitOfWork unitOfWork,
                                           IRepositorioContato repositorioContato,
                                           IServicoMeta servicoMeta,
-                                          IRepositorioMensagem repositorioMensagem)
+                                          IServicoMensagem servicoMensagem)
         {
             _repositorioProcessamentoMensal = repositorioProcessamentoMensal;
             _servicoArquivos = servicoArquivos;
@@ -34,7 +34,7 @@ namespace Marketing.Application.Servicos
             _unitOfWork = unitOfWork;
             _repositorioContato = repositorioContato;
             _servicoMeta = servicoMeta;
-            _repositorioMensagem = repositorioMensagem;
+            _servicoMensagem = servicoMensagem;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
@@ -89,20 +89,14 @@ namespace Marketing.Application.Servicos
                                     var mensagemId = message.id;
                                     if (mensagemId != null)
                                     {
-                                        var mensagem = new Mensagem(mensagemId, contato.Telefone, competencia);
-                                        await _repositorioMensagem.AddAsync(mensagem);
-                                        var novaMensagem = await _repositorioMensagem.GetByIdStringAsync(mensagemId);
-                                        if (novaMensagem != null)
-                                        {
-                                            novaMensagem.AdicionarEvento(MensagemStatus.sent);
-                                            _repositorioMensagem.Update(novaMensagem);
-                                        }
+                                        var mensagem = new Mensagem(mensagemId, contato.Telefone, contato);
+                                        //mensagem.AdicionarEvento(MensagemStatus.sent);
+                                        await _servicoMensagem.AddAsync(mensagem);
                                     }
                                 }
                             }
                         }
                     }
-                    
                 }
             }                                    
         }

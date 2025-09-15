@@ -4,21 +4,21 @@ namespace Marketing.Domain.Entidades
     {
         public Mensagem()
         {
+            IdMessage = String.Empty;
+            ContatoTelefone = String.Empty;
+            Contato = new Contato();
         }
-        public Mensagem(string id, string contatoFone, DateTime competencia)
+
+        public Mensagem(string idMessage, string contatoTelefone, Contato contato)
         {
-            Id = id;
-            ContatoTelefone = contatoFone;
-            Competencia = competencia;
+            IdMessage = idMessage;
+            ContatoTelefone = contatoTelefone;
+            Contato = contato;
         }
 
-        public string Id { get; set; } = string.Empty; 
-        public string ContatoTelefone { get; set; } = string.Empty;
-        public DateTime Competencia { get; set; }
-        public ICollection<MensagemEvento> MensagemEvento { get; private set; } = new List<MensagemEvento>();
-
-        public void AdicionarEvento(MensagemStatus mensagemStatus) {
-            MensagemEvento.Add(new MensagemEvento(this.Id, mensagemStatus));
-        }
-    }   
+        public string IdMessage { get; set; } 
+        public string ContatoTelefone { get; set; }
+        public virtual Contato Contato { get; set; }
+       
+    }
 }
