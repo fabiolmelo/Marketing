@@ -1,11 +1,11 @@
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Interfaces.UnitOfWork;
+using Marketing.Domain.Interfaces.Repositorio;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoImportacaoEfetuada : Servico<ImportacaoEfetuada>
     {
-        public ServicoImportacaoEfetuada(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ServicoImportacaoEfetuada(IRepository<ImportacaoEfetuada> repository) : base(repository)
         {
         }
     }

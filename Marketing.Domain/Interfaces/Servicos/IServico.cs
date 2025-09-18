@@ -16,5 +16,6 @@ namespace Marketing.Domain.Interfaces.Servicos
         void Delete(T entity);
         Task<bool> Any(Expression<Func<T, bool>> expression);
         Task<int> Count(Expression<Func<T, bool>> expression);
+        
     }
 }

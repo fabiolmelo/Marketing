@@ -1,27 +1,22 @@
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
-using Marketing.Domain.Interfaces.UnitOfWork;
 using Marketing.Domain.PagedResponse;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoEstabelecimento : Servico<Estabelecimento>, IServicoEstabelecimento
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IServicoRede _servicoRede;
-        private readonly IServicoContato _servicoContato;
-        private readonly IRepositorioEstabelecimento _repositorioEstabelecimento;
-        public ServicoEstabelecimento(IUnitOfWork unitOfWork,
-                                      IServicoRede servicoRede,
-                                      IServicoContato servicoContato,
-                                      IRepositorioEstabelecimento repositorioEstabelecimento) : base(unitOfWork)
+        private readonly IRepositorioEstabelecimento _repositoryEstabelecimento;
+        private readonly IRepositorioRede _repositoryRede;
+        private readonly IRepositorioContato _repositorioContato;
+        public ServicoEstabelecimento(IRepositorioEstabelecimento repositoryEstabelecimento,
+                                      IRepositorioRede repositoryRede,
+                                      IRepositorioContato repositorioContato) : base(repositoryEstabelecimento)
         {
-            _unitOfWork = unitOfWork;
-            _servicoRede = servicoRede;
-            _servicoContato = servicoContato;
-            _repositorioEstabelecimento = repositorioEstabelecimento;
+            _repositoryEstabelecimento = repositoryEstabelecimento;
+            _repositoryRede = repositoryRede;
+            _repositorioContato = repositorioContato;
         }
 
         public async Task AtualizarEstabelecimentoViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
@@ -41,8 +36,8 @@ namespace Marketing.Application.Servicos
             {
                 if (grupo.Cnpj != null)
                 {
-                    var estabelecimento = await _repositorioEstabelecimento.GetByIdStringAsync(grupo.Cnpj);
-                    var rede = await _unitOfWork.GetRepository<Rede>().GetByIdStringAsync(grupo.NomeRede);
+                    var estabelecimento = await _repositoryEstabelecimento.GetByIdStringAsync(grupo.Cnpj);
+                    var rede = await _repositoryRede.GetByIdStringAsync(grupo.NomeRede);
                     if (estabelecimento == null && rede != null)
                     {
                         estabelecimento = new Estabelecimento()
@@ -54,8 +49,7 @@ namespace Marketing.Application.Servicos
                             Rede = rede,
                             RedeNome = rede.Nome
                         };
-                        await _unitOfWork.GetRepository<Estabelecimento>().AddAsync(estabelecimento);
-                        await _unitOfWork.CommitAsync();
+                        await _repositoryEstabelecimento.AddAsync(estabelecimento);
                     }
                 }
             }
@@ -68,17 +62,14 @@ namespace Marketing.Application.Servicos
             {
                 if (linhaPlanilha.Fone != String.Empty && linhaPlanilha.Fone != null)
                 {
-                    var estabelecimento = await _repositorioEstabelecimento.
-                                            FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
-
-                    var contato = await _servicoContato.GetByIdStringAsync(linhaPlanilha.Fone);
+                    var estabelecimento = await _repositoryEstabelecimento.FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
+                    var contato = await _repositorioContato.GetByIdStringAsync(linhaPlanilha.Fone);
                     if (estabelecimento != null && contato != null)
                     {
                         if (!estabelecimento.Contatos.Contains(contato))
                         {
                             estabelecimento.Contatos.Add(contato);
-                            _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimento);
-                            await _unitOfWork.CommitAsync();
+                            _repositoryEstabelecimento.Update(estabelecimento);
                         }
                     }    
                 }
@@ -91,16 +82,14 @@ namespace Marketing.Application.Servicos
             {
                 if (linhaPlanilha.Rede != String.Empty && linhaPlanilha.Rede != null)
                 {
-                    var estabelecimento = await _repositorioEstabelecimento.
-                                FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
-                    var rede = await _servicoRede.GetByIdStringAsync(linhaPlanilha.Rede);
+                    var estabelecimento = await FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
+                    var rede = await _repositoryRede.GetByIdStringAsync(linhaPlanilha.Rede);
 
                     if (estabelecimento != null && rede != null)
                     {
                         estabelecimento.Rede = rede;
                         estabelecimento.RedeNome = rede.Nome;
-                        _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimento);
-                        await _unitOfWork.CommitAsync();
+                        _repositoryEstabelecimento.Update(estabelecimento);
                     }
                 }
             }
@@ -108,7 +97,12 @@ namespace Marketing.Application.Servicos
 
         public async Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
         {
-            return await _repositorioEstabelecimento.GetAllEstabelecimentos(pageNumber, pageSize, filtro);
+            return await _repositoryEstabelecimento.GetAllEstabelecimentos(pageNumber, pageSize, filtro);
+        }
+
+        public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
+        {
+            return await _repositoryEstabelecimento.FindEstabelecimentoIncludeContatoRede(cnpj);
         }
     }
 }

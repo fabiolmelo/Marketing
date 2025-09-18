@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketing.Infraestrutura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250915180337_Inicial")]
+    [Migration("20250916203219_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -23,7 +23,7 @@ namespace Marketing.Infraestrutura.Migrations
             modelBuilder.Entity("ContatoEstabelecimento", b =>
                 {
                     b.Property<string>("ContatosTelefone")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<string>("EstabelecimentosCnpj")
                         .HasColumnType("TEXT");
@@ -38,7 +38,7 @@ namespace Marketing.Infraestrutura.Migrations
             modelBuilder.Entity("Marketing.Domain.Entidades.Contato", b =>
                 {
                     b.Property<string>("Telefone")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<bool>("AceitaMensagem")
                         .HasColumnType("INTEGER");
@@ -229,33 +229,24 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DataImportacao")
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DATETIME");
 
                     b.Property<string>("NomeArquivoServer")
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("VARCHAR(255)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ImportacaoEfetuada");
                 });
 
-            modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
+            modelBuilder.Entity("Marketing.Domain.Entidades.MensagemEnviada", b =>
                 {
-                    b.Property<string>("IdMessage")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR");
+                    b.Property<string>("Id")
+                        .HasColumnType("VARCHAR(5000)");
 
-                    b.Property<string>("ContatoTelefone")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.HasKey("Id");
 
-                    b.HasKey("IdMessage");
-
-                    b.HasIndex("ContatoTelefone");
-
-                    b.ToTable("Mensagens");
+                    b.ToTable("MensagensEnviadas");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>
@@ -315,22 +306,6 @@ namespace Marketing.Infraestrutura.Migrations
                         .IsRequired();
 
                     b.Navigation("Estabelecimento");
-                });
-
-            modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
-                {
-                    b.HasOne("Marketing.Domain.Entidades.Contato", "Contato")
-                        .WithMany("Mensagens")
-                        .HasForeignKey("ContatoTelefone")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contato");
-                });
-
-            modelBuilder.Entity("Marketing.Domain.Entidades.Contato", b =>
-                {
-                    b.Navigation("Mensagens");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Estabelecimento", b =>

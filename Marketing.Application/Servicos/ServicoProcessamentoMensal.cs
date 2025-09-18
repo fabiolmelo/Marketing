@@ -3,39 +3,41 @@ using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
-using Marketing.Domain.Interfaces.UnitOfWork;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoProcessamentoMensal : IServicoProcessamentoMensal
     {
+        private readonly IServicoMeta _servicoMeta;
+        private readonly IServicoRede _servicoRede;
+        private readonly IServicoMensagemEnviada _servicoMensagemEnviada;
+        private readonly IServicoEstabelecimento _servicoEstabelecimento;
         private readonly IRepositorioProcessamentoMensal _repositorioProcessamentoMensal;
         private readonly IRepositorioContato _repositorioContato;
-        private readonly IServicoArquivos _servicoArquivos;
-        private readonly IServicoRede _servicoRede;
-        private readonly IServicoGrafico _servicoGrafico;
-        private readonly IServicoMeta _servicoMeta;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IServicoMensagem _servicoMensagem;
+
 
         public ServicoProcessamentoMensal(IRepositorioProcessamentoMensal repositorioProcessamentoMensal,
-                                          IServicoArquivos servicoArquivos,
-                                          IServicoRede servicoRede,
-                                          IServicoGrafico servicoGrafico,
-                                          IUnitOfWork unitOfWork,
-                                          IRepositorioContato repositorioContato,
                                           IServicoMeta servicoMeta,
-                                          IServicoMensagem servicoMensagem)
+                                          IRepositorioContato repositorioContato,
+                                          IServicoGrafico servicoGrafico,
+                                          IServicoArquivos servicoArquivos,
+                                          IServicoMensagemEnviada servicoMensagemEnviada,
+                                          IServicoRede servicoRede,
+                                          IServicoEstabelecimento servicoEstabelecimento)
         {
             _repositorioProcessamentoMensal = repositorioProcessamentoMensal;
-            _servicoArquivos = servicoArquivos;
-            _servicoRede = servicoRede;
-            _servicoGrafico = servicoGrafico;
-            _unitOfWork = unitOfWork;
-            _repositorioContato = repositorioContato;
             _servicoMeta = servicoMeta;
-            _servicoMensagem = servicoMensagem;
+            _repositorioContato = repositorioContato;
+            ServicoGrafico = servicoGrafico;
+            ServicoArquivos = servicoArquivos;
+            _servicoMensagemEnviada = servicoMensagemEnviada;
+            _servicoRede = servicoRede;
+            _servicoEstabelecimento = servicoEstabelecimento;
         }
+
+        public IServicoGrafico ServicoGrafico { get; }
+
+        public IServicoArquivos ServicoArquivos { get; }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
                                                    String contentRootPath,
@@ -50,9 +52,32 @@ namespace Marketing.Application.Servicos
                 {
                     await GerarProcessamentoPorEstabelecimento(estabelecimento, competencia,
                                                                contentRootPath, caminhoApp);
+                    var contatos = await _repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
+                    foreach (Contato contato in contatos)
+                    {
+                        // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
+                        // if (response.IsSuccessStatusCode)
+                        // {
+                        //     WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
+                        //     if (json != null && contato.Telefone != null)
+                        //     {
+                        //         foreach (Message message in json.messages)
+                        //         {
+                        //             var mensagemId = message.id;
+                        //             if (mensagemId != null)
+                        //             {
+                        //                 // var length = mensagemId.Length;
+                        //                 // var mensagem = new MensagemEnviada(mensagemId);
+                        //                 // //mensagem.AdicionarEvento(MensagemStatus.sent);
+                        //                 // await _servicoMensagemEnviada.AddAsyncWithCommit(mensagem);
+                        //             }
+                        //         }
+                        //     }
+                        // }
+                    }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Erro {ex.Message}");
             }
@@ -65,38 +90,14 @@ namespace Marketing.Application.Servicos
             {
                 var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
                 var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial.Replace(" ","_")}.pdf";
-                _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
-                _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                ServicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
+                ServicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                     posicaoNaRede, contentRootPath, caminhoApp);
-                var estabelecimentoUpdate = await _unitOfWork.GetRepository<Estabelecimento>().
-                                                                GetByIdStringAsync(estabelecimento.Cnpj);
+                var estabelecimentoUpdate = await _servicoEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
                 if (estabelecimentoUpdate != null)
                 {
                     estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
-                    _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimentoUpdate);
-
-                    var contatos = await _repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimentoUpdate.Cnpj);
-                    foreach (Contato contato in contatos)
-                    {
-                        var response = await _servicoMeta.EnviarExtrato(contato, estabelecimentoUpdate, caminhoApp);
-                        if (response.IsSuccessStatusCode)
-                        {
-                            var json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response);
-                            if (json != null && contato.Telefone != null)
-                            {
-                                foreach (Message message in json.messages)
-                                {
-                                    var mensagemId = message.id;
-                                    if (mensagemId != null)
-                                    {
-                                        var mensagem = new Mensagem(mensagemId, contato.Telefone, contato);
-                                        //mensagem.AdicionarEvento(MensagemStatus.sent);
-                                        await _servicoMensagem.AddAsync(mensagem);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    _servicoEstabelecimento.Update(estabelecimentoUpdate);
                 }
             }                                    
         }

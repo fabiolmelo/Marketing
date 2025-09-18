@@ -1,4 +1,3 @@
-using System.Linq;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Infraestrutura.Contexto;
@@ -9,9 +8,10 @@ namespace Marketing.Infraestrutura.Repositorio
     public class RepositorioContato : Repository<Contato>, IRepositorioContato
     {
         private readonly DataContext _context;
-        public RepositorioContato(DataContext dataContext) : base(dataContext)
+
+        public RepositorioContato(DataContext context) : base(context)
         {
-            _context = dataContext;
+            _context = context;
         }
 
         public async Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj)
@@ -19,7 +19,8 @@ namespace Marketing.Infraestrutura.Repositorio
             var estabelecimento = await _context.Set<Estabelecimento>().
                                                  Include(x=>x.Contatos).
                                                  FirstAsync(x => x.Cnpj == cnpj);
-            return estabelecimento.Contatos.Where(x=>x.AceitaMensagem).ToList();
+            var contatos = estabelecimento.Contatos.Where(x => x.AceitaMensagem).ToList();
+            return contatos ?? new List<Contato>();
         }
     }
 }

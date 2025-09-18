@@ -1,16 +1,16 @@
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Interfaces.UnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Http;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Marketing.Domain.Extensoes;
+using Marketing.Domain.Interfaces.Repositorio;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoArquivo : Servico<ImportacaoEfetuada>, IServicoArquivos
     {
-        public ServicoArquivo(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ServicoArquivo(IRepository<ImportacaoEfetuada> repository) : base(repository)
         {
         }
 

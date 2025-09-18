@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Entidades.Meta;
+using Marketing.Domain.Interfaces.IHttpClient;
 using Marketing.Domain.Interfaces.Servicos;
 
 
@@ -11,9 +12,9 @@ namespace Marketing.Application.Servicos
     {
         private readonly HttpClient _httpClient;
 
-        public ServicoMeta(IHttpClientFactory httpClientFactory)
+        public ServicoMeta(IHttpClientsFactoryPerson httpClientFactory)
         {
-            _httpClient = httpClientFactory.CreateClient("MetaHttpClient");
+            _httpClient = httpClientFactory.Client("MetaHttpClient");
         }
 
         public async Task<ServicoExtratoResponseDto> EnviarExtrato(Contato contato,

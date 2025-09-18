@@ -1,18 +1,21 @@
 ﻿using Marketing.Domain.Entidades;
-using Marketing.Domain.Interfaces.UnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.IdentityModel.Tokens;
 using Marketing.Domain.PagedResponse;
 using System.Linq.Expressions;
+using Marketing.Domain.Interfaces.Repositorio;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoContato : Servico<Contato>, IServicoContato
     {
-        private readonly IUnitOfWork _unitOfWork;
-        public ServicoContato(IUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly IRepository<Contato> _repositorioContato;
+        private readonly IRepositorioContato _irepositorioContato;
+
+        public ServicoContato(IRepository<Contato> repository, IRepositorioContato irepositorioContato) : base(repository)
         {
-            _unitOfWork = unitOfWork;
+            _repositorioContato = repository;
+            _irepositorioContato = irepositorioContato;
         }
 
         public async Task AtualizarContatosViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
@@ -21,21 +24,25 @@ namespace Marketing.Application.Servicos
             {
                 if (!linhaPlanilha.Fone.IsNullOrEmpty())
                 {
-                    var contato = await _unitOfWork.GetRepository<Contato>().
-                                            GetByIdStringAsync(linhaPlanilha.Fone);
+                    var contato = await _repositorioContato.GetByIdStringAsync(linhaPlanilha.Fone);
                     if (contato == null)
                     {
                         contato = new Contato(linhaPlanilha.Fone);
-                        await _unitOfWork.GetRepository<Contato>().AddAsync(contato);
-                        await _unitOfWork.CommitAsync();
+                        await _repositorioContato.AddAsync(contato);
+                        
                     }
                 }
             }
         }
 
+        public async Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj)
+        {
+            return await _irepositorioContato.BuscarContatosPorEstabelecimentoComAceite(cnpj);
+        }
+
         public async Task<PagedResponse<Contato>> GetAllContatos(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null)
         {
-            return await _unitOfWork.GetRepository<Contato>().GetAllAsync(pageNumber, pageSize, filtros);
+            return await _repositorioContato.GetAllAsync(pageNumber, pageSize, filtros);
         }
        
     }

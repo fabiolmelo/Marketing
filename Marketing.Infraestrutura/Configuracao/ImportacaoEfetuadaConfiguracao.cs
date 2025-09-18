@@ -9,8 +9,8 @@ namespace Marketing.Infraestrutura.Configuracao
         public void Configure(EntityTypeBuilder<ImportacaoEfetuada> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.NomeArquivoServer).HasMaxLength(255);
-            builder.Property(x => x.DataImportacao).HasMaxLength(255);
+            builder.Property(x => x.NomeArquivoServer).HasColumnType("VARCHAR(255)");
+            builder.Property(x => x.DataImportacao).HasColumnType("DATETIME");
 
             builder.HasMany(x=>x.DadosPlanilha).
                     WithOne(x=>x.ImportacaoEfetuada).

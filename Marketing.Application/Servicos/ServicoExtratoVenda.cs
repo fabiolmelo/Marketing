@@ -1,19 +1,17 @@
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
-using Marketing.Domain.Interfaces.UnitOfWork;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoExtratoVenda : Servico<ExtratoVendas>, IServicoExtratoVendas
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepositorioExtratoVendas _repositorioExtratoVenda;
         private readonly IRepositorioEstabelecimento _repositorioEstabelecimento;
-
-        public ServicoExtratoVenda(IUnitOfWork unitOfWork,
-                            IRepositorioEstabelecimento repositorioEstabelecimento) : base(unitOfWork)
+        public ServicoExtratoVenda(IRepositorioExtratoVendas repository,
+                                   IRepositorioEstabelecimento repositorioEstabelecimento) : base(repository)
         {
-            _unitOfWork = unitOfWork;
+            _repositorioExtratoVenda = repository;
             _repositorioEstabelecimento = repositorioEstabelecimento;
         }
 
@@ -21,13 +19,11 @@ namespace Marketing.Application.Servicos
         {
             foreach (DadosPlanilha linha in dadosPlanilhas)
             {
-                var estabelecimento = await _repositorioEstabelecimento.
-                                            FindEstabelecimentoIncludeContatoRede(linha.Cnpj);
-                var extrato = await _unitOfWork.GetRepository<ExtratoVendas>().FindByPredicate(
-                        x => x.Ano == linha.AnoMes.Year &&
-                        x.Mes == linha.AnoMes.Month &&
-                        x.EstabelecimentoCnpj == linha.Cnpj);
-
+                var estabelecimento = await _repositorioEstabelecimento.FindEstabelecimentoIncludeContatoRede(linha.Cnpj);
+                var extrato = await _repositorioExtratoVenda.FindByPredicate(
+                                                                                x => x.Ano == linha.AnoMes.Year &&
+                                                                                x.Mes == linha.AnoMes.Month &&
+                                                                                x.EstabelecimentoCnpj == linha.Cnpj);
                 if (estabelecimento != null && extrato == null)
                 {
                     estabelecimento.ExtratoVendas.Add(
@@ -44,10 +40,14 @@ namespace Marketing.Application.Servicos
                             linha.ReceitaNaoCapturada,
                             linha.Cnpj)
                         );
-                    _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimento);
-                    await _unitOfWork.CommitAsync();
+                    _repositorioEstabelecimento.Update(estabelecimento);
                 }
             }
+        }
+
+        public async Task<DateTime> BuscarCompetenciaVigente()
+        {
+            return await _repositorioExtratoVenda.BuscarCompetenciaVigente();
         }
     }
 }

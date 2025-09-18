@@ -1,10 +1,9 @@
 using System.Net.Http.Headers;
 using Marketing.Application.Servicos;
+using Marketing.Domain.Interfaces.IHttpClient;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
-using Marketing.Domain.Interfaces.UnitOfWork;
 using Marketing.Infraestrutura.Repositorio;
-using Marketing.Infraestrutura.Repositorio.UnitOfWork;
 
 namespace Marketing.Mvc.Extensoes
 {
@@ -12,9 +11,9 @@ namespace Marketing.Mvc.Extensoes
     {
         public static void AdicionarServicosAppIOC(this IServiceCollection servicos)
         {
+            servicos.AddSingleton<IHttpClientsFactoryPerson, HttpClientsFactoryPerson>();
             servicos.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             servicos.AddScoped(typeof(IServico<>), typeof(Servico<>));
-
             servicos.AddScoped<IServicoArquivos, ServicoArquivo>();
             servicos.AddScoped<IServicoContato, ServicoContato>();
             servicos.AddScoped<IServicoRede, ServicoRede>();
@@ -25,12 +24,12 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IServicoImportarPlanilha, ServicoImportarPlanilha>();
             servicos.AddScoped<IServicoProcessamentoMensal, ServicoProcessamentoMensal>();
             servicos.AddScoped<IServicoExtratoVendas, ServicoExtratoVenda>();
-            servicos.AddScoped<IServicoMensagem, ServicoMensagem>();
-            servicos.AddScoped<IRepositorioEstabelecimento, RepositorioEstabelecimento>();
-            servicos.AddScoped<IRepositorioRede, RepositorioRede>();
-            servicos.AddScoped<IRepositorioProcessamentoMensal, RepositorioFechamentoMensal>();
+            servicos.AddScoped<IServicoMensagemEnviada, ServicoMensagemEnviada>();
+
             servicos.AddScoped<IRepositorioContato, RepositorioContato>();
-            servicos.AddScoped<IUnitOfWork, UnitOfWork>();
+            servicos.AddScoped<IRepositorioEstabelecimento, RepositorioEstabelecimento>();
+            servicos.AddScoped<IRepositorioProcessamentoMensal, RepositorioFechamentoMensal>();
+            servicos.AddScoped<IRepositorioRede, RepositorioRede>();
         }
 
         public static void ConfigureHttpClient(IServiceCollection services,
@@ -44,7 +43,9 @@ namespace Marketing.Mvc.Extensoes
             {
                 client.BaseAddress = new Uri(apiUrl);
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }).AddHttpMessageHandler(x => new BearerTokenHandler(token));
+            })
+            .AddHttpMessageHandler(x => new BearerTokenHandler(token))
+            .SetHandlerLifetime(TimeSpan.FromMinutes(10));;
         }
     }
 }

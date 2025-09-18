@@ -1,31 +1,26 @@
 using Marketing.Application.Servicos;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
-using Marketing.Domain.Interfaces.UnitOfWork;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Marketing.Domain.Interfaces.Servicos
 {
     public class ServicoRede : Servico<Rede>, IServicoRede
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IRepositorioRede _repositorioRede;
-        public ServicoRede(IUnitOfWork unitOfWork, IRepositorioRede repositorioRede) : base(unitOfWork)
+        public ServicoRede(IRepositorioRede repository) : base(repository)
         {
-            _unitOfWork = unitOfWork;
-            _repositorioRede = repositorioRede;
+            _repositorioRede = repository;
         }
 
         public async Task AtualizarRedesViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
         {
             foreach (DadosPlanilha linhaPlanilha in dadosPlanilhas)
             {
-                var rede = await _unitOfWork.GetRepository<Rede>().GetByIdStringAsync(linhaPlanilha.Rede);
+                var rede = await _repositorioRede.GetByIdStringAsync(linhaPlanilha.Rede);
                 if (rede == null)
                 {
                     rede = new Rede(linhaPlanilha.Rede);
-                    await _unitOfWork.GetRepository<Rede>().AddAsync(rede);
-                    await _unitOfWork.CommitAsync();
+                    await _repositorioRede.AddAsync(rede);
                 }
             }
         }

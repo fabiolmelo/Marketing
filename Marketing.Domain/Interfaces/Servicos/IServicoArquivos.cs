@@ -1,8 +1,5 @@
 using Marketing.Domain.Entidades;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Marketing.Domain.Interfaces.Servicos
 {

@@ -19,6 +19,7 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task AddAsync(T entity)
         {
             await _dataContext.Set<T>().AddAsync(entity);
+            await _dataContext.SaveChangesAsync();
         }
 
         public async Task AddRangeAsync(IEnumerable<T> entities)
@@ -30,7 +31,6 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             return await _dataContext.Set<T>().AnyAsync(expression);
         }
-
         public async Task<int> Count(Expression<Func<T, bool>> expression)
         {
             return await _dataContext.Set<T>().CountAsync(expression);
@@ -83,6 +83,7 @@ namespace Marketing.Infraestrutura.Repositorio
         public void Update(T entity)
         {
             _dataContext.Set<T>().Update(entity);
+            _dataContext.SaveChanges();
         }
     }
 }

@@ -1,7 +1,6 @@
 using Marketing.Domain.Entidades;
 using Marketing.Infraestrutura.Configuracao;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Marketing.Infraestrutura.Contexto
 {
@@ -18,7 +17,7 @@ namespace Marketing.Infraestrutura.Contexto
         public DbSet<Rede> Redes { get; set; }
         public DbSet<ImportacaoEfetuada> ImportacaoEfetuada { get; set; }
         public DbSet<DadosPlanilha> DadosPlanilha { get; set; }
-        public DbSet<Mensagem> Mensagens  { get; set; }
+        public DbSet<MensagemEnviada> MensagensEnviadas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -41,7 +40,7 @@ namespace Marketing.Infraestrutura.Contexto
             modelBuilder.ApplyConfiguration(new ContatoConfiguracao());
             modelBuilder.ApplyConfiguration(new RedeConfiguracao());
             modelBuilder.ApplyConfiguration(new DadosPlanilhaConfiguration());
-            modelBuilder.ApplyConfiguration(new MensagemConfiguracao());
+            modelBuilder.ApplyConfiguration(new MensagemEnviadaConfiguracao());
         }
     }
 }

@@ -1,7 +1,5 @@
-using System.Linq.Expressions;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
-using Marketing.Domain.Interfaces.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 
 namespace Marketing.Application.Servicos
@@ -14,8 +12,7 @@ namespace Marketing.Application.Servicos
         private readonly IServicoEstabelecimento _servicoEstabelecimento;
         private readonly IServicoExtratoVendas _servicoExtratoVendas;
 
-        public ServicoImportarPlanilha(IUnitOfWork unitOfWork,
-                                       IServicoContato servicoContato,
+        public ServicoImportarPlanilha(IServicoContato servicoContato,
                                        IServicoRede servicoRede,
                                        IServicoArquivos servicoArquivos,
                                        IServicoEstabelecimento servicoEstabelecimento,

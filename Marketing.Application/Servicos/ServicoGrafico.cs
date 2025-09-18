@@ -9,10 +9,14 @@ namespace Marketing.Application.Servicos
 {
     public class ServicoGrafico : IServicoGrafico
     {
+        public ServicoGrafico()
+        {
+        }
+        
         public void GerarGrafico(Estabelecimento estabelecimento, string contentRootPath)
         {
             var caminhoGrafico = Path.Combine(contentRootPath, "DadosApp", "Grafico.jpg");
-            
+
             int largura = 500;
             int altura = 268;
             float margem = 7.5f;
