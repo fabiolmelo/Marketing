@@ -21,6 +21,7 @@ namespace Marketing.Domain.Entidades
         public virtual Estabelecimento? Estabelecimento { get; set; } 
         public string? ContatoTelefone { get; set; }
         public virtual Contato? Contato { get; set; } 
+        public string? MensagemId { get; set; }
         public virtual Mensagem? Mensagem { get; set; }
     }
 }

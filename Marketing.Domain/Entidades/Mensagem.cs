@@ -10,6 +10,7 @@ namespace Marketing.Domain.Entidades
             Id = id;
         }
 
-        public string? Id { get; set; } 
+        public string Id { get; set; } 
+        public ICollection<EnvioMensagemMensal> MensagensMensais { get; set; } = new List<EnvioMensagemMensal>();
     }
 }

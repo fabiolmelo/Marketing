@@ -17,7 +17,7 @@ namespace Marketing.Infraestrutura.Contexto
         public DbSet<Rede> Redes { get; set; }
         public DbSet<ImportacaoEfetuada> ImportacaoEfetuada { get; set; }
         public DbSet<DadosPlanilha> DadosPlanilha { get; set; }
-        public DbSet<MensagemEnviada> MensagensEnviadas { get; set; }
+        public DbSet<EnvioMensagemMensal> EnviosMensagemMensais { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,6 +31,8 @@ namespace Marketing.Infraestrutura.Contexto
                 //                         .EnableSensitiveDataLogging()
                 //                         .EnableDetailedErrors();
             }
+
+            
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +43,8 @@ namespace Marketing.Infraestrutura.Contexto
             modelBuilder.ApplyConfiguration(new RedeConfiguracao());
             modelBuilder.ApplyConfiguration(new DadosPlanilhaConfiguration());
             modelBuilder.ApplyConfiguration(new MensagemEnviadaConfiguracao());
+
         }
+
     }
 }

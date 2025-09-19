@@ -55,6 +55,12 @@ namespace Marketing.Application.Servicos
                     var contatos = await _repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
                     foreach (Contato contato in contatos)
                     {
+                        var mensagem = new EnvioMensagemMensal(competencia,
+                                                               estabelecimento.Cnpj,
+                                                               estabelecimento,
+                                                               contato.Telefone ?? "",
+                                                               contato);
+                        
                         // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
                         // if (response.IsSuccessStatusCode)
                         // {
