@@ -19,7 +19,9 @@ switch (bancoDeDados)
         connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase") ?? "";
         builder.Services.AddDbContext<DataContext>(
             dbContextOptions => dbContextOptions
-                .UseSqlite(connectionString));
+                .UseSqlite(connectionString)
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+            );
         break;
     default:
         connectionString = builder.Configuration.GetConnectionString("MySql") ?? "";
@@ -31,6 +33,7 @@ switch (bancoDeDados)
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors()
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
         );
         break;
 }

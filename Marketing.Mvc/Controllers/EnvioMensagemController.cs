@@ -8,9 +8,10 @@ namespace Marketing.Mvc.Controllers
         private readonly IServicoExtratoVendas _servicoExtratoVendas;
         private readonly IServicoEnvioMensagemMensal _servicoEnvioMensagemMensal;
 
-        public EnvioMensagemController(IServicoExtratoVendas servicoExtratoVendas)
+        public EnvioMensagemController(IServicoExtratoVendas servicoExtratoVendas, IServicoEnvioMensagemMensal servicoEnvioMensagemMensal)
         {
             _servicoExtratoVendas = servicoExtratoVendas;
+            _servicoEnvioMensagemMensal = servicoEnvioMensagemMensal;
         }
 
         [HttpGet]

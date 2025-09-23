@@ -17,7 +17,7 @@ namespace Marketing.Domain.Entidades
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);
         public string? UltimoPdfGerado { get; set; }
-        public ICollection<EnvioMensagemMensal> MensagensMensais { get; set; } = new List<EnvioMensagemMensal>();
+        // public ICollection<EnvioMensagemMensal> MensagensMensais { get; set; } = new List<EnvioMensagemMensal>();
         public decimal IncidenciaMedia
         {
             //get { return this.ExtratoVendas.Count == 0 ? 0 : (decimal)this.ExtratoVendas.Average(x => x.IncidenciaReal); }

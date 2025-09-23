@@ -6,8 +6,15 @@ namespace Marketing.Application.Servicos
 {
     public class ServicoEnvioMensagemMensal : Servico<EnvioMensagemMensal>, IServicoEnvioMensagemMensal
     {
-        public ServicoEnvioMensagemMensal(IRepository<EnvioMensagemMensal> repository) : base(repository)
+        private readonly IRepositorioEnvioMensagemMensal _repositorioEnvioMensagemMensal;
+        public ServicoEnvioMensagemMensal(IRepositorioEnvioMensagemMensal repository) : base(repository)
         {
+            _repositorioEnvioMensagemMensal = repository;
+        }
+
+        public async Task<List<EnvioMensagemMensal>> BuscarMensagensNaoEnviadas(DateTime competencia)
+        {
+            return await _repositorioEnvioMensagemMensal.BuscarMensagensNaoEnviadas(competencia);
         }
     }
 }

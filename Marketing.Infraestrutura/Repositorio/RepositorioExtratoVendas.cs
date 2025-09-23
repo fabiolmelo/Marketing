@@ -15,7 +15,7 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<DateTime> BuscarCompetenciaVigente()
         {
-            return await _context.Set<ExtratoVendas>().MaxAsync(x => x.Competencia);
+            return await _context.Set<ExtratoVendas>().AsNoTracking().MaxAsync(x => x.Competencia);
         }
     }
 }

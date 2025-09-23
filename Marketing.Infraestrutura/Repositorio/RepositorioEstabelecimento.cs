@@ -16,7 +16,7 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
         {
-            var estabelecimento = await _context.Set<Estabelecimento>().
+            var estabelecimento = await _context.Set<Estabelecimento>().AsNoTracking().
                                         Where(x => x.Cnpj == cnpj).
                                         Include(x => x.Contatos).
                                         Include(x => x.Rede).
@@ -28,7 +28,7 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task<Estabelecimento?> FindEstabelecimentoPorCnpj(string cnpj)
         {
 
-            return await _context.Set<Estabelecimento>().Include(x => x.Rede).Include(X => X.Contatos).
+            return await _context.Set<Estabelecimento>().AsNoTracking().Include(x => x.Rede).Include(X => X.Contatos).
                             Where(x => x.Cnpj == cnpj).FirstOrDefaultAsync();
         }
 

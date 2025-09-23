@@ -24,11 +24,13 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IServicoImportarPlanilha, ServicoImportarPlanilha>();
             servicos.AddScoped<IServicoProcessamentoMensal, ServicoProcessamentoMensal>();
             servicos.AddScoped<IServicoExtratoVendas, ServicoExtratoVenda>();
-            servicos.AddScoped<IServicoMensagemEnviada, ServicoMensagemEnviada>();
+            servicos.AddScoped<IServicoEnvioMensagemMensal, ServicoEnvioMensagemMensal>();
 
             servicos.AddScoped<IRepositorioContato, RepositorioContato>();
+            servicos.AddScoped<IRepositorioExtratoVendas, RepositorioExtratoVendas>();
             servicos.AddScoped<IRepositorioEstabelecimento, RepositorioEstabelecimento>();
             servicos.AddScoped<IRepositorioProcessamentoMensal, RepositorioFechamentoMensal>();
+            servicos.AddScoped<IRepositorioEnvioMensagemMensal, RepositorioEnvioMensagemMensal>();
             servicos.AddScoped<IRepositorioRede, RepositorioRede>();
         }
 

@@ -1,6 +1,4 @@
 ﻿using Marketing.Domain.Entidades;
-using System;
-using System.Threading.Tasks;
 
 namespace Marketing.Domain.Interfaces.Repositorio
 {

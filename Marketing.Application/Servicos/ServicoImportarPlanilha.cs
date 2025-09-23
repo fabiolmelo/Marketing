@@ -39,7 +39,7 @@ namespace Marketing.Application.Servicos
             await _servicoEstabelecimento.AtualizarEstabelecimentoViaPlanilha(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarAssociacaoEstabelecimentoContato(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarAssociacaoEstabelecimentoRede(dadosPlanilha);
-            await _servicoExtratoVendas.AtualizarExtratosViaPlanilha(dadosPlanilha);
+            await _servicoEstabelecimento.AtualizarExtratosViaPlanilha(dadosPlanilha);
             return true;
         }
     }

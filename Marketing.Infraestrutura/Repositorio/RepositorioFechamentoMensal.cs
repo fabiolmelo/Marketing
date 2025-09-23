@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Marketing.Infraestrutura.Repositorio
 {
-    public class RepositorioFechamentoMensal : Repository<FechamentoMensal>, IRepositorioProcessamentoMensal
+    public class RepositorioFechamentoMensal : Repository<EnvioMensagemMensal>, IRepositorioProcessamentoMensal
     {
         private readonly DataContext _context;
         

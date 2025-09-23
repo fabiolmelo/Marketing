@@ -1,7 +1,5 @@
 using Marketing.Domain.Entidades;
 using Marketing.Domain.PagedResponse;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Marketing.Domain.Interfaces.Servicos
 {
@@ -12,5 +10,6 @@ namespace Marketing.Domain.Interfaces.Servicos
         Task AtualizarAssociacaoEstabelecimentoContato(List<DadosPlanilha> dadosPlanilhas);
         Task AtualizarAssociacaoEstabelecimentoRede(List<DadosPlanilha> dadosPlanilhas);
         Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj);
+        Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas);
     }
 }

@@ -12,14 +12,18 @@ namespace Marketing.Infraestrutura.Configuracao
             builder.Property(x => x.Cnpj).HasMaxLength(14);
             builder.Property(x => x.Uf).HasMaxLength(2);
             builder.Property(x => x.Cidade).HasMaxLength(100);
-            
-            builder.HasMany(r=>r.ExtratoVendas)
-                   .WithOne(e=>e.Estabelecimento)
-                   .HasForeignKey(e=>e.EstabelecimentoCnpj);
-                   
-            builder.HasOne(x=>x.Rede).
-                    WithMany(x=>x.Estabelecimentos).
-                    HasPrincipalKey(x=>x.Nome);
+
+            builder.HasMany(r => r.ExtratoVendas)
+                   .WithOne(e => e.Estabelecimento)
+                   .HasForeignKey(e => e.EstabelecimentoCnpj);
+
+            builder.HasOne(x => x.Rede).
+                    WithMany(x => x.Estabelecimentos).
+                    HasPrincipalKey(x => x.Nome);
+
+            // builder.HasMany(x => x.MensagensMensais)
+            //        .WithOne(e => e.Estabelecimento)
+            //        .HasForeignKey(x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj }); 
         }
     }
 }

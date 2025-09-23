@@ -10,7 +10,7 @@ namespace Marketing.Application.Servicos
     {
         private readonly IServicoMeta _servicoMeta;
         private readonly IServicoRede _servicoRede;
-        private readonly IServicoMensagemEnviada _servicoMensagemEnviada;
+        private readonly IServicoEnvioMensagemMensal _servicoEnvioMensagemMensal;
         private readonly IServicoEstabelecimento _servicoEstabelecimento;
         private readonly IRepositorioProcessamentoMensal _repositorioProcessamentoMensal;
         private readonly IRepositorioContato _repositorioContato;
@@ -21,18 +21,18 @@ namespace Marketing.Application.Servicos
                                           IRepositorioContato repositorioContato,
                                           IServicoGrafico servicoGrafico,
                                           IServicoArquivos servicoArquivos,
-                                          IServicoMensagemEnviada servicoMensagemEnviada,
                                           IServicoRede servicoRede,
-                                          IServicoEstabelecimento servicoEstabelecimento)
+                                          IServicoEstabelecimento servicoEstabelecimento,
+                                          IServicoEnvioMensagemMensal servicoEnvioMensagemMensal)
         {
             _repositorioProcessamentoMensal = repositorioProcessamentoMensal;
             _servicoMeta = servicoMeta;
             _repositorioContato = repositorioContato;
             ServicoGrafico = servicoGrafico;
             ServicoArquivos = servicoArquivos;
-            _servicoMensagemEnviada = servicoMensagemEnviada;
             _servicoRede = servicoRede;
             _servicoEstabelecimento = servicoEstabelecimento;
+            _servicoEnvioMensagemMensal = servicoEnvioMensagemMensal;
         }
 
         public IServicoGrafico ServicoGrafico { get; }
@@ -55,11 +55,10 @@ namespace Marketing.Application.Servicos
                     var contatos = await _repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
                     foreach (Contato contato in contatos)
                     {
-                        var mensagem = new EnvioMensagemMensal(competencia,
-                                                               estabelecimento.Cnpj,
-                                                               estabelecimento,
-                                                               contato.Telefone ?? "",
-                                                               contato);
+                        var telefone = contato.Telefone ?? "";
+                        var mensagem = new EnvioMensagemMensal(competencia, estabelecimento.Cnpj, estabelecimento,
+                                                               telefone, contato);
+                        await _servicoEnvioMensagemMensal.AddAsync(mensagem);
                         
                         // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
                         // if (response.IsSuccessStatusCode)

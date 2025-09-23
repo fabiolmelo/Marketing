@@ -66,7 +66,8 @@ namespace Marketing.Application.Servicos
                     var contato = await _repositorioContato.GetByIdStringAsync(linhaPlanilha.Fone);
                     if (estabelecimento != null && contato != null)
                     {
-                        if (!estabelecimento.Contatos.Contains(contato))
+                        
+                        if (!estabelecimento.Contatos.Any(x=>x.Telefone == contato.Telefone))
                         {
                             estabelecimento.Contatos.Add(contato);
                             _repositoryEstabelecimento.Update(estabelecimento);
@@ -87,9 +88,12 @@ namespace Marketing.Application.Servicos
 
                     if (estabelecimento != null && rede != null)
                     {
-                        estabelecimento.Rede = rede;
-                        estabelecimento.RedeNome = rede.Nome;
-                        _repositoryEstabelecimento.Update(estabelecimento);
+                        if (estabelecimento.RedeNome != rede.Nome)
+                        {
+                            estabelecimento.Rede = rede;
+                            estabelecimento.RedeNome = rede.Nome;
+                            _repositoryEstabelecimento.Update(estabelecimento);
+                        }
                     }
                 }
             }
@@ -103,6 +107,38 @@ namespace Marketing.Application.Servicos
         public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
         {
             return await _repositoryEstabelecimento.FindEstabelecimentoIncludeContatoRede(cnpj);
+        }
+
+        public async Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
+        {
+            foreach (DadosPlanilha linha in dadosPlanilhas)
+            {
+                var estabelecimento = await _repositoryEstabelecimento.FindEstabelecimentoIncludeContatoRede(linha.Cnpj);
+                if (estabelecimento != null)
+                {
+                    var extrato = estabelecimento.ExtratoVendas.Any(x => x.Ano == linha.AnoMes.Year &&
+                                                                     x.Mes == linha.AnoMes.Month &&
+                                                                     x.EstabelecimentoCnpj == linha.Cnpj);
+                    if (estabelecimento != null && extrato == false)
+                    {
+                        estabelecimento.ExtratoVendas.Add(
+                            new ExtratoVendas(
+                                linha.AnoMes.Year,
+                                linha.AnoMes.Month,
+                                linha.AnoMes,
+                                linha.TotalPedidos,
+                                linha.PedidosComCocaCola,
+                                linha.IncidenciaReal,
+                                linha.Meta,
+                                linha.PrecoUnitarioMedio,
+                                linha.TotalPedidosNaoCapturados,
+                                linha.ReceitaNaoCapturada,
+                                linha.Cnpj)
+                            );
+                        _repositoryEstabelecimento.Update(estabelecimento);
+                    }
+                }
+            }
         }
     }
 }

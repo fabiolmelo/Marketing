@@ -18,7 +18,7 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var ano = competencia.Year;
             var mes = competencia.Month;
-            var rede = await _context.Set<Rede>().
+            var rede = await _context.Set<Rede>().AsNoTracking().
                 Include(es => es.Estabelecimentos).
                     ThenInclude(es => es.ExtratoVendas.
                                     Where(ex => ex.Competencia > DateTime.Now.AddMonths(-12))).
