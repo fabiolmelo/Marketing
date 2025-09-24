@@ -1,49 +1,28 @@
-﻿using System.Text.Json;
-using Marketing.Domain.Entidades;
+﻿using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
-using Marketing.Domain.Interfaces.Repositorio;
+using Marketing.Domain.Interfaces.IUnityOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoProcessamentoMensal : IServicoProcessamentoMensal
     {
-        private readonly IServicoMeta _servicoMeta;
-        private readonly IServicoRede _servicoRede;
-        private readonly IServicoEnvioMensagemMensal _servicoEnvioMensagemMensal;
-        private readonly IServicoEstabelecimento _servicoEstabelecimento;
-        private readonly IRepositorioProcessamentoMensal _repositorioProcessamentoMensal;
-        private readonly IRepositorioContato _repositorioContato;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IServicoGrafico _servicoGrafico;
+        private readonly IServicoArquivos _servicoArquivos;
 
-
-        public ServicoProcessamentoMensal(IRepositorioProcessamentoMensal repositorioProcessamentoMensal,
-                                          IServicoMeta servicoMeta,
-                                          IRepositorioContato repositorioContato,
-                                          IServicoGrafico servicoGrafico,
-                                          IServicoArquivos servicoArquivos,
-                                          IServicoRede servicoRede,
-                                          IServicoEstabelecimento servicoEstabelecimento,
-                                          IServicoEnvioMensagemMensal servicoEnvioMensagemMensal)
+        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGrafico servicoGrafico, IServicoArquivos servicoArquivos)
         {
-            _repositorioProcessamentoMensal = repositorioProcessamentoMensal;
-            _servicoMeta = servicoMeta;
-            _repositorioContato = repositorioContato;
-            ServicoGrafico = servicoGrafico;
-            ServicoArquivos = servicoArquivos;
-            _servicoRede = servicoRede;
-            _servicoEstabelecimento = servicoEstabelecimento;
-            _servicoEnvioMensagemMensal = servicoEnvioMensagemMensal;
+            _unitOfWork = unitOfWork;
+            _servicoGrafico = servicoGrafico;
+            _servicoArquivos = servicoArquivos;
         }
-
-        public IServicoGrafico ServicoGrafico { get; }
-
-        public IServicoArquivos ServicoArquivos { get; }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
                                                    String contentRootPath,
                                                    string caminhoApp)
         {
-            var estabelecimentos = await _repositorioProcessamentoMensal.GetAllEstabelecimentosParaGerarPdf(competencia);
+            var estabelecimentos = await _unitOfWork.repositorioProcessamentoMensal.GetAllEstabelecimentosParaGerarPdf(competencia);
             string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
 
             try
@@ -52,14 +31,14 @@ namespace Marketing.Application.Servicos
                 {
                     await GerarProcessamentoPorEstabelecimento(estabelecimento, competencia,
                                                                contentRootPath, caminhoApp);
-                    var contatos = await _repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
+                    var contatos = await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
                     foreach (Contato contato in contatos)
                     {
                         var telefone = contato.Telefone ?? "";
-                        var mensagem = new EnvioMensagemMensal(competencia, estabelecimento.Cnpj, estabelecimento,
-                                                               telefone, contato);
-                        await _servicoEnvioMensagemMensal.AddAsync(mensagem);
-                        
+                        var mensagem = new EnvioMensagemMensal(competencia, estabelecimento.Cnpj, telefone);
+                        await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
+                        await _unitOfWork.CommitAsync();
+
                         // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
                         // if (response.IsSuccessStatusCode)
                         // {
@@ -93,16 +72,17 @@ namespace Marketing.Application.Servicos
         {
             if (estabelecimento.ExtratoVendas.Count > 0)
             {
-                var posicaoNaRede = await _servicoRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
+                var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
                 var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial.Replace(" ","_")}.pdf";
-                ServicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
-                ServicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
+                _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                     posicaoNaRede, contentRootPath, caminhoApp);
-                var estabelecimentoUpdate = await _servicoEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
+                var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
                 if (estabelecimentoUpdate != null)
                 {
                     estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
-                    _servicoEstabelecimento.Update(estabelecimentoUpdate);
+                    _unitOfWork.repositorioEstabelecimento.Update(estabelecimentoUpdate);
+                    await _unitOfWork.CommitAsync();
                 }
             }                                    
         }

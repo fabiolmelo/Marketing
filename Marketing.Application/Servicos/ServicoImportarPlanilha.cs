@@ -23,6 +23,7 @@ namespace Marketing.Application.Servicos
             _servicoArquivos = servicoArquivos;
             _servicoEstabelecimento = servicoEstabelecimento;
             _servicoExtratoVendas = servicoExtratoVendas;
+            
         }
 
         public async Task<bool> ImportarPlanilha(IFormFile formFile)

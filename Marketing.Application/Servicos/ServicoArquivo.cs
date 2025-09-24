@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Http;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Marketing.Domain.Extensoes;
-using Marketing.Domain.Interfaces.Repositorio;
+using Marketing.Domain.Interfaces.IUnityOfWork;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoArquivo : Servico<ImportacaoEfetuada>, IServicoArquivos
     {
-        public ServicoArquivo(IRepository<ImportacaoEfetuada> repository) : base(repository)
+        public ServicoArquivo(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 

@@ -1,9 +1,11 @@
 using System.Net.Http.Headers;
 using Marketing.Application.Servicos;
 using Marketing.Domain.Interfaces.IHttpClient;
+using Marketing.Domain.Interfaces.IUnityOfWork;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
 using Marketing.Infraestrutura.Repositorio;
+using Marketing.Infraestrutura.Repositorio.UnitOfWork;
 
 namespace Marketing.Mvc.Extensoes
 {
@@ -11,9 +13,13 @@ namespace Marketing.Mvc.Extensoes
     {
         public static void AdicionarServicosAppIOC(this IServiceCollection servicos)
         {
+
             servicos.AddSingleton<IHttpClientsFactoryPerson, HttpClientsFactoryPerson>();
+
+            servicos.AddScoped<IUnitOfWork, UnitOfWork>();
             servicos.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             servicos.AddScoped(typeof(IServico<>), typeof(Servico<>));
+
             servicos.AddScoped<IServicoArquivos, ServicoArquivo>();
             servicos.AddScoped<IServicoContato, ServicoContato>();
             servicos.AddScoped<IServicoRede, ServicoRede>();

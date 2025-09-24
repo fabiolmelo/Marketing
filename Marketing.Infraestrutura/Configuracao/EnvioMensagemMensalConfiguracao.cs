@@ -11,7 +11,7 @@ namespace Marketing.Infraestrutura.Configuracao
             builder.HasKey(x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj });
             // builder.HasOne(x => x.Contato).WithMany(x => x.MensagensMensais).HasForeignKey(x => x.ContatoTelefone);
             // builder.HasOne(x => x.Estabelecimento).WithMany(x => x.MensagensMensais).HasForeignKey(x => x.EstabelecimentoCnpj);
-            builder.HasOne(x => x.Mensagem).WithMany(x => x.MensagensMensais).HasForeignKey(x => x.MensagemId).IsRequired(false);
+            //builder.HasOne(x => x.Mensagem).WithMany(x => x.MensagensMensais).HasForeignKey(x => x.MensagemId).IsRequired(false);
         }
     }
 }

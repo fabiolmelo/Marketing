@@ -143,8 +143,6 @@ namespace Marketing.Infraestrutura.Migrations
 
                     b.HasKey("Competencia", "ContatoTelefone", "EstabelecimentoCnpj");
 
-                    b.HasIndex("MensagemId");
-
                     b.ToTable("EnviosMensagemMensais");
                 });
 
@@ -257,16 +255,6 @@ namespace Marketing.Infraestrutura.Migrations
                     b.ToTable("ImportacaoEfetuada");
                 });
 
-            modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Mensagem");
-                });
-
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>
                 {
                     b.Property<string>("Nome")
@@ -304,15 +292,6 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Navigation("ImportacaoEfetuada");
                 });
 
-            modelBuilder.Entity("Marketing.Domain.Entidades.EnvioMensagemMensal", b =>
-                {
-                    b.HasOne("Marketing.Domain.Entidades.Mensagem", "Mensagem")
-                        .WithMany("MensagensMensais")
-                        .HasForeignKey("MensagemId");
-
-                    b.Navigation("Mensagem");
-                });
-
             modelBuilder.Entity("Marketing.Domain.Entidades.Estabelecimento", b =>
                 {
                     b.HasOne("Marketing.Domain.Entidades.Rede", "Rede")
@@ -343,11 +322,6 @@ namespace Marketing.Infraestrutura.Migrations
             modelBuilder.Entity("Marketing.Domain.Entidades.ImportacaoEfetuada", b =>
                 {
                     b.Navigation("DadosPlanilha");
-                });
-
-            modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
-                {
-                    b.Navigation("MensagensMensais");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>

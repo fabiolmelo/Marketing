@@ -19,14 +19,11 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task AddAsync(T entity)
         {
             await _dataContext.Set<T>().AddAsync(entity);
-            await _dataContext.SaveChangesAsync();
-            _dataContext.ChangeTracker.Clear();
         }
 
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
             await _dataContext.BulkInsertAsync<T>(entities);
-             _dataContext.ChangeTracker.Clear();
         }
 
         public async Task<bool> Any(Expression<Func<T, bool>> expression)
@@ -41,7 +38,6 @@ namespace Marketing.Infraestrutura.Repositorio
         public void Delete(T entity)
         {
             _dataContext.Set<T>().Remove(entity);
-            _dataContext.SaveChanges();
         }
 
         public async Task<T?> FindByPredicate(Expression<Func<T, bool>> expression)
@@ -85,9 +81,7 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public void Update(T entity)
         {
-            _dataContext.Set<T>().Update(entity);
-            _dataContext.SaveChanges();
-            _dataContext.ChangeTracker.Clear(); 
+            _dataContext.Entry(entity).State = EntityState.Modified;
         }
     }
 }

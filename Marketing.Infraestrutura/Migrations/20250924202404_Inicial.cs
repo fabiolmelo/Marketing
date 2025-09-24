@@ -31,6 +31,20 @@ namespace Marketing.Infraestrutura.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EnviosMensagemMensais",
+                columns: table => new
+                {
+                    Competencia = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EstabelecimentoCnpj = table.Column<string>(type: "TEXT", nullable: false),
+                    ContatoTelefone = table.Column<string>(type: "TEXT", nullable: false),
+                    MensagemId = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EnviosMensagemMensais", x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ImportacaoEfetuada",
                 columns: table => new
                 {
@@ -42,17 +56,6 @@ namespace Marketing.Infraestrutura.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ImportacaoEfetuada", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Mensagem",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Mensagem", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,25 +98,6 @@ namespace Marketing.Infraestrutura.Migrations
                         principalTable: "ImportacaoEfetuada",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EnviosMensagemMensais",
-                columns: table => new
-                {
-                    Competencia = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    EstabelecimentoCnpj = table.Column<string>(type: "TEXT", nullable: false),
-                    ContatoTelefone = table.Column<string>(type: "TEXT", nullable: false),
-                    MensagemId = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EnviosMensagemMensais", x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj });
-                    table.ForeignKey(
-                        name: "FK_EnviosMensagemMensais_Mensagem_MensagemId",
-                        column: x => x.MensagemId,
-                        principalTable: "Mensagem",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -203,11 +187,6 @@ namespace Marketing.Infraestrutura.Migrations
                 column: "Token");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EnviosMensagemMensais_MensagemId",
-                table: "EnviosMensagemMensais",
-                column: "MensagemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Estabelecimentos_RedeNome",
                 table: "Estabelecimentos",
                 column: "RedeNome");
@@ -238,9 +217,6 @@ namespace Marketing.Infraestrutura.Migrations
 
             migrationBuilder.DropTable(
                 name: "ImportacaoEfetuada");
-
-            migrationBuilder.DropTable(
-                name: "Mensagem");
 
             migrationBuilder.DropTable(
                 name: "Estabelecimentos");

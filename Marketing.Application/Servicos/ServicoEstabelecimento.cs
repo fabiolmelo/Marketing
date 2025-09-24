@@ -1,5 +1,5 @@
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Interfaces.Repositorio;
+using Marketing.Domain.Interfaces.IUnityOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Marketing.Domain.PagedResponse;
 
@@ -7,16 +7,11 @@ namespace Marketing.Application.Servicos
 {
     public class ServicoEstabelecimento : Servico<Estabelecimento>, IServicoEstabelecimento
     {
-        private readonly IRepositorioEstabelecimento _repositoryEstabelecimento;
-        private readonly IRepositorioRede _repositoryRede;
-        private readonly IRepositorioContato _repositorioContato;
-        public ServicoEstabelecimento(IRepositorioEstabelecimento repositoryEstabelecimento,
-                                      IRepositorioRede repositoryRede,
-                                      IRepositorioContato repositorioContato) : base(repositoryEstabelecimento)
+        private readonly IUnitOfWork _unitOfWork;
+        
+        public ServicoEstabelecimento(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _repositoryEstabelecimento = repositoryEstabelecimento;
-            _repositoryRede = repositoryRede;
-            _repositorioContato = repositorioContato;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task AtualizarEstabelecimentoViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
@@ -36,8 +31,8 @@ namespace Marketing.Application.Servicos
             {
                 if (grupo.Cnpj != null)
                 {
-                    var estabelecimento = await _repositoryEstabelecimento.GetByIdStringAsync(grupo.Cnpj);
-                    var rede = await _repositoryRede.GetByIdStringAsync(grupo.NomeRede);
+                    var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(grupo.Cnpj);
+                    var rede = await _unitOfWork.repositorioRede.GetByIdStringAsync(grupo.NomeRede);
                     if (estabelecimento == null && rede != null)
                     {
                         estabelecimento = new Estabelecimento()
@@ -49,7 +44,7 @@ namespace Marketing.Application.Servicos
                             Rede = rede,
                             RedeNome = rede.Nome
                         };
-                        await _repositoryEstabelecimento.AddAsync(estabelecimento);
+                        await _unitOfWork.repositorioEstabelecimento.AddAsync(estabelecimento);
                     }
                 }
             }
@@ -62,15 +57,16 @@ namespace Marketing.Application.Servicos
             {
                 if (linhaPlanilha.Fone != String.Empty && linhaPlanilha.Fone != null)
                 {
-                    var estabelecimento = await _repositoryEstabelecimento.FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
-                    var contato = await _repositorioContato.GetByIdStringAsync(linhaPlanilha.Fone);
+                    var estabelecimento = await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
+                    var contato = await _unitOfWork.repositorioContato.GetByIdStringAsync(linhaPlanilha.Fone);
                     if (estabelecimento != null && contato != null)
                     {
-                        
-                        if (!estabelecimento.Contatos.Any(x=>x.Telefone == contato.Telefone))
+
+                        if (!estabelecimento.Contatos.Any(x => x.Telefone == contato.Telefone))
                         {
                             estabelecimento.Contatos.Add(contato);
-                            _repositoryEstabelecimento.Update(estabelecimento);
+                            _unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
+                            await _unitOfWork.CommitAsync();
                         }
                     }    
                 }
@@ -84,7 +80,7 @@ namespace Marketing.Application.Servicos
                 if (linhaPlanilha.Rede != String.Empty && linhaPlanilha.Rede != null)
                 {
                     var estabelecimento = await FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
-                    var rede = await _repositoryRede.GetByIdStringAsync(linhaPlanilha.Rede);
+                    var rede = await _unitOfWork.repositorioRede.GetByIdStringAsync(linhaPlanilha.Rede);
 
                     if (estabelecimento != null && rede != null)
                     {
@@ -92,7 +88,8 @@ namespace Marketing.Application.Servicos
                         {
                             estabelecimento.Rede = rede;
                             estabelecimento.RedeNome = rede.Nome;
-                            _repositoryEstabelecimento.Update(estabelecimento);
+                            _unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
+                            await _unitOfWork.CommitAsync();
                         }
                     }
                 }
@@ -101,19 +98,19 @@ namespace Marketing.Application.Servicos
 
         public async Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
         {
-            return await _repositoryEstabelecimento.GetAllEstabelecimentos(pageNumber, pageSize, filtro);
+            return await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentos(pageNumber, pageSize, filtro);
         }
 
         public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
         {
-            return await _repositoryEstabelecimento.FindEstabelecimentoIncludeContatoRede(cnpj);
+            return await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoIncludeContatoRede(cnpj);
         }
 
         public async Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
         {
             foreach (DadosPlanilha linha in dadosPlanilhas)
             {
-                var estabelecimento = await _repositoryEstabelecimento.FindEstabelecimentoIncludeContatoRede(linha.Cnpj);
+                var estabelecimento = await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoIncludeContatoRede(linha.Cnpj);
                 if (estabelecimento != null)
                 {
                     var extrato = estabelecimento.ExtratoVendas.Any(x => x.Ano == linha.AnoMes.Year &&
@@ -135,7 +132,8 @@ namespace Marketing.Application.Servicos
                                 linha.ReceitaNaoCapturada,
                                 linha.Cnpj)
                             );
-                        _repositoryEstabelecimento.Update(estabelecimento);
+                        _unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
+                        await _unitOfWork.CommitAsync();
                     }
                 }
             }
