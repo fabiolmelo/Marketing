@@ -162,7 +162,6 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RedeNome")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Uf")
@@ -296,9 +295,7 @@ namespace Marketing.Infraestrutura.Migrations
                 {
                     b.HasOne("Marketing.Domain.Entidades.Rede", "Rede")
                         .WithMany("Estabelecimentos")
-                        .HasForeignKey("RedeNome")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RedeNome");
 
                     b.Navigation("Rede");
                 });

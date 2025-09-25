@@ -195,7 +195,7 @@ namespace Marketing.Application.Servicos
                     for (var index = 0; index < qtdExtrato; index++)
                     {
                         volumePedido[index] = new ColumnText(directContent);
-                        volumePedidoText[index] = estabelecimento.ExtratoVendas[index].TotalPedidos.ToString("N0");
+                        volumePedidoText[index] = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidos.ToString("N0");
                         volumePedidoPhrase[index] = new Phrase(new Chunk(volumePedidoText[index], fontValoresGraf));
                         int fatorPosicao = (index * FATOR_FIXO);
                         volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 285 + fatorPosicao, 382, 200 + fatorPosicao, 432, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
@@ -210,7 +210,7 @@ namespace Marketing.Application.Servicos
                     for (var index = 0; index < qtdExtrato; index++)
                     {
                         volumePedidoCoca[index] = new ColumnText(directContent);
-                        volumePedidoCocaText[index] = estabelecimento.ExtratoVendas[index].PedidosComCocaCola.ToString("N0");
+                        volumePedidoCocaText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PedidosComCocaCola.ToString("N0");
                         volumePedidoCocaPhrase[index] = new Phrase(new Chunk(volumePedidoCocaText[index], fontValoresGraf));
                         int fatorPosicao = (index * FATOR_FIXO);
                         volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 285 + fatorPosicao, 367, 200 + fatorPosicao, 417, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
@@ -225,7 +225,7 @@ namespace Marketing.Application.Servicos
                     for (var index = 0; index < qtdExtrato; index++)
                     {
                         meses[index] = new ColumnText(directContent);
-                        mesesText[index] = estabelecimento.ExtratoVendas[index].Competencia.ToString("MMM yy").PriMaiuscula();
+                        mesesText[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
                         mesesPhrase[index] = new Phrase(new Chunk(mesesText[index], fontValoresGraf));
                         int fatorPosicao = (index * FATOR_FIXO);
                         meses[index].SetSimpleColumn(mesesPhrase[index], 285 + fatorPosicao, 212, 200 + fatorPosicao, 272, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
@@ -239,7 +239,7 @@ namespace Marketing.Application.Servicos
 
                     for (var index = 0; index < qtdExtrato; index++)
                     {
-                        decimal aprovMeta = estabelecimento.ExtratoVendas[index].IncidenciaReal - estabelecimento.ExtratoVendas[index].Meta;
+                        decimal aprovMeta = estabelecimento.ExtratoVendas.ElementAt(index).IncidenciaReal - estabelecimento.ExtratoVendas.ElementAt(index).Meta;
                         aproveitamento[index] = new ColumnText(directContent);
                         aproveitamentoText[index] = aprovMeta.ToString("P0");
                         aproveitamentoPhrase[index] = new Phrase(new Chunk(aproveitamentoText[index], fontValoresGraf));
@@ -255,7 +255,7 @@ namespace Marketing.Application.Servicos
 
                     for (var index = 0; index < qtdExtrato; index++)
                     {
-                        int qtde = estabelecimento.ExtratoVendas[index].TotalPedidosNaoCapturados * -1;
+                        int qtde = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidosNaoCapturados * -1;
                         Font fontNaoCap = qtde < 0 ? fontValoresGrafRed : qtde == 0 ? fontValoresGraf : fontValoresGrafGreen;
                         naoCapiturados[index] = new ColumnText(directContent);
                         naoCapituradosText[index] = qtde.ToString("N0");
@@ -273,7 +273,7 @@ namespace Marketing.Application.Servicos
                     for (var index = 0; index < qtdExtrato; index++)
                     {
                         precoMedio[index] = new ColumnText(directContent);
-                        precoMedioText[index] = estabelecimento.ExtratoVendas[index].PrecoUnitarioMedio.ToString("C2");
+                        precoMedioText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PrecoUnitarioMedio.ToString("C2");
                         precoMedioPhrase[index] = new Phrase(new Chunk(precoMedioText[index], fontValoresGraf));
                         int fatorPosicao = (index * FATOR_FIXO);
                         precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 197 + fatorPosicao, 173, 217 + fatorPosicao, 211, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
@@ -287,7 +287,7 @@ namespace Marketing.Application.Servicos
 
                     for (var index = 0; index < qtdExtrato; index++)
                     {
-                        decimal receita = estabelecimento.ExtratoVendas[index].ReceitaNaoCapturada * -1;
+                        decimal receita = estabelecimento.ExtratoVendas.ElementAt(index).ReceitaNaoCapturada * -1;
                         Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
                         crifaofixo[index] = new ColumnText(directContent);
                         crifaofixoText[index] = "R$";
@@ -304,7 +304,7 @@ namespace Marketing.Application.Servicos
 
                     for (var index = 0; index < qtdExtrato; index++)
                     {
-                        decimal receita = estabelecimento.ExtratoVendas[index].ReceitaNaoCapturada * -1;
+                        decimal receita = estabelecimento.ExtratoVendas.ElementAt(index).ReceitaNaoCapturada * -1;
                         Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
                         receitaNaoCapiturados[index] = new ColumnText(directContent);
                         receitaNaoCapituradosText[index] = receita.ToString("N2");
@@ -417,7 +417,7 @@ namespace Marketing.Application.Servicos
 
                     for (var index = 0; index < qtdExtrato; index++)
                     {
-                        int incidenciaRealValor = (int)(estabelecimento.ExtratoVendas[index].IncidenciaReal * 100);
+                        int incidenciaRealValor = (int)(estabelecimento.ExtratoVendas.ElementAt(index).IncidenciaReal * 100);
                         incidenciaReal[index] = new ColumnText(directContent);
                         incidenciaRealText[index] = $"{incidenciaRealValor.ToString("N0")}%";
                         incidenciaRealPhrase[index] = new Phrase(new Chunk(incidenciaRealText[index], fontValoresIncidencia));

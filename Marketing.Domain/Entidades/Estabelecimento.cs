@@ -1,19 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Marketing.Domain.Entidades
 {
     public class Estabelecimento
     {
         public string Cnpj { get; set; } = String.Empty;
-        public string RedeNome { get; set; } = String.Empty;
-        public virtual Rede Rede { get; set; } = new Rede("");
+        public string? RedeNome { get; set; }
+        public virtual Rede? Rede { get; set; }
         public string RazaoSocial { get; set; } = String.Empty;
         public string Cidade { get; set; } = String.Empty;
         public string Uf { get; set; } = String.Empty;
         public ICollection<Contato> Contatos { get; set; } = new List<Contato>();
-        public List<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
+        public ICollection<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);
         public string? UltimoPdfGerado { get; set; }

@@ -16,11 +16,10 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
         {
-            var estabelecimento = await _context.Set<Estabelecimento>().AsNoTracking().
-                                        Where(x => x.Cnpj == cnpj).
+            var estabelecimento = await _context.Set<Estabelecimento>().Where(x => x.Cnpj == cnpj).
                                         Include(x => x.Contatos).
                                         Include(x => x.Rede).
-                                        Include(x=>x.ExtratoVendas).
+                                        Include(x => x.ExtratoVendas).
                                         FirstOrDefaultAsync();
             return estabelecimento;
         }
@@ -28,8 +27,10 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task<Estabelecimento?> FindEstabelecimentoPorCnpj(string cnpj)
         {
 
-            return await _context.Set<Estabelecimento>().AsNoTracking().Include(x => x.Rede).Include(X => X.Contatos).
-                            Where(x => x.Cnpj == cnpj).FirstOrDefaultAsync();
+            return await _context.Set<Estabelecimento>().Include(x => x.Rede).Where(x => x.Cnpj == cnpj)
+                                 .Include(X => X.Contatos)
+                                 .AsSplitQuery()
+                                 .FirstOrDefaultAsync();
         }
 
         public async Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)

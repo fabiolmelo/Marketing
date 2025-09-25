@@ -24,8 +24,8 @@ namespace Marketing.Application.Servicos
                                                 Restaurante = x.Key.Restaurante,
                                                 Cidade = x.Key.Cidade,
                                                 Uf = x.Key.Uf,
-                                                NomeRede = x.Key.Rede 
-                                            });
+                                                NomeRede = x.Key.Rede
+                                            }).ToList();
 
             foreach (var grupo in estabelecimentosPlanilha)
             {
@@ -40,14 +40,16 @@ namespace Marketing.Application.Servicos
                             Cnpj = grupo.Cnpj,
                             RazaoSocial = grupo.Restaurante ?? "",
                             Cidade = grupo.Cidade ?? "",
-                            Uf = grupo.Uf ?? "",
-                            Rede = rede,
-                            RedeNome = rede.Nome
+                            Uf = grupo.Uf ?? ""
+                            //,Rede = rede
+                            //,RedeNome = rede.Nome
                         };
                         await _unitOfWork.repositorioEstabelecimento.AddAsync(estabelecimento);
+                        await _unitOfWork.CommitAsync();
                     }
                 }
             }
+            
         }
         
         public async Task AtualizarAssociacaoEstabelecimentoContato(List<DadosPlanilha> dadosPlanilhas)
