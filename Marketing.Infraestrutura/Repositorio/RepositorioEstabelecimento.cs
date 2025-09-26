@@ -29,13 +29,12 @@ namespace Marketing.Infraestrutura.Repositorio
 
             return await _context.Set<Estabelecimento>().Include(x => x.Rede).Where(x => x.Cnpj == cnpj)
                                  .Include(X => X.Contatos)
-                                 .AsSplitQuery()
                                  .FirstOrDefaultAsync();
         }
 
         public async Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
         {
-            var query = _context.Set<Estabelecimento>().AsNoTracking();
+            var query = _context.Set<Estabelecimento>().AsQueryable();
             if (filtro != null)
             {
                 query.Where(x=>x.RazaoSocial == filtro || x.Cidade == filtro);

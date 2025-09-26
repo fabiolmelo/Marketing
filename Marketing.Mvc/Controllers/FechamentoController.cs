@@ -10,21 +10,26 @@ namespace Marketing.Mvc.Controllers
         private readonly IWebHostEnvironment _webHostEnviroment;
         private readonly IConfiguration _configuration;
         private readonly IServicoEstabelecimento _servicoEstabelecimento;
+        private readonly IServicoExtratoVendas _servicoExtratoVendas;
 
         public FechamentoController(IServicoProcessamentoMensal servicoProcessamentoMensal,
                                                 IWebHostEnvironment webHostEnviroment,
                                                 IConfiguration configuration,
-                                                IServicoEstabelecimento servicoEstabelecimento)
+                                                IServicoEstabelecimento servicoEstabelecimento,
+                                                IServicoExtratoVendas servicoExtratoVendas)
         {
             _servicoProcessamentoMensal = servicoProcessamentoMensal;
             _webHostEnviroment = webHostEnviroment;
             _configuration = configuration;
             _servicoEstabelecimento = servicoEstabelecimento;
+            _servicoExtratoVendas = servicoExtratoVendas;
         }
 
-        public ActionResult Index(bool? gerou)
+        public async Task<ActionResult> Index(bool? gerou)
         {
+            var competenciaVigente = await _servicoExtratoVendas.BuscarCompetenciaVigente();
             ViewBag.Gerou = gerou;
+            ViewBag.CompetenciaVigente = competenciaVigente.ToString("yyyy-MM");
             return View();
         }
 

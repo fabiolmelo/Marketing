@@ -8,6 +8,7 @@ namespace Marketing.Infraestrutura.Contexto
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
+            
         }
 
         public DbSet<ExtratoVendas> ExtratosVendas { get; set; }
@@ -31,8 +32,6 @@ namespace Marketing.Infraestrutura.Contexto
                 //                         .EnableSensitiveDataLogging()
                 //                         .EnableDetailedErrors();
             }
-
-            
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

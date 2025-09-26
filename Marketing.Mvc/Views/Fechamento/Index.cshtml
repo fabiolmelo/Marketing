@@ -6,7 +6,7 @@
                 <label asp-asp-for="Competencia" >Data Competência</label>
             </div>
             <div class="col-sm-3 col-md-3 col-lg-3">
-                <input asp-for="Competencia" class="form-control" type="month" asp-format="{0:yyyy-MM}" placeholder="Informe a competência:">
+                <input asp-for="Competencia" class="form-control" type="month" asp-format="{0:yyyy-MM}" placeholder="Informe a competência:" value="@ViewBag.CompetenciaVigente">
             </div>
         </div>
         <input type="submit" value="Processar" class="btn btn-primary">        

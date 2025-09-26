@@ -28,11 +28,11 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<bool> Any(Expression<Func<T, bool>> expression)
         {
-            return await _dataContext.Set<T>().AsNoTracking().AnyAsync(expression);
+            return await _dataContext.Set<T>().AnyAsync(expression);
         }
         public async Task<int> Count(Expression<Func<T, bool>> expression)
         {
-            return await _dataContext.Set<T>().AsNoTracking().CountAsync(expression);
+            return await _dataContext.Set<T>().CountAsync(expression);
         }
 
         public void Delete(T entity)
@@ -42,13 +42,13 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<T?> FindByPredicate(Expression<Func<T, bool>> expression)
         {
-            return await _dataContext.Set<T>().AsNoTracking().
+            return await _dataContext.Set<T>().
                                       Where(expression).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dataContext.Set<T>().AsNoTracking().ToListAsync();
+            return await _dataContext.Set<T>().ToListAsync();
         }
 
         public async Task<PagedResponse<T>> GetAllAsync(int pageNumber, int pageSize,
@@ -82,6 +82,7 @@ namespace Marketing.Infraestrutura.Repositorio
         public void Update(T entity)
         {
             _dataContext.Entry(entity).State = EntityState.Modified;
+            _dataContext.Update(entity);
         }
     }
 }

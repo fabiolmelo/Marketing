@@ -49,12 +49,10 @@ namespace Marketing.Application.Servicos
                     }
                 }
             }
-            
         }
         
         public async Task AtualizarAssociacaoEstabelecimentoContato(List<DadosPlanilha> dadosPlanilhas)
         {
-            
             foreach (DadosPlanilha linhaPlanilha in dadosPlanilhas)
             {
                 if (linhaPlanilha.Fone != String.Empty && linhaPlanilha.Fone != null)
@@ -120,21 +118,35 @@ namespace Marketing.Application.Servicos
                                                                      x.EstabelecimentoCnpj == linha.Cnpj);
                     if (estabelecimento != null && extrato == false)
                     {
-                        estabelecimento.ExtratoVendas.Add(
-                            new ExtratoVendas(
-                                linha.AnoMes.Year,
-                                linha.AnoMes.Month,
-                                linha.AnoMes,
-                                linha.TotalPedidos,
-                                linha.PedidosComCocaCola,
-                                linha.IncidenciaReal,
-                                linha.Meta,
-                                linha.PrecoUnitarioMedio,
-                                linha.TotalPedidosNaoCapturados,
-                                linha.ReceitaNaoCapturada,
-                                linha.Cnpj)
-                            );
-                        _unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
+                        // estabelecimento.ExtratoVendas.Add(
+                        //     new ExtratoVendas(
+                        //         linha.AnoMes.Year,
+                        //         linha.AnoMes.Month,
+                        //         linha.AnoMes,
+                        //         linha.TotalPedidos,
+                        //         linha.PedidosComCocaCola,
+                        //         linha.IncidenciaReal,
+                        //         linha.Meta,
+                        //         linha.PrecoUnitarioMedio,
+                        //         linha.TotalPedidosNaoCapturados,
+                        //         linha.ReceitaNaoCapturada,
+                        //         linha.Cnpj)
+                        //     );
+                        // _unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
+
+                        var extratoNew = new ExtratoVendas(
+                                                    linha.AnoMes.Year,
+                                                    linha.AnoMes.Month,
+                                                    linha.AnoMes,
+                                                    linha.TotalPedidos,
+                                                    linha.PedidosComCocaCola,
+                                                    linha.IncidenciaReal,
+                                                    linha.Meta,
+                                                    linha.PrecoUnitarioMedio,
+                                                    linha.TotalPedidosNaoCapturados,
+                                                    linha.ReceitaNaoCapturada,
+                                                    linha.Cnpj);
+                        await _unitOfWork.GetRepository<ExtratoVendas>().AddAsync(extratoNew);
                         await _unitOfWork.CommitAsync();
                     }
                 }
