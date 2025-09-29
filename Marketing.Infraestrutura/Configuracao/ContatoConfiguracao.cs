@@ -13,6 +13,10 @@ namespace Marketing.Infraestrutura.Configuracao
 
             builder.Property(x => x.Token).HasMaxLength(50);
             builder.HasIndex(x => x.Token).HasDatabaseName("IX_CONTATO_TOKEN");
+
+            // builder.HasMany(d => d.Estabelecimentos)
+            //        .WithMany(p => p.Contatos)
+            //        .UsingEntity(x=>x.ToTable("EstabelecimentosContatos"));
         }
     }
 }

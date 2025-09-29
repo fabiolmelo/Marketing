@@ -2,8 +2,8 @@ namespace Marketing.Domain.Entidades
 {
     public class Contato
     {
-        public string? Telefone { get; set; } = String.Empty;
-        public string? Nome { get; set; } = String.Empty;
+        public string Telefone { get; set; } = String.Empty;
+        public string Nome { get; set; } = String.Empty;
         public bool AceitaMensagem {get; set; }
         public DateTime? DataAceite { get; set; }
         public bool RecusaMensagem {get; set; }

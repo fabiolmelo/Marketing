@@ -16,7 +16,7 @@ namespace Marketing.Infraestrutura.Migrations
                 columns: table => new
                 {
                     Telefone = table.Column<string>(type: "VARCHAR(250)", nullable: false),
-                    Nome = table.Column<string>(type: "TEXT", nullable: true),
+                    Nome = table.Column<string>(type: "TEXT", nullable: false),
                     AceitaMensagem = table.Column<bool>(type: "INTEGER", nullable: false),
                     DataAceite = table.Column<DateTime>(type: "TEXT", nullable: true),
                     RecusaMensagem = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -122,24 +122,24 @@ namespace Marketing.Infraestrutura.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EstabelecimentoContato",
+                name: "ContatoEstabelecimento",
                 columns: table => new
                 {
-                    EstabelecimentoCnpj = table.Column<string>(type: "TEXT", nullable: false),
-                    ContatosTempId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ContatoTelefone = table.Column<string>(type: "VARCHAR(250)", nullable: true)
+                    ContatosTelefone = table.Column<string>(type: "VARCHAR(250)", nullable: false),
+                    EstabelecimentosCnpj = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EstabelecimentoContato", x => new { x.ContatosTempId, x.EstabelecimentoCnpj });
+                    table.PrimaryKey("PK_ContatoEstabelecimento", x => new { x.ContatosTelefone, x.EstabelecimentosCnpj });
                     table.ForeignKey(
-                        name: "FK_EstabelecimentoContato_Contatos_ContatoTelefone",
-                        column: x => x.ContatoTelefone,
+                        name: "FK_ContatoEstabelecimento_Contatos_ContatosTelefone",
+                        column: x => x.ContatosTelefone,
                         principalTable: "Contatos",
-                        principalColumn: "Telefone");
+                        principalColumn: "Telefone",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EstabelecimentoContato_Estabelecimentos_EstabelecimentoCnpj",
-                        column: x => x.EstabelecimentoCnpj,
+                        name: "FK_ContatoEstabelecimento_Estabelecimentos_EstabelecimentosCnpj",
+                        column: x => x.EstabelecimentosCnpj,
                         principalTable: "Estabelecimentos",
                         principalColumn: "Cnpj",
                         onDelete: ReferentialAction.Cascade);
@@ -176,19 +176,14 @@ namespace Marketing.Infraestrutura.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContatoEstabelecimento_EstabelecimentosCnpj",
+                table: "ContatoEstabelecimento",
+                column: "EstabelecimentosCnpj");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CONTATO_TOKEN",
                 table: "Contatos",
                 column: "Token");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EstabelecimentoContato_ContatoTelefone",
-                table: "EstabelecimentoContato",
-                column: "ContatoTelefone");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EstabelecimentoContato_EstabelecimentoCnpj",
-                table: "EstabelecimentoContato",
-                column: "EstabelecimentoCnpj");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Estabelecimentos_RedeNome",
@@ -205,22 +200,22 @@ namespace Marketing.Infraestrutura.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ContatoEstabelecimento");
+
+            migrationBuilder.DropTable(
                 name: "DadosPlanilha");
 
             migrationBuilder.DropTable(
                 name: "EnviosMensagemMensais");
 
             migrationBuilder.DropTable(
-                name: "EstabelecimentoContato");
-
-            migrationBuilder.DropTable(
                 name: "ExtratosVendas");
 
             migrationBuilder.DropTable(
-                name: "ImportacaoEfetuada");
+                name: "Contatos");
 
             migrationBuilder.DropTable(
-                name: "Contatos");
+                name: "ImportacaoEfetuada");
 
             migrationBuilder.DropTable(
                 name: "Estabelecimentos");
