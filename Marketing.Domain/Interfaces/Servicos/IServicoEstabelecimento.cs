@@ -7,7 +7,7 @@ namespace Marketing.Domain.Interfaces.Servicos
     {
         Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro);
         Task AtualizarEstabelecimentoViaPlanilha(List<DadosPlanilha> dadosPlanilhas);
-        Task AtualizarAssociacaoEstabelecimentoContato(List<DadosPlanilha> dadosPlanilhas);
+        //Task AtualizarAssociacaoEstabelecimentoContato(List<DadosPlanilha> dadosPlanilhas);
         Task AtualizarAssociacaoEstabelecimentoRede(List<DadosPlanilha> dadosPlanilhas);
         Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj);
         Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas);

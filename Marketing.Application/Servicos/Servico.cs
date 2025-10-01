@@ -24,6 +24,11 @@ namespace Marketing.Application.Servicos
             return await _unitOfWork.GetRepository<T>().Any(expression);
         }
 
+        public async Task<int> CommitAsync()
+        {
+            return await _unitOfWork.CommitAsync();
+        }
+
         public async Task<int> Count(Expression<Func<T, bool>> expression)
         {
             return await _unitOfWork.GetRepository<T>().Count(expression);

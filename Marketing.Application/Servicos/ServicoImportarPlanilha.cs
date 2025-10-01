@@ -33,8 +33,9 @@ namespace Marketing.Application.Servicos
                 return false;
             var dadosPlanilha = _servicoArquivos.LerDados(arquivoImportado);
             var importacaoEfetuada = new ImportacaoEfetuada(arquivoImportado);
-            importacaoEfetuada.AdicionarDadosPlanilha(dadosPlanilha);
+            importacaoEfetuada.AdicionarDadosPlanilha(dadosPlanilha);       
             await _servicoArquivos.AddAsync(importacaoEfetuada);
+            await _servicoArquivos.CommitAsync();
             await _servicoRede.AtualizarRedesViaPlanilha(dadosPlanilha);
             await _servicoContato.AtualizarContatosViaPlanilha(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarEstabelecimentoViaPlanilha(dadosPlanilha);

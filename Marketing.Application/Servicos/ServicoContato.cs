@@ -18,24 +18,30 @@ namespace Marketing.Application.Servicos
 
         public async Task AtualizarAssociacaoContatoEstabelecimento(List<DadosPlanilha> dadosPlanilhas)
         {
-            foreach (DadosPlanilha linhaPlanilha in dadosPlanilhas)
+            var group = dadosPlanilhas.Where(x => !x.Fone.IsNullOrEmpty())
+                                      .GroupBy(item => new { item.Cnpj, item.Fone})
+                                      .Select(g => new
+                                      {
+                                        Cnpj = g.Key.Cnpj,
+                                        Fone = g.Key.Fone
+                                      });
+
+                    
+            foreach (var item in group)
             {
-                if (linhaPlanilha.Fone != String.Empty && linhaPlanilha.Fone != null)
+                var contato = await _unitOfWork.repositorioContato.BuscarContatosIncludeEstabelecimento(item.Fone);
+                var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(item.Cnpj);
+
+                if (contato != null && estabelecimento != null)
                 {
-                    var contato = await _unitOfWork.repositorioContato.BuscarContatosIncludeEstabelecimento(linhaPlanilha.Fone);
-                    var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(linhaPlanilha.Cnpj);
-                    if (estabelecimento != null && contato != null)
+                    if (!contato.ContatoEstabelecimentos.Estabelecimentos.Any(x => x.Cnpj == estabelecimento.Cnpj))
                     {
-                        if (!estabelecimento.Contatos.Any(x => x.Telefone == contato.Telefone))
-                        {
-                            estabelecimento.Contatos.Add(contato);
-                            _unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
-                            await _unitOfWork.CommitAsync();
-                        }
-                    }    
-                }
+                        contato.Estabelecimentos.Add(estabelecimento);
+                        //_unitOfWork.repositorioContato.Update(contato);
+                        await _unitOfWork.CommitAsync();
+                    }
+                } 
             }
-           
         }
 
         public async Task AtualizarContatosViaPlanilha(List<DadosPlanilha> dadosPlanilhas)

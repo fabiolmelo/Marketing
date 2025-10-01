@@ -74,6 +74,11 @@ namespace Marketing.Infraestrutura.Repositorio
             return await _dataContext.Set<T>().FindAsync(id);
         }
 
+        public async Task<T?> GetByIdChaveComposta(string id1, string id2)
+        {
+            return await _dataContext.Set<T>().FindAsync(id1, id2);
+        }
+
         public async Task<T?> GetByIdStringAsync(string id)
         {
             return await _dataContext.Set<T>().FindAsync(id);
@@ -82,7 +87,12 @@ namespace Marketing.Infraestrutura.Repositorio
         public void Update(T entity)
         {
             _dataContext.Entry(entity).State = EntityState.Modified;
-            _dataContext.Update(entity);
+        }
+
+        public void UpdateCommit(T entity)
+        {
+            _dataContext.Entry(entity).State = EntityState.Modified;
+            _dataContext.SaveChanges();
         }
     }
 }

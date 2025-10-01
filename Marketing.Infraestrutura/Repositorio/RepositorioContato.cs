@@ -14,22 +14,22 @@ namespace Marketing.Infraestrutura.Repositorio
             _context = context;
         }
 
-        public async Task<Contato> BuscarContatosIncludeEstabelecimento(string telefone)
+        public async Task<Contato?> BuscarContatosIncludeEstabelecimento(string telefone)
         {
-            var contato = await _context.Set<Contato>()
-                                        .Include(x => x.Estabelecimentos)
-                                        .Where(x => x.Telefone == telefone)
-                                        .FirstAsync();
-            return contato;
+            var contatos = await _context.Contatos.Where(x => x.Telefone == telefone)
+                                        .Include(x => x.ContatoEstabelecimentos)
+                                            .ThenInclude(x=>x.Contato)
+                                        .FirstOrDefaultAsync();
+            return contatos;
         }
 
         public async Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj)
         {
-            var estabelecimento = await _context.Set<Estabelecimento>().
-                                                 Include(x=>x.Contatos).
-                                                 Where(x => x.Cnpj == cnpj).
-                                                 FirstAsync();
-            var contatos = estabelecimento.Contatos.Where(x => x.AceitaMensagem).ToList();
+            var estabelecimento = await _context.Estabelecimentos
+                                                .Include(x => x.ContatoEstabelecimentos)
+                                                    .ThenInclude(x=>x.Estabelecimento)
+                                                .FirstOrDefaultAsync(x => x.Cnpj == cnpj);
+            var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem).Select(x=>x.Contato).ToList();
             return contatos ?? new List<Contato>();
         }
     }

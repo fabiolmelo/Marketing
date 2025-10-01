@@ -2,13 +2,13 @@ namespace Marketing.Domain.Entidades
 {
     public class Estabelecimento
     {
-        public string Cnpj { get; set; } = String.Empty;
+        public string Cnpj { get; set; } = null!;
         public string? RedeNome { get; set; }
         public virtual Rede? Rede { get; set; }
-        public string RazaoSocial { get; set; } = String.Empty;
-        public string Cidade { get; set; } = String.Empty;
-        public string Uf { get; set; } = String.Empty;
-        public ICollection<Contato> Contatos { get; set; } = new List<Contato>();
+        public string? RazaoSocial { get; set; } 
+        public string? Cidade { get; set; }
+        public string? Uf { get; set; } 
+        public ICollection<ContatoEstabelecimento> ContatoEstabelecimentos { get; set; } = null!;
         public ICollection<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);

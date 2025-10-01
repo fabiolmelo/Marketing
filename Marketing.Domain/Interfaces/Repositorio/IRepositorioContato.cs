@@ -6,6 +6,6 @@ namespace Marketing.Domain.Interfaces.Repositorio
     {
         Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj);
 
-        Task<Contato> BuscarContatosIncludeEstabelecimento(string telefone);
+        Task<Contato?> BuscarContatosIncludeEstabelecimento(string telefone);
     }
 }

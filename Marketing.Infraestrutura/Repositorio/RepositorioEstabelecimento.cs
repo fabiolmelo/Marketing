@@ -16,20 +16,23 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
         {
-            var estabelecimento = await _context.Set<Estabelecimento>().Where(x => x.Cnpj == cnpj).
-                                        Include(x => x.Contatos).
-                                        Include(x => x.Rede).
-                                        Include(x => x.ExtratoVendas).
-                                        FirstOrDefaultAsync();
+            var estabelecimentos = await _context.Set<Estabelecimento>()
+                                                .Include(x => x.Contatos)
+                                                .Include(x => x.Rede)
+                                                .Include(x => x.ExtratoVendas)
+                                                .ToListAsync();
+            var estabelecimento = estabelecimentos.Find(x => x.Cnpj == cnpj);
             return estabelecimento;
         }
 
         public async Task<Estabelecimento?> FindEstabelecimentoPorCnpj(string cnpj)
         {
-
-            return await _context.Set<Estabelecimento>().Include(x => x.Rede).Where(x => x.Cnpj == cnpj)
-                                 .Include(X => X.Contatos)
-                                 .FirstOrDefaultAsync();
+            var estabelecimentos = await _context.Set<Estabelecimento>()
+                                 .Include(x => x.Rede)
+                                 .Include(x => x.Contatos)
+                                 .ToListAsync();
+            var estabelecimento = estabelecimentos.Find(x => x.Cnpj == cnpj);
+            return estabelecimento;
         }
 
         public async Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
@@ -41,7 +44,10 @@ namespace Marketing.Infraestrutura.Repositorio
             }
             
             var totalRecords = await query.CountAsync();
-            query = query.Skip(pageNumber - 1).Take(pageSize).Include(x => x.Rede).Include(x => x.Contatos); 
+            query = query.Skip(pageNumber - 1)
+                         .Take(pageSize)
+                         .Include(x => x.Rede)
+                         .Include(x=>x.Contatos); 
             return new PagedResponse<Estabelecimento>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
         }
     }
