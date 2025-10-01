@@ -34,9 +34,9 @@ namespace Marketing.Application.Servicos
 
                 if (contato != null && estabelecimento != null)
                 {
-                    if (!contato.ContatoEstabelecimentos.Estabelecimentos.Any(x => x.Cnpj == estabelecimento.Cnpj))
+                    if (!contato.ContatoEstabelecimentos.Any(x => x.Estabelecimento.Cnpj == estabelecimento.Cnpj))
                     {
-                        contato.Estabelecimentos.Add(estabelecimento);
+                        //contato.Estabelecimentos.Add(estabelecimento);
                         //_unitOfWork.repositorioContato.Update(contato);
                         await _unitOfWork.CommitAsync();
                     }

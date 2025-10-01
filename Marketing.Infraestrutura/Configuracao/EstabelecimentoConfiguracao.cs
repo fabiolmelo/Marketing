@@ -20,10 +20,6 @@ namespace Marketing.Infraestrutura.Configuracao
                 .WithOne(p => p.Estabelecimento)
                 .HasForeignKey(p => p.EstabelecimentoCnpj);
 
-            builder.HasMany(d => d.Contatos)
-                   .WithMany(p => p.Estabelecimentos)
-                   .UsingEntity(x=>x.ToTable("ContatoEstabelecimento"));
-
             // builder.HasMany(d => d.Contatos).WithMany(p => p.Estabelecimentos)
             //     .UsingEntity(x=>x.ToTable("EstabelecimentosContatos"));
 

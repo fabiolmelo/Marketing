@@ -19,7 +19,7 @@ namespace Marketing.Infraestrutura.Repositorio
             var dozeMesesAnteriores = competencia.AddYears(-1);
             var estabelecimentos = await _context.Estabelecimentos.
                                         Include(x=>x.Rede).
-                                        Include(x=>x.Contatos).
+                                        Include(x=>x.ContatoEstabelecimentos).ThenInclude(x=>x.Contato).
                                         Include(x => x.ExtratoVendas.Where(e => e.Competencia > dozeMesesAnteriores &&
                                                                                 e.Competencia <= competencia)).
                                         Where(x=>x.ExtratoVendas.Count > 0 &&

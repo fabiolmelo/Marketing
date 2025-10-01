@@ -43,7 +43,7 @@ namespace Marketing.Infraestrutura.Contexto
             modelBuilder.ApplyConfiguration(new RedeConfiguracao());
             modelBuilder.ApplyConfiguration(new DadosPlanilhaConfiguration());
             modelBuilder.ApplyConfiguration(new EnvioMensagemMensalConfiguracao());
-            //modelBuilder.ApplyConfiguration(new ContatoEstabelecimentoConfiguracao());
+            modelBuilder.ApplyConfiguration(new ContatoEstabelecimentoConfiguracao());
         }
     }
 }

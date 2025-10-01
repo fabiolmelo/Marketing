@@ -13,7 +13,6 @@ namespace Marketing.Infraestrutura.Configuracao
             builder.HasOne(x => x.Contato)
                    .WithMany(x => x.ContatoEstabelecimentos)
                    .HasForeignKey(x => x.ContatoTelefone); 
-
             builder.HasOne(x => x.Estabelecimento)
                    .WithMany(x => x.ContatoEstabelecimentos)
                    .HasForeignKey(x => x.EstabelecimentoCnpj);

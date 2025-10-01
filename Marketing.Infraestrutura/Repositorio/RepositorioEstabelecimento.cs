@@ -17,7 +17,8 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
         {
             var estabelecimentos = await _context.Set<Estabelecimento>()
-                                                .Include(x => x.Contatos)
+                                                .Include(x => x.ContatoEstabelecimentos)
+                                                    .ThenInclude(X=>X.Contato)
                                                 .Include(x => x.Rede)
                                                 .Include(x => x.ExtratoVendas)
                                                 .ToListAsync();
@@ -29,7 +30,8 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var estabelecimentos = await _context.Set<Estabelecimento>()
                                  .Include(x => x.Rede)
-                                 .Include(x => x.Contatos)
+                                 .Include(x => x.ContatoEstabelecimentos)
+                                    .ThenInclude(X=>X.Estabelecimento)
                                  .ToListAsync();
             var estabelecimento = estabelecimentos.Find(x => x.Cnpj == cnpj);
             return estabelecimento;
@@ -47,7 +49,8 @@ namespace Marketing.Infraestrutura.Repositorio
             query = query.Skip(pageNumber - 1)
                          .Take(pageSize)
                          .Include(x => x.Rede)
-                         .Include(x=>x.Contatos); 
+                         .Include(x => x.ContatoEstabelecimentos)
+                         .ThenInclude(X=>X.Contato); 
             return new PagedResponse<Estabelecimento>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
         }
     }
