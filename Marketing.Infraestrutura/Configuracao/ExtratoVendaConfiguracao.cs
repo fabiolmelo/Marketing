@@ -21,7 +21,7 @@ namespace Marketing.Infraestrutura.Configuracao
             builder.Property(x => x.CorTransparenteGrafico).HasPrecision(8, 2);
             builder.Property(x => x.CorVerdeGrafico).HasColumnType("NUMERIC"); ;
             builder.Property(x => x.CorVerdeGrafico).HasPrecision(8, 2);
-            builder.Property(x => x.CorVermelhaGrafico).HasColumnType("NUMERIC"); ;
+            builder.Property(x => x.CorVermelhaGrafico).HasColumnType("NUMERIC"); 
             builder.Property(x => x.CorVermelhaGrafico).HasPrecision(8, 2);
         }
     }

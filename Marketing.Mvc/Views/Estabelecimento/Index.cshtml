@@ -1,4 +1,4 @@
-﻿@model Marketing.Domain.PagedResponse.PagedResponse<Marketing.Domain.Entidades.Estabelecimento>
+﻿@model Marketing.Domain.PagedResponse.PagedResponse<List<Marketing.Domain.Entidades.Estabelecimento>>
 
 @{
     ViewData["Title"] = "Lojas";
@@ -9,7 +9,7 @@
 <p>
     <button class="btn btn-primary" asp-action="Create">Nova Loja</button>
 </p>
-<table class="table">
+<table class="table table-responsive table-primary">
     <thead>
         <tr>
             <th>Cnpj</th>

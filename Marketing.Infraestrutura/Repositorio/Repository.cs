@@ -51,7 +51,7 @@ namespace Marketing.Infraestrutura.Repositorio
             return await _dataContext.Set<T>().ToListAsync();
         }
 
-        public async Task<PagedResponse<T>> GetAllAsync(int pageNumber, int pageSize,
+        public async Task<PagedResponse<List<T>>> GetAllAsync(int pageNumber, int pageSize,
                                         Expression<Func<T, bool>>? filtros = null,
                                         params Expression<Func<T, object>>[] includes) 
         {
@@ -66,7 +66,7 @@ namespace Marketing.Infraestrutura.Repositorio
             }
             var totalRecords = await query.CountAsync();
             query = query.Skip(pageNumber - 1).Take(pageSize);
-            return new PagedResponse<T>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
+            return new PagedResponse<List<T>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
         }
 
         public async Task<T?> GetByIdAsync(int id)

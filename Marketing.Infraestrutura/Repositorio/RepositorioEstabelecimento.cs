@@ -37,7 +37,7 @@ namespace Marketing.Infraestrutura.Repositorio
             return estabelecimento;
         }
 
-        public async Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
+        public async Task<PagedResponse<List<Estabelecimento>>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
         {
             var query = _context.Set<Estabelecimento>().AsQueryable();
             if (filtro != null)
@@ -51,7 +51,7 @@ namespace Marketing.Infraestrutura.Repositorio
                          .Include(x => x.Rede)
                          .Include(x => x.ContatoEstabelecimentos)
                          .ThenInclude(X=>X.Contato); 
-            return new PagedResponse<Estabelecimento>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
+            return new PagedResponse<List<Estabelecimento>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
         }
     }
 }

@@ -29,18 +29,14 @@ namespace Marketing.Application.Servicos
                     
             foreach (var item in group)
             {
-                var contato = await _unitOfWork.repositorioContato.BuscarContatosIncludeEstabelecimento(item.Fone);
-                var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(item.Cnpj);
-
-                if (contato != null && estabelecimento != null)
+                var contatoEstabelecimento = await _unitOfWork.GetRepository<ContatoEstabelecimento>()
+                                                              .GetByIdChaveComposta(item.Fone, item.Cnpj);
+                if (contatoEstabelecimento == null)
                 {
-                    if (!contato.ContatoEstabelecimentos.Any(x => x.Estabelecimento.Cnpj == estabelecimento.Cnpj))
-                    {
-                        //contato.Estabelecimentos.Add(estabelecimento);
-                        //_unitOfWork.repositorioContato.Update(contato);
-                        await _unitOfWork.CommitAsync();
-                    }
-                } 
+                    contatoEstabelecimento = new ContatoEstabelecimento(item.Fone, item.Cnpj);
+                    await _unitOfWork.GetRepository<ContatoEstabelecimento>().AddAsync(contatoEstabelecimento);
+                    await _unitOfWork.CommitAsync();
+                }
             }
         }
 
@@ -66,10 +62,9 @@ namespace Marketing.Application.Servicos
             return await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(cnpj);
         }
 
-        public async Task<PagedResponse<Contato>> GetAllContatos(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null)
+        public async Task<PagedResponse<List<Contato>>> GetAllContatos(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null)
         {
             return await _unitOfWork.repositorioContato.GetAllAsync(pageNumber, pageSize, filtros);
         }
-       
     }
 }

@@ -1,4 +1,5 @@
-﻿using Marketing.Domain.Entidades;
+﻿using System.Text.Json;
+using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
 using Marketing.Domain.Interfaces.IUnityOfWork;
 using Marketing.Domain.Interfaces.Servicos;
@@ -11,7 +12,8 @@ namespace Marketing.Application.Servicos
         private readonly IServicoGrafico _servicoGrafico;
         private readonly IServicoArquivos _servicoArquivos;
 
-        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGrafico servicoGrafico, IServicoArquivos servicoArquivos)
+        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGrafico servicoGrafico,
+                                          IServicoArquivos servicoArquivos)
         {
             _unitOfWork = unitOfWork;
             _servicoGrafico = servicoGrafico;
@@ -73,7 +75,7 @@ namespace Marketing.Application.Servicos
             if (estabelecimento.ExtratoVendas.Count > 0)
             {
                 var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
-                var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial.Replace(" ","_")}.pdf";
+                var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
                 _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
                 _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                     posicaoNaRede, contentRootPath, caminhoApp);

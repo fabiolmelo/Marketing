@@ -96,7 +96,7 @@ namespace Marketing.Application.Servicos
             }
         }
 
-        public async Task<PagedResponse<Estabelecimento>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
+        public async Task<PagedResponse<List<Estabelecimento>>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
         {
             return await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentos(pageNumber, pageSize, filtro);
         }

@@ -5,7 +5,7 @@ namespace Marketing.Domain.Entidades
         public string Cnpj { get; set; } = null!;
         public string? RedeNome { get; set; }
         public virtual Rede? Rede { get; set; }
-        public string? RazaoSocial { get; set; } 
+        public string RazaoSocial { get; set; } = null!;
         public string? Cidade { get; set; }
         public string? Uf { get; set; } 
         public ICollection<ContatoEstabelecimento> ContatoEstabelecimentos { get; set; } = null!;

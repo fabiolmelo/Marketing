@@ -2,7 +2,6 @@
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Marketing.Mvc.Controllers
 {

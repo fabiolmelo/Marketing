@@ -20,7 +20,8 @@ namespace Marketing.Infraestrutura.Contexto
         public DbSet<ImportacaoEfetuada> ImportacaoEfetuada { get; set; }
         public DbSet<DadosPlanilha> DadosPlanilha { get; set; }
         public DbSet<EnvioMensagemMensal> EnviosMensagemMensais { get; set; }
-
+        public DbSet<Mensagem> Mensagem { get; set; }
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (optionsBuilder.IsConfigured == false)
@@ -44,6 +45,8 @@ namespace Marketing.Infraestrutura.Contexto
             modelBuilder.ApplyConfiguration(new DadosPlanilhaConfiguration());
             modelBuilder.ApplyConfiguration(new EnvioMensagemMensalConfiguracao());
             modelBuilder.ApplyConfiguration(new ContatoEstabelecimentoConfiguracao());
+            modelBuilder.ApplyConfiguration(new MensagemConfiguracao());
+            modelBuilder.ApplyConfiguration(new MensagemItemConfiguracao());
         }
     }
 }

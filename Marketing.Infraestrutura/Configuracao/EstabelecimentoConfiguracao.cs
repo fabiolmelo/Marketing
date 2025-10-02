@@ -15,17 +15,13 @@ namespace Marketing.Infraestrutura.Configuracao
             builder.HasOne(x => x.Rede).
                     WithMany(x => x.Estabelecimentos).
                     HasPrincipalKey(x => x.Nome);
-            builder
-                .HasMany(b => b.ExtratoVendas)
-                .WithOne(p => p.Estabelecimento)
-                .HasForeignKey(p => p.EstabelecimentoCnpj);
+            builder.HasMany(b => b.ExtratoVendas)
+                   .WithOne(p => p.Estabelecimento)
+                   .HasForeignKey(p => p.EstabelecimentoCnpj);
 
-            // builder.HasMany(d => d.Contatos).WithMany(p => p.Estabelecimentos)
-            //     .UsingEntity(x=>x.ToTable("EstabelecimentosContatos"));
-
-            // builder.HasMany(x => x.MensagensMensais)
-            //        .WithOne(e => e.Estabelecimento)
-            //        .HasForeignKey(x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj }); 
+            builder.HasMany(x => x.ContatoEstabelecimentos)
+                   .WithOne(x => x.Estabelecimento)
+                   .HasForeignKey(x => x.EstabelecimentoCnpj);
         }
     }
 }

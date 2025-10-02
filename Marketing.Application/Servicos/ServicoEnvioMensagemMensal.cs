@@ -1,6 +1,7 @@
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.IUnityOfWork;
 using Marketing.Domain.Interfaces.Servicos;
+using Marketing.Domain.PagedResponse;
 
 namespace Marketing.Application.Servicos
 {
@@ -12,9 +13,21 @@ namespace Marketing.Application.Servicos
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<EnvioMensagemMensal>> BuscarMensagensNaoEnviadas(DateTime competencia)
+        public async Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarMensagensNaoEnviadas(int pageNumber,
+                                                int pageSize, bool somenteEnvioPendente)
         {
-            return await _unitOfWork.repositorioEnvioMensagemMensal.BuscarMensagensNaoEnviadas(competencia);
+            return await _unitOfWork.repositorioEnvioMensagemMensal
+                                    .BuscarMensagensNaoEnviadas(pageNumber, pageSize, somenteEnvioPendente);
+        }
+
+        public async Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas()
+        {
+            return await _unitOfWork.repositorioEnvioMensagemMensal.BuscarTodasMensagensNaoEnviadas();
+        }
+
+        public async Task<EnvioMensagemMensal?> GetByIdChaveComposta3(DateTime id1, string id2, string id3)
+        {
+            return await _unitOfWork.repositorioEnvioMensagemMensal.GetByIdChaveComposta3(id1, id2, id3);
         }
     }
 }

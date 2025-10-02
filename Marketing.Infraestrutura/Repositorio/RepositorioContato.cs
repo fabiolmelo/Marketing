@@ -18,16 +18,17 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var contatos = await _context.Contatos.Where(x => x.Telefone == telefone)
                                         .Include(x => x.ContatoEstabelecimentos)
-                                            .ThenInclude(x=>x.Contato)
+                                        //    .ThenInclude(x => x.Contato)
+                                        //.AsNoTrackingWithIdentityResolution()
                                         .FirstOrDefaultAsync();
             return contatos;
         }
 
         public async Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj)
         {
-            var estabelecimento = await _context.Estabelecimentos
+            var estabelecimento = await _context.Estabelecimentos.AsNoTracking()
                                                 .Include(x => x.ContatoEstabelecimentos)
-                                                    .ThenInclude(x=>x.Estabelecimento)
+                                                    .ThenInclude(x=>x.Contato)
                                                 .FirstOrDefaultAsync(x => x.Cnpj == cnpj);
             var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem).Select(x=>x.Contato).ToList();
             return contatos ?? new List<Contato>();

@@ -44,7 +44,7 @@ namespace Marketing.Application.Servicos
             return await _unitOfWork.GetRepository<T>().FindByPredicate(expression);
         }
 
-        public async Task<PagedResponse<T>> GetAllAsync(int pageNumber = 1, int pageSize = 10,
+        public async Task<PagedResponse<List<T>>> GetAllAsync(int pageNumber = 1, int pageSize = 10,
                                 Expression<Func<T, bool>>? filtros = null,
                                 params Expression<Func<T, object>>[] includes)
         {

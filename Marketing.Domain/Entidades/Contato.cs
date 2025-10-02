@@ -3,7 +3,7 @@ namespace Marketing.Domain.Entidades
     public class Contato
     {
         public string Telefone { get; set; } = null!;
-        public string Nome { get; set; } = null!;
+        public string? Nome { get; set; } = null!;
         public bool AceitaMensagem {get; set; }
         public DateTime? DataAceite { get; set; }
         public bool RecusaMensagem {get; set; }

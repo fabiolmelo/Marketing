@@ -35,7 +35,6 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("RecusaMensagem")
@@ -140,9 +139,12 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MensagemId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Competencia", "ContatoTelefone", "EstabelecimentoCnpj");
+
+                    b.HasIndex("MensagemId");
 
                     b.ToTable("EnviosMensagemMensais");
                 });
@@ -158,6 +160,7 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RazaoSocial")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RedeNome")
@@ -252,6 +255,42 @@ namespace Marketing.Infraestrutura.Migrations
                     b.ToTable("ImportacaoEfetuada");
                 });
 
+            modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Mensagem");
+                });
+
+            modelBuilder.Entity("Marketing.Domain.Entidades.MensagemItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataEvento")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MensagemId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MensagemStatus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Observacao")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MensagemId");
+
+                    b.ToTable("MensagemItem");
+                });
+
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>
                 {
                     b.Property<string>("Nome")
@@ -293,6 +332,17 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Navigation("ImportacaoEfetuada");
                 });
 
+            modelBuilder.Entity("Marketing.Domain.Entidades.EnvioMensagemMensal", b =>
+                {
+                    b.HasOne("Marketing.Domain.Entidades.Mensagem", "Mensagem")
+                        .WithMany()
+                        .HasForeignKey("MensagemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mensagem");
+                });
+
             modelBuilder.Entity("Marketing.Domain.Entidades.Estabelecimento", b =>
                 {
                     b.HasOne("Marketing.Domain.Entidades.Rede", "Rede")
@@ -313,6 +363,17 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Navigation("Estabelecimento");
                 });
 
+            modelBuilder.Entity("Marketing.Domain.Entidades.MensagemItem", b =>
+                {
+                    b.HasOne("Marketing.Domain.Entidades.Mensagem", "Mensagem")
+                        .WithMany("MensagemItems")
+                        .HasForeignKey("MensagemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mensagem");
+                });
+
             modelBuilder.Entity("Marketing.Domain.Entidades.Contato", b =>
                 {
                     b.Navigation("ContatoEstabelecimentos");
@@ -328,6 +389,11 @@ namespace Marketing.Infraestrutura.Migrations
             modelBuilder.Entity("Marketing.Domain.Entidades.ImportacaoEfetuada", b =>
                 {
                     b.Navigation("DadosPlanilha");
+                });
+
+            modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
+                {
+                    b.Navigation("MensagemItems");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>

@@ -16,7 +16,7 @@ namespace Marketing.Infraestrutura.Migrations
                 columns: table => new
                 {
                     Telefone = table.Column<string>(type: "VARCHAR(250)", nullable: false),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", nullable: true),
                     AceitaMensagem = table.Column<bool>(type: "INTEGER", nullable: false),
                     DataAceite = table.Column<DateTime>(type: "TEXT", nullable: true),
                     RecusaMensagem = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -31,20 +31,6 @@ namespace Marketing.Infraestrutura.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EnviosMensagemMensais",
-                columns: table => new
-                {
-                    Competencia = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    EstabelecimentoCnpj = table.Column<string>(type: "TEXT", nullable: false),
-                    ContatoTelefone = table.Column<string>(type: "TEXT", nullable: false),
-                    MensagemId = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EnviosMensagemMensais", x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj });
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ImportacaoEfetuada",
                 columns: table => new
                 {
@@ -56,6 +42,17 @@ namespace Marketing.Infraestrutura.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ImportacaoEfetuada", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mensagem",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mensagem", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -101,12 +98,53 @@ namespace Marketing.Infraestrutura.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EnviosMensagemMensais",
+                columns: table => new
+                {
+                    Competencia = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EstabelecimentoCnpj = table.Column<string>(type: "TEXT", nullable: false),
+                    ContatoTelefone = table.Column<string>(type: "TEXT", nullable: false),
+                    MensagemId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EnviosMensagemMensais", x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj });
+                    table.ForeignKey(
+                        name: "FK_EnviosMensagemMensais_Mensagem_MensagemId",
+                        column: x => x.MensagemId,
+                        principalTable: "Mensagem",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MensagemItem",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MensagemId = table.Column<string>(type: "TEXT", nullable: false),
+                    DataEvento = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    MensagemStatus = table.Column<int>(type: "INTEGER", nullable: false),
+                    Observacao = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MensagemItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MensagemItem_Mensagem_MensagemId",
+                        column: x => x.MensagemId,
+                        principalTable: "Mensagem",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Estabelecimentos",
                 columns: table => new
                 {
                     Cnpj = table.Column<string>(type: "TEXT", maxLength: 14, nullable: false),
                     RedeNome = table.Column<string>(type: "TEXT", nullable: true),
-                    RazaoSocial = table.Column<string>(type: "TEXT", nullable: true),
+                    RazaoSocial = table.Column<string>(type: "TEXT", nullable: false),
                     Cidade = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     Uf = table.Column<string>(type: "TEXT", maxLength: 2, nullable: true),
                     UltimoPdfGerado = table.Column<string>(type: "TEXT", nullable: true)
@@ -186,6 +224,11 @@ namespace Marketing.Infraestrutura.Migrations
                 column: "Token");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EnviosMensagemMensais_MensagemId",
+                table: "EnviosMensagemMensais",
+                column: "MensagemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Estabelecimentos_RedeNome",
                 table: "Estabelecimentos",
                 column: "RedeNome");
@@ -194,6 +237,11 @@ namespace Marketing.Infraestrutura.Migrations
                 name: "IX_ExtratosVendas_EstabelecimentoCnpj",
                 table: "ExtratosVendas",
                 column: "EstabelecimentoCnpj");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MensagemItem_MensagemId",
+                table: "MensagemItem",
+                column: "MensagemId");
         }
 
         /// <inheritdoc />
@@ -212,6 +260,9 @@ namespace Marketing.Infraestrutura.Migrations
                 name: "ExtratosVendas");
 
             migrationBuilder.DropTable(
+                name: "MensagemItem");
+
+            migrationBuilder.DropTable(
                 name: "Contatos");
 
             migrationBuilder.DropTable(
@@ -219,6 +270,9 @@ namespace Marketing.Infraestrutura.Migrations
 
             migrationBuilder.DropTable(
                 name: "Estabelecimentos");
+
+            migrationBuilder.DropTable(
+                name: "Mensagem");
 
             migrationBuilder.DropTable(
                 name: "Redes");

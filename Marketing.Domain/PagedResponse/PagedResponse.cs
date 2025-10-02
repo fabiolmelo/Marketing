@@ -9,9 +9,9 @@ namespace Marketing.Domain.PagedResponse
         public int PageSize { get; set; }
         public int TotalRecords { get; set; }
         public int TotalPages { get; set; }
-        public List<T> Dados { get; set; }
+        public T Dados { get; set; }
 
-        public PagedResponse(List<T> data, int pageNumber, int pageSize, int totalRecords)
+        public PagedResponse(T data, int pageNumber, int pageSize, int totalRecords)
         {
             Dados = data;
             PageNumber = pageNumber;
