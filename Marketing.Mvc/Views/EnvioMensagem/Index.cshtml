@@ -1,57 +1,65 @@
 ﻿@model Marketing.Domain.PagedResponse.PagedResponse<List<Marketing.Domain.Entidades.EnvioMensagemMensal>>
 
-<h1>Fechamentos pendentes de envio</h1>
-
-<form asp-action="EnviarTodos" asp-antiforgery="true" method="post">
-    <input type="submit" value="EnviarTodos" class="btn btn-primary">
-    <table class="table table-responsive table-primary">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Competência</th>
-                <th>Estabelecimento</th>
-                <th>Contato</th>
-                <th>Enviado</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (EnvioMensagemMensal item in Model.Dados.ToList()) {
-                <tr>
-                    <td>
-                    </td>
-                    <td>
-                        @item.Competencia.ToString("MMM/yyyy") 
-                    </td>
-                    <td>
-                        @item.EstabelecimentoCnpj
-                    </td>
-                    <td>
-                        @item.ContatoTelefone
-                    </td>
-                    <td>
-                        @if(item.MensagemId != null) {
-                            @Html.Raw("Enviado")
-                        } else {
-                            @Html.Raw("Pendente")
-                        }
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" asp-action="Enviar" asp-route-id="@item.">Enviar</button> 
-                    </td>
-                </tr>
-        }
-        </tbody>
-    </table>
-    <div class="row">
-        <div class="col col-12">
-            <input class="btn btn-primary" type="button" value="<<" onclick="location.href='@Url.Action("Index", "EnvioMensagemController", new { pageNumber = 1 })'" />|
-            <input class="btn btn-primary" type="button" value="<" onclick="location.href='@Url.Action("Index", "EnvioMensagemController", new { pageNumber = Model.PageNumber - 1 })'" />|
-            <input class="btn btn-primary" type="button" value=">" onclick="location.href='@Url.Action("Index", "EnvioMensagemController", new { pageNumber = Model.PageNumber + 1 })'" />|
-            <input class="btn btn-primary" type="button" value=">>" onclick="location.href='@Url.Action("Index", "EnvioMensagemController", new { pageNumber = Model.TotalPages })'" />|
-        </div>
-        <div class="col col-12">
-            <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
-        </div>
+<div class="row">
+    <div class="col-12">
+        <h1>Fechamentos pendentes de envio</h1>
     </div>
-</form>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <form asp-action="EnviarTodos" asp-antiforgery="true" method="post">
+            <input type="submit" value="EnviarTodos" class="btn btn-primary">
+            <table class="table table-responsive table-primary">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Competência</th>
+                        <th>Estabelecimento</th>
+                        <th>Contato</th>
+                        <th>Enviado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (EnvioMensagemMensal item in Model.Dados.ToList()) {
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                @item.Competencia.ToString("MMM/yyyy") 
+                            </td>
+                            <td>
+                                @item.EstabelecimentoCnpj
+                            </td>
+                            <td>
+                                @item.ContatoTelefone
+                            </td>
+                            <td>
+                                @if(item.MensagemId != null) {
+                                    @Html.Raw("Enviado")
+                                } else {
+                                    @Html.Raw("Pendente")
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-danger" asp-action="Enviar" asp-route-id="@item.">Enviar</button> 
+                            </td>
+                        </tr>
+                }
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col col-12">
+                    <input class="btn btn-primary" type="button" value="<<" onclick="location.href='@Url.Action("Index", "EnvioMensagemController", new { pageNumber = 1 })'" />|
+                    <input class="btn btn-primary" type="button" value="<" onclick="location.href='@Url.Action("Index", "EnvioMensagemController", new { pageNumber = Model.PageNumber - 1 })'" />|
+                    <input class="btn btn-primary" type="button" value=">" onclick="location.href='@Url.Action("Index", "EnvioMensagemController", new { pageNumber = Model.PageNumber + 1 })'" />|
+                    <input class="btn btn-primary" type="button" value=">>" onclick="location.href='@Url.Action("Index", "EnvioMensagemController", new { pageNumber = Model.TotalPages })'" />|
+                </div>
+                <div class="col col-12">
+                    <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

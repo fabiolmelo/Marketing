@@ -39,10 +39,10 @@
 </table>
 <div class="row">
 <div class="col col-12">
-    <input class="btn btn-primary" type="button" value="<<" onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = 1 })'" />|
-    <input class="btn btn-primary" type="button" value="<" onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber - 1 })'" />|
-    <input class="btn btn-primary" type="button" value=">" onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber + 1 })'" />|
-    <input class="btn btn-primary" type="button" value=">>" onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.TotalPages })'" />|
+    <input class="btn btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = 1 })'" />|
+    <input class="btn btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber - 1 })'" />|
+    <input class="btn btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber + 1 })'" />|
+    <input class="btn btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.TotalPages })'" />|
 </div>
 <div class="col col-12">
     <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
