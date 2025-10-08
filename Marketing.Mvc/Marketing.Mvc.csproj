@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Marketing.Infraestrutura\Marketing.Infraestrutura.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+  <Content Include="/DadosApp">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
+
 </Project>
