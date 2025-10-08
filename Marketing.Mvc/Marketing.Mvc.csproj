@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-  <Content Include="/DadosApp">
+  <Content Include=".\DadosApp\**">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
 </ItemGroup>
