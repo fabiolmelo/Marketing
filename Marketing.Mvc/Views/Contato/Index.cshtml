@@ -4,46 +4,55 @@
     ViewData["Title"] = "View";
 }
 
-<h1>Contatos</h1>
+ <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Contatos</h6>
+    </div>
+    <div class="card-body">
+        <p>
+            <button class="btn btn-primary" asp-action="Create">Novo Contato</button>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Telefone</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model.Dados) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telefone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        <a asp-action="Editar" asp-route-id="@item.Telefone">Edit</a> |
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+        <div class="row">
+        <div class="col col-12">
+            <input class="btn btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = 1 })'" />|
+            <input class="btn btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber - 1 })'" />|
+            <input class="btn btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber + 1 })'" />|
+            <input class="btn btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.TotalPages })'" />|
+        </div>
+        <div class="col col-12">
+            <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
+        </div>
+    </div>
+</div>
 
-<p>
-    <button class="btn btn-primary" asp-action="Create">Novo Contato</button>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Telefone</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Dados) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                <a asp-action="Editar" asp-route-id="@item.Telefone">Edit</a> |
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-<div class="row">
-<div class="col col-12">
-    <input class="btn btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = 1 })'" />|
-    <input class="btn btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber - 1 })'" />|
-    <input class="btn btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber + 1 })'" />|
-    <input class="btn btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.TotalPages })'" />|
-</div>
-<div class="col col-12">
-    <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
-</div>
+
+
+

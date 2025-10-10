@@ -55,9 +55,11 @@ namespace Marketing.Mvc.Controllers
         }
 
         // GET: ContatoController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(string id)
         {
-            return View();
+            var contato = await _servicoContato.GetByIdStringAsync(id);
+            if (contato == null) return NotFound();
+            return View(contato);
         }
 
         // POST: ContatoController/Edit/5
