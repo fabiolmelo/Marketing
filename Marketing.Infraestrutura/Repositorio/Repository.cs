@@ -51,24 +51,6 @@ namespace Marketing.Infraestrutura.Repositorio
             return await _dataContext.Set<T>().ToListAsync();
         }
 
-        public async Task<PagedResponse<List<T>>> GetAllAsync(int pageNumber, int pageSize,
-                                        Expression<Func<T, bool>>? filtros = null,
-                                        params Expression<Func<T, object>>[] includes) 
-        {
-            var query = _dataContext.Set<T>().AsNoTracking();
-            if (filtros != null)
-            {
-                query.Where(filtros);
-            }
-            if (includes != null)
-            {
-                includes.Aggregate(query, (current, includes) => current.Include(includes));
-            }
-            var totalRecords = await query.CountAsync();
-            query = query.Skip(pageNumber - 1).Take(pageSize);
-            return new PagedResponse<List<T>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
-        }
-
         public async Task<T?> GetByIdAsync(int id)
         {
             return await _dataContext.Set<T>().FindAsync(id);

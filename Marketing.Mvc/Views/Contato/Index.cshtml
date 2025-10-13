@@ -12,40 +12,53 @@
         <p>
             <button class="btn btn-primary" asp-action="Create">Novo Contato</button>
         </p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Telefone</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-        @foreach (var item in Model.Dados) {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Telefone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nome)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        <a asp-action="Editar" asp-route-id="@item.Telefone">Edit</a> |
-                    </td>
-                </tr>
-        }
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Telefone</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Aceita Mensagem</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @{int linha = 1;}
+                @foreach (var item in Model.Dados) {
+                    <tr class="@(linha % 2 == 0 ? "" : "")">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Telefone)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @if (item.AceitaMensagem == true) {
+                                @("Sim")
+                            } else {
+                                @("Não")
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Telefone" class="btn btn-danger btn-xs">Alterar</a>
+                        </td>
+                    </tr>
+                    linha = linha + 1;
+                }
+                </tbody>
+            </table>
+        </div>
+        
         <div class="row">
         <div class="col col-12">
-            <input class="btn btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = 1 })'" />|
-            <input class="btn btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber - 1 })'" />|
-            <input class="btn btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber + 1 })'" />|
-            <input class="btn btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.TotalPages })'" />|
+            <input class="btn btn-xs btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = 1 })'" />|
+            <input class="btn btn-xs btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber - 1 })'" />|
+            <input class="btn btn-xs btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.PageNumber + 1 })'" />|
+            <input class="btn btn-xs btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Contato", new { pageNumber = Model.TotalPages })'" />|
         </div>
         <div class="col col-12">
             <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>

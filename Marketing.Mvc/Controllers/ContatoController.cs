@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using System.Threading.Tasks;
+using DocumentFormat.OpenXml.InkML;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
@@ -65,11 +67,14 @@ namespace Marketing.Mvc.Controllers
         // POST: ContatoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(string id,
+                    [Bind("Telefone,Nome,AceitaMensagem,DataAceite,RecusaMensagem,DataRecusa,Email,Token,UltimaCompetenciaEnviada")] Contato contato)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _servicoContato.Update(contato);
+                await _servicoContato.CommitAsync();
+                return RedirectToAction("Index");
             }
             catch
             {

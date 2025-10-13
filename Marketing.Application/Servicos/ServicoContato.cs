@@ -62,6 +62,11 @@ namespace Marketing.Application.Servicos
             return await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(cnpj);
         }
 
+        public async Task<PagedResponse<List<Contato>>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null, params Expression<Func<Contato, object>>[] includes)
+        {
+            return await _unitOfWork.repositorioContato.GetAllAsync(pageNumber, pageSize, filtros, includes);
+        }
+
         public async Task<PagedResponse<List<Contato>>> GetAllContatos(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null)
         {
             return await _unitOfWork.repositorioContato.GetAllAsync(pageNumber, pageSize, filtros);

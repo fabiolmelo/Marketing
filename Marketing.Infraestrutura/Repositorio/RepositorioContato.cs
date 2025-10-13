@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
+using Marketing.Domain.PagedResponse;
 using Marketing.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +34,23 @@ namespace Marketing.Infraestrutura.Repositorio
                                                 .FirstOrDefaultAsync(x => x.Cnpj == cnpj);
             var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem).Select(x=>x.Contato).ToList();
             return contatos ?? new List<Contato>();
+        }
+
+        public async Task<PagedResponse<List<Contato>>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null, params Expression<Func<Contato, object>>[] includes)
+        {
+            var query = _context.Contatos.AsNoTracking();
+            if (filtros != null)
+            {
+                query.Where(filtros);
+            }
+            if (includes != null)
+            {
+                includes.Aggregate(query, (current, includes) => current.Include(includes));
+            }
+            query = query.OrderBy(x => x.Telefone);
+            var totalRecords = await query.CountAsync();
+            query = query.Skip(pageNumber - 1).Take(pageSize);
+            return new PagedResponse<List<Contato>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
         }
     }
 }

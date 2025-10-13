@@ -9,15 +9,12 @@ namespace Marketing.Application.Servicos
     public class ServicoProcessamentoMensal : IServicoProcessamentoMensal
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IServicoGrafico _servicoGrafico;
-        private readonly IServicoArquivos _servicoArquivos;
+        private readonly IServicoGraficoRevisado _servicoGrafico;
 
-        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGrafico servicoGrafico,
-                                          IServicoArquivos servicoArquivos)
+        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGraficoRevisado servicoGrafico)
         {
             _unitOfWork = unitOfWork;
             _servicoGrafico = servicoGrafico;
-            _servicoArquivos = servicoArquivos;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
@@ -77,7 +74,7 @@ namespace Marketing.Application.Servicos
                 var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
                 var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
                 _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
-                _servicoArquivos.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                _servicoGrafico.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                     posicaoNaRede, contentRootPath, caminhoApp);
                 var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
                 if (estabelecimentoUpdate != null)
