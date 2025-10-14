@@ -16,7 +16,7 @@ namespace Marketing.Mvc.Controllers
             _servicoContato = servicoContato;
         }
 
-        public async Task<ActionResult> Index(int pageNumber = 1, int pageSize = 5, string? filtro = null)
+        public async Task<ActionResult> Index(int pageNumber = 1, int pageSize = 8, string? filtro = null)
         {
             Expression<Func<Contato, bool>>? filtroContato = null;
             if (filtro != null) 

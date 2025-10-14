@@ -12,9 +12,9 @@ namespace Marketing.Mvc.Controllers
             _servicoRede = servicoRede;
         }
 
-        public async Task<ActionResult> Index(int? pageNumber = null, int? pageSize = null)
+        public async Task<ActionResult> Index(int? pageNumber, int? pageSize)
         {
-            var redes = await _servicoRede.GetAllAsync(pageNumber ?? 1, pageSize ?? 10); 
+            var redes = await _servicoRede.GetAllRedesAsync(pageNumber ?? 1, pageSize ?? 8); 
             return View(redes);
         }
 

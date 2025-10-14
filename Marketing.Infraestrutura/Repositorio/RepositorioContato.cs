@@ -39,6 +39,7 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task<PagedResponse<List<Contato>>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null, params Expression<Func<Contato, object>>[] includes)
         {
             var query = _context.Contatos.AsNoTracking();
+            
             if (filtros != null)
             {
                 query.Where(filtros);
@@ -47,9 +48,10 @@ namespace Marketing.Infraestrutura.Repositorio
             {
                 includes.Aggregate(query, (current, includes) => current.Include(includes));
             }
-            query = query.OrderBy(x => x.Telefone);
+            query = query.OrderBy(x => x.Telefone).AsQueryable();
+            
             var totalRecords = await query.CountAsync();
-            query = query.Skip(pageNumber - 1).Take(pageSize);
+            query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
             return new PagedResponse<List<Contato>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
         }
     }

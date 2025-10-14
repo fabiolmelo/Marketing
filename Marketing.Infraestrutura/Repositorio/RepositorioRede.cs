@@ -1,5 +1,7 @@
-﻿using Marketing.Domain.Entidades;
+﻿using System.Linq.Expressions;
+using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
+using Marketing.Domain.PagedResponse;
 using Marketing.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +35,26 @@ namespace Marketing.Infraestrutura.Repositorio
             int posicaoNaRede = 0;
             posicaoNaRede = estabelecimentoSort.FindIndex(x=>x.Cnpj == estabelecimento.Cnpj);
             return posicaoNaRede == -1 ? 1 : ++posicaoNaRede;
+        }
+
+        public async Task<PagedResponse<List<Rede>>> GetAllAsync(int pageNumber, int pageSize,
+                                                                Expression<Func<Rede, bool>>? filtros = null,
+                                                                params Expression<Func<Rede, object>>[] includes)
+        {
+            var query = _context.Redes.AsNoTracking();
+            if (filtros != null)
+            {
+                query.Where(filtros);
+            }
+            if (includes != null)
+            {
+                includes.Aggregate(query, (current, includes) => current.Include(includes));
+            }
+            query = query.OrderBy(x => x.Nome);
+            var totalRecords = await query.CountAsync();
+            query = query.Skip((pageNumber - 1) * pageSize)
+                         .Take(pageSize);
+            return new PagedResponse<List<Rede>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
         }
     }
 }

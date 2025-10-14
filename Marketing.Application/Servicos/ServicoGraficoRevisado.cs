@@ -142,11 +142,11 @@ namespace Marketing.Application.Servicos
                     receitaMes.Go();
 
                     //MES COMPETENCIA
-                    ColumnText mesCompetencia = new ColumnText(directContent);
-                    string mesCompetenciaText = estabelecimento.Periodo();
-                    var mesCompetenciaPhrase = new Phrase(new Chunk(mesCompetenciaText, fontMes));
-                    mesCompetencia.SetSimpleColumn(mesCompetenciaPhrase, 350, 500, 45, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
-                    mesCompetencia.Go();
+                    // ColumnText mesCompetencia = new ColumnText(directContent);
+                    // string mesCompetenciaText = estabelecimento.Periodo();
+                    // var mesCompetenciaPhrase = new Phrase(new Chunk(mesCompetenciaText, fontMes));
+                    // mesCompetencia.SetSimpleColumn(mesCompetenciaPhrase, 350, 500, 45, 545, 25, Element.ALIGN_BOTTOM | Element.ALIGN_LEFT);
+                    // mesCompetencia.Go();
 
                     //RECEITA TOTAL NAO CAPTURADA
                     ColumnText receitaTotalMes = new ColumnText(directContent);
@@ -161,7 +161,7 @@ namespace Marketing.Application.Servicos
                     PdfContentByte cb = worker.DirectContent;
                     ColumnText ct = new ColumnText(cb);
                     var posicaoPhrase = new Phrase(new Chunk($"{posicao.ToString()}º", fontPosicaoRede));
-                    ct.SetSimpleColumn(posicaoPhrase, 920, 100, 50, 580, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    ct.SetSimpleColumn(posicaoPhrase, 565, 555, 420, 590, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     ct.Go();
 
                     const int FATOR_FIXO = 31;
@@ -195,6 +195,21 @@ namespace Marketing.Application.Servicos
                         int fatorPosicao = (index * FATOR_FIXO);
                         volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 285 + fatorPosicao, 367, 200 + fatorPosicao, 417, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedidoCoca[index].Go();
+                    }
+
+                    // MESES 2
+                    ColumnText[] meses2 = new ColumnText[qtdExtrato];
+                    string[] mesesText2 = new string[qtdExtrato];
+                    Phrase[] mesesPhrase2 = new Phrase[qtdExtrato];
+
+                    for (var index = 0; index < qtdExtrato; index++)
+                    {
+                        meses2[index] = new ColumnText(directContent);
+                        mesesText2[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
+                        mesesPhrase2[index] = new Phrase(new Chunk(mesesText2[index], fontValoresGraf));
+                        int fatorPosicao = (index * FATOR_FIXO);
+                        meses2[index].SetSimpleColumn(mesesPhrase2[index], 285 + fatorPosicao, 397, 200 + fatorPosicao, 447, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        meses2[index].Go();
                     }
 
                     // MESES
@@ -303,7 +318,7 @@ namespace Marketing.Application.Servicos
 
                     //PLOTAR A IMAGEM DA SETA META
                     iTextSharp.text.Image setaMeta = iTextSharp.text.Image.GetInstance(caminhoSetaMeta);
-                    setaMeta.SetAbsolutePosition(425, 430);
+                    setaMeta.SetAbsolutePosition(425, 445);
                     document.Add(setaMeta);
 
                     //PLOTAR A IMAGEM DA SETA INCIDENCIA
@@ -343,7 +358,7 @@ namespace Marketing.Application.Servicos
                         setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia95);
                     }
                     
-                    setaIncidencia.SetAbsolutePosition(275, 430);
+                    setaIncidencia.SetAbsolutePosition(275, 445);
                     document.Add(setaIncidencia);
 
                     // DESENHAR A LINHA TRACEJADA DA META

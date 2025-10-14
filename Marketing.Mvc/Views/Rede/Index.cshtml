@@ -1,29 +1,60 @@
 ﻿@model Marketing.Domain.PagedResponse.PagedResponse<List<Marketing.Domain.Entidades.Rede>>
-
-<h1>Redes</h1>
-
-<p>
-    <button class="btn btn-success" asp-action="Create">Adicionar Rede</button>
-</p>
-<table class="table table-responsive table-primary">
-    <thead>
-        <tr>
-            <th>
-                Nome
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Dados) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Nome">Edit</a>|
-            </td>
-        </tr>
+@{
+    ViewData["Title"] = "View";
 }
-    </tbody>
-</table>
+
+ <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Redes</h6>
+    </div>
+    <div class="card-body">
+        <p>
+            <button class="btn btn=sm btn-primary" asp-action="Create">Nova Rede</button>
+        </p>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>
+                            Rede
+                        </th>
+                        <th>
+                            DataCadastro
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int linha = 1;}
+                    @foreach (var item in Model.Dados) {
+                        <tr class="@(linha % 2 == 0 ? "" : "")">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataCadastro)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Nome" class="btn btn-danger btn-sm">Alterar</a>
+                            </td>
+                        </tr>
+                        linha = linha + 1;
+                    }
+                </tbody>
+            </table>
+        </div>
+         <div class="row">
+            @if (Model.TotalPages > 1){
+                <div class="col col-12">
+                    <input class="btn btn-sm btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Rede", new { pageNumber = 1 })'" />|
+                    <input class="btn btn-sm btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Rede", new { pageNumber = Model.PageNumber - 1 })'" />|
+                    <input class="btn btn-sm btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Rede", new { pageNumber = Model.PageNumber + 1 })'" />|
+                    <input class="btn btn-sm btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Rede", new { pageNumber = Model.TotalPages })'" />|
+                </div>
+            }
+            <div class="col col-12">
+                <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
+            </div>
+        </div>
+    </div>
+</div>

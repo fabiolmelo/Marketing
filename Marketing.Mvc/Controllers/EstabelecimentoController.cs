@@ -13,7 +13,7 @@ namespace Marketing.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(int pageNumber = 1, int pageSize = 5, string? filtro = null)
+        public async Task<ActionResult> Index(int pageNumber = 1, int pageSize = 7, string? filtro = null)
         {
             if (filtro == "") filtro = null;
 

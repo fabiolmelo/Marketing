@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Marketing.Domain.Entidades;
+﻿using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
 using Marketing.Domain.Interfaces.IUnityOfWork;
 using Marketing.Domain.Interfaces.Servicos;
@@ -69,21 +68,29 @@ namespace Marketing.Application.Servicos
         public async Task GerarProcessamentoPorEstabelecimento(Estabelecimento estabelecimento,
                         DateTime competencia, string contentRootPath, string caminhoApp)
         {
-            if (estabelecimento.ExtratoVendas.Count > 0)
+            try
             {
-                var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
-                var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
-                _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
-                _servicoGrafico.GerarArquivoPdf(estabelecimento, arquivoPdf,
-                                                    posicaoNaRede, contentRootPath, caminhoApp);
-                var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
-                if (estabelecimentoUpdate != null)
+                if (estabelecimento.ExtratoVendas.Count > 0)
                 {
-                    estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
-                    _unitOfWork.repositorioEstabelecimento.Update(estabelecimentoUpdate);
-                    await _unitOfWork.CommitAsync();
-                }
-            }                                    
+                    var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
+                    var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
+                    _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
+                    _servicoGrafico.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                                                        posicaoNaRede, contentRootPath, caminhoApp);
+                    var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
+                    if (estabelecimentoUpdate != null)
+                    {
+                        estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
+                        _unitOfWork.repositorioEstabelecimento.Update(estabelecimentoUpdate);
+                        await _unitOfWork.CommitAsync();
+                    }
+                }     
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro {ex.Message}");
+            }
+                                           
         }
     }
 }

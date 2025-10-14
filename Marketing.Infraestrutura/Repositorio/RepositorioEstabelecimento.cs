@@ -42,11 +42,12 @@ namespace Marketing.Infraestrutura.Repositorio
             var query = _context.Set<Estabelecimento>().AsQueryable();
             if (filtro != null)
             {
-                query.Where(x=>x.RazaoSocial == filtro || x.Cidade == filtro);
+                query.Where(x => x.RazaoSocial == filtro || x.Cidade == filtro);
             }
+            query = query.OrderBy(x => x.Cnpj);
             
             var totalRecords = await query.CountAsync();
-            query = query.Skip(pageNumber - 1)
+            query = query.Skip((pageNumber - 1) * pageSize)
                          .Take(pageSize)
                          .Include(x => x.Rede)
                          .Include(x => x.ContatoEstabelecimentos)
