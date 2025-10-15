@@ -14,7 +14,7 @@ namespace Marketing.Mvc.Controllers
 
         public async Task<ActionResult> Index(int? pageNumber, int? pageSize)
         {
-            var redes = await _servicoRede.GetAllRedesAsync(pageNumber ?? 1, pageSize ?? 8); 
+            var redes = await _servicoRede.GetAllRedesAsync(pageNumber ?? 1, pageSize ?? 5); 
             return View(redes);
         }
 

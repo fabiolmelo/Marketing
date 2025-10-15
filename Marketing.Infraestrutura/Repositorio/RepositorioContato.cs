@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.PagedResponse;
@@ -34,6 +35,14 @@ namespace Marketing.Infraestrutura.Repositorio
                                                 .FirstOrDefaultAsync(x => x.Cnpj == cnpj);
             var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem).Select(x=>x.Contato).ToList();
             return contatos ?? new List<Contato>();
+        }
+
+        public async Task<bool> EstabelecimentoPossuiContatoQueAceitaMensagem(string cnpj)
+        {
+            var estabelecimento = await _context.Set<Estabelecimento>()
+                                                .Include(x => x.ContatoEstabelecimentos)
+                                                .ThenInclude(x => x.Contato).ToListAsync();
+            return estabelecimento.Any(x => x.ContatoEstabelecimentos.Any(x => x.Contato.AceitaMensagem == true));
         }
 
         public async Task<PagedResponse<List<Contato>>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null, params Expression<Func<Contato, object>>[] includes)

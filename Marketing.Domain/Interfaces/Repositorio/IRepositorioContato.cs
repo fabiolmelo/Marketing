@@ -9,5 +9,6 @@ namespace Marketing.Domain.Interfaces.Repositorio
         Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj);
         Task<Contato?> BuscarContatosIncludeEstabelecimento(string telefone);
         Task<PagedResponse<List<Contato>>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null, params Expression<Func<Contato, object>>[] includes);
+        Task<bool> EstabelecimentoPossuiContatoQueAceitaMensagem(string cnpj);
     }
 }

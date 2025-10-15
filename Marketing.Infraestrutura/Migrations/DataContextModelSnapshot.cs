@@ -139,12 +139,12 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MensagemId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Competencia", "ContatoTelefone", "EstabelecimentoCnpj");
 
-                    b.HasIndex("MensagemId");
+                    b.HasIndex("MensagemId")
+                        .IsUnique();
 
                     b.ToTable("EnviosMensagemMensais");
                 });
@@ -262,7 +262,7 @@ namespace Marketing.Infraestrutura.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Mensagem");
+                    b.ToTable("Mensagens");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.MensagemItem", b =>
@@ -288,13 +288,20 @@ namespace Marketing.Infraestrutura.Migrations
 
                     b.HasIndex("MensagemId");
 
-                    b.ToTable("MensagemItem");
+                    b.ToTable("MensagemItems");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>
                 {
                     b.Property<string>("Nome")
                         .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Nome");
@@ -335,10 +342,8 @@ namespace Marketing.Infraestrutura.Migrations
             modelBuilder.Entity("Marketing.Domain.Entidades.EnvioMensagemMensal", b =>
                 {
                     b.HasOne("Marketing.Domain.Entidades.Mensagem", "Mensagem")
-                        .WithMany()
-                        .HasForeignKey("MensagemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("EnvioMensagemMensal")
+                        .HasForeignKey("Marketing.Domain.Entidades.EnvioMensagemMensal", "MensagemId");
 
                     b.Navigation("Mensagem");
                 });
@@ -393,6 +398,8 @@ namespace Marketing.Infraestrutura.Migrations
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
                 {
+                    b.Navigation("EnvioMensagemMensal");
+
                     b.Navigation("MensagemItems");
                 });
 

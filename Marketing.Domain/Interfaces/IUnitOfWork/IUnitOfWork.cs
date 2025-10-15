@@ -12,6 +12,7 @@ namespace Marketing.Domain.Interfaces.IUnityOfWork
         public IRepositorioExtratoVendas repositorioExtratoVendas { get; }
         public IRepositorioProcessamentoMensal repositorioProcessamentoMensal { get; }
         public IRepositorioRede repositorioRede { get; }
+        public IRepositorioMensagem repositorioMensagem { get; }
         
     }
 }

@@ -503,7 +503,11 @@ namespace Marketing.Application.Servicos
                         var qtdPedidosNaoCapiturados = (int)linha.Cell("K").Value;
                         var receitaNaoCapturada = (decimal)linha.Cell("L").Value.GetNumber();
                         var rede = linha.Cell("M").Value.ToString();
-                        var fone = linha.Cell("N").Value.ToString();
+                        var fone = linha.Cell("N").Value.ToString().RemoverCaracteresEspeciais();
+                        if (fone.Length == 11)
+                        {
+                            fone = $"55{fone}";
+                        }
 
                         dadosPlanilha.Add(
                             new DadosPlanilha(data, uf, cidade, cnpj, restaurante, totalPedidos, 

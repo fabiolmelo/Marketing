@@ -1,8 +1,6 @@
 using System.Diagnostics;
-using System.Text.Json;
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Entidades.Meta;
-using Marketing.Domain.Interfaces.Servicos;
+using Marketing.Domain.Interfaces.IUnityOfWork;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketing.Mvc.Controllers;
@@ -10,17 +8,32 @@ namespace Marketing.Mvc.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IWebHostEnvironment _webHostEnviroment;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnviroment)
     {
         _logger = logger;
-
+        _unitOfWork = unitOfWork;
+        _webHostEnviroment = webHostEnviroment;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var competencia = await _unitOfWork.repositorioExtratoVendas.BuscarCompetenciaVigente();
+        var mensagens = await _unitOfWork.repositorioMensagem.GetAllMensagemsAsync(competencia);
+        return View(mensagens);
     }
+    
+    [HttpGet]
+    public IActionResult Download()
+    {
+        var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio", "Base.xlsx");
+            byte[] fileBytes = System.IO.File.ReadAllBytes(pathRoot);
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        $"Base.xlsx");
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

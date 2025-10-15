@@ -27,35 +27,38 @@ namespace Marketing.Application.Servicos
             {
                 foreach (Estabelecimento estabelecimento in estabelecimentos)
                 {
-                    await GerarProcessamentoPorEstabelecimento(estabelecimento, competencia,
-                                                               contentRootPath, caminhoApp);
-                    var contatos = await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
-                    foreach (Contato contato in contatos)
+                    if (await _unitOfWork.repositorioContato.EstabelecimentoPossuiContatoQueAceitaMensagem(estabelecimento.Cnpj))
                     {
-                        var telefone = contato.Telefone ?? "";
-                        var mensagem = new EnvioMensagemMensal(competencia, estabelecimento.Cnpj, telefone);
-                        await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
-                        await _unitOfWork.CommitAsync();
+                        await GerarProcessamentoPorEstabelecimento(estabelecimento, competencia,
+                                                               contentRootPath, caminhoApp);
+                        var contatos = await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
+                        foreach (Contato contato in contatos)
+                        {
+                            var telefone = contato.Telefone ?? "";
+                            var mensagem = new EnvioMensagemMensal(competencia, estabelecimento.Cnpj, telefone);
+                            await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
+                            await _unitOfWork.CommitAsync();
 
-                        // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
-                        // if (response.IsSuccessStatusCode)
-                        // {
-                        //     WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
-                        //     if (json != null && contato.Telefone != null)
-                        //     {
-                        //         foreach (Message message in json.messages)
-                        //         {
-                        //             var mensagemId = message.id;
-                        //             if (mensagemId != null)
-                        //             {
-                        //                 // var length = mensagemId.Length;
-                        //                 // var mensagem = new MensagemEnviada(mensagemId);
-                        //                 // //mensagem.AdicionarEvento(MensagemStatus.sent);
-                        //                 // await _servicoMensagemEnviada.AddAsyncWithCommit(mensagem);
-                        //             }
-                        //         }
-                        //     }
-                        // }
+                            // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
+                            // if (response.IsSuccessStatusCode)
+                            // {
+                            //     WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
+                            //     if (json != null && contato.Telefone != null)
+                            //     {
+                            //         foreach (Message message in json.messages)
+                            //         {
+                            //             var mensagemId = message.id;
+                            //             if (mensagemId != null)
+                            //             {
+                            //                 // var length = mensagemId.Length;
+                            //                 // var mensagem = new MensagemEnviada(mensagemId);
+                            //                 // //mensagem.AdicionarEvento(MensagemStatus.sent);
+                            //                 // await _servicoMensagemEnviada.AddAsyncWithCommit(mensagem);
+                            //             }
+                            //         }
+                            //     }
+                            // }
+                        }
                     }
                 }
             }

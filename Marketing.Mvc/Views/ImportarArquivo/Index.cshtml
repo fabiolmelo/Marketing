@@ -1,10 +1,40 @@
-<div>
-    <form method="post" enctype="multipart/form-data" asp-controller="ImportarArquivo"  
-        asp-action="Index"> 
-        <span>Selecionar planilha:</span> 
-        <input type="file" name="arquivoEnviado" /> 
-        <input type="submit" value="Upload" /> 
-        <br /> 
-        <span>@Html.Raw(ViewBag.Message)</span> 
-    </form> 
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Importação de Dados</h6>
+    </div>
+    <div class="card-body">
+        <div>
+            <form method="post" enctype="multipart/form-data" asp-controller="ImportarArquivo"  
+                asp-action="Index"> 
+                <span>Selecionar planilha:</span> 
+                <input type="file" name="arquivoEnviado" /> 
+                <input type="submit" value="Upload" /> 
+                <br /> 
+            </form> 
+        </div>
+    </div>
 </div>
+@if (@ViewData["Erro"] != null){
+    <div class="col-12">
+        <div class="card bg-danger text-white text-sm shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["Erro"]
+            </div>
+        </div>
+    </div>
+}
+@if (@ViewData["OK"] != null){
+    <div class="col-12">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["OK"]
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-using Marketing.Domain.Entidades;
+using Marketing.Domain.Entidades.Meta;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketing.WebApi.Controllers
@@ -14,7 +14,7 @@ namespace Marketing.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> HandleWebhook([FromBody]WhatsAppWebhookPayload payload)
+        public async Task<IActionResult> HandleWebhook([FromBody] WhatsAppWebhookPayload payload)
         {
             if (payload == null)
             {

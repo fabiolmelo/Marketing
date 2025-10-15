@@ -4,15 +4,15 @@ namespace Marketing.Domain.Entidades
     {
         public Mensagem()
         {
-            MensagemItems = MensagemItems ?? new List<MensagemItem>();
         }
+        
         public Mensagem(string id)
         {
             Id = id;
-            MensagemItems = MensagemItems ?? new List<MensagemItem>();
         }
 
         public string Id { get; set; } = null!;
+        public virtual EnvioMensagemMensal? EnvioMensagemMensal { get; set; }
         public ICollection<MensagemItem> MensagemItems { get; private set; } = null!;
 
         public void AdicionarEvento(MensagemItem evento)

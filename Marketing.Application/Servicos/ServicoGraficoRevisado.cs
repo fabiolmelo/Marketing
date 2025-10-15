@@ -33,6 +33,7 @@ namespace Marketing.Application.Servicos
             var caminhoSetaIncidencia60 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia60.png");
             var caminhoSetaIncidencia80 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia80.png");
             var caminhoSetaIncidencia95 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia95.png");
+            var caminhoLogoRede = Path.Combine(contentRootPath, "DadosApp", "Logos", estabelecimento.Rede?.Logo ?? "0.png"); 
 
             using (var image = File.OpenRead(caminhoFundo))
             {
@@ -73,11 +74,21 @@ namespace Marketing.Application.Servicos
                     pic.ScaleToFit(document.PageSize);
                     document.Add(pic);
 
+                    //GRAVA O LOGO DA REDE
+                    if (File.Exists(caminhoLogoRede))
+                    {
+                        var logoRede = iTextSharp.text.Image.GetInstance(caminhoFundo);
+                        logoRede.SetAbsolutePosition(300, 30);
+                        logoRede.ScaleAbsoluteHeight(100);
+                        logoRede.ScaleAbsoluteWidth(100);
+                        document.Add(logoRede);    
+                    }
+
                     // DADOS DO ESTABELECIMENTO
-                    var dadosEstabelecimento1 = $"Franqueado: {estabelecimento.RazaoSocial}";
+                    var dadosEstabelecimento1 = $"Loja: {estabelecimento.RazaoSocial}";
                     var dadosEstabelecimento2 = $"Cidade: {estabelecimento.Cidade} - {estabelecimento.Uf}";
                     var dadosEstabelecimento3 = $"Endereço: ";
-                    var dadosEstabelecimento4 = $"Código:        CO";
+                    // var dadosEstabelecimento4 = $"Código:        CO";
 
                     //DADOS 1
                     PdfContentByte directContent = worker.DirectContent;
@@ -99,10 +110,10 @@ namespace Marketing.Application.Servicos
                     columnText3.Go();
 
                     //DADOS 4
-                    ColumnText columnText4 = new ColumnText(directContent);
-                    var posicaoDados4 = new Phrase(new Chunk(dadosEstabelecimento4, fontDadosEstabelecimento));
-                    columnText4.SetSimpleColumn(posicaoDados4, 650, 100, 50, 670, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
-                    columnText4.Go();
+                    // ColumnText columnText4 = new ColumnText(directContent);
+                    // var posicaoDados4 = new Phrase(new Chunk(dadosEstabelecimento4, fontDadosEstabelecimento));
+                    // columnText4.SetSimpleColumn(posicaoDados4, 650, 100, 50, 670, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
+                    // columnText4.Go();
 
                     //MES REFERENCIA
                     string textoMesReferencia = $"{estabelecimento.MesCompetencia} (META DE INCIDÊNCIA: ";
@@ -242,7 +253,7 @@ namespace Marketing.Application.Servicos
                         aproveitamento[index].SetSimpleColumn(aproveitamentoPhrase[index], 197 + fatorPosicao, 195, 217 + fatorPosicao, 252, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         aproveitamento[index].Go();
                     }
-
+                    
                     // PEDIDOS NAO CAPTURADOS
                     ColumnText[] naoCapiturados = new ColumnText[qtdExtrato];
                     string[] naoCapituradosText = new string[qtdExtrato];

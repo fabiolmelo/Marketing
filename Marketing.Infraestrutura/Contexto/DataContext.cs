@@ -20,7 +20,8 @@ namespace Marketing.Infraestrutura.Contexto
         public DbSet<ImportacaoEfetuada> ImportacaoEfetuada { get; set; }
         public DbSet<DadosPlanilha> DadosPlanilha { get; set; }
         public DbSet<EnvioMensagemMensal> EnviosMensagemMensais { get; set; }
-        public DbSet<Mensagem> Mensagem { get; set; }
+        public DbSet<Mensagem> Mensagens { get; set; }
+        public DbSet<MensagemItem> MensagemItems { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

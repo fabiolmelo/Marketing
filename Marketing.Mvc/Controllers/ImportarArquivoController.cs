@@ -14,8 +14,8 @@ namespace Marketinf.Mvc.Controllers
 
         public IActionResult Index(string? erro = null, string? sucesso = null)
         {
-            ViewBag.Erro = erro;
-            ViewBag.Sucesso = sucesso;
+            ViewData["Erro"] = erro;
+            ViewData["OK"] = sucesso;
             return View();
         }
 
@@ -25,7 +25,7 @@ namespace Marketinf.Mvc.Controllers
             if (arquivoEnviado == null) return RedirectToAction("Index", new { erro = "Arquivo não selecionado" }); 
             var sucesso = await _servicoImportarPlanilha.ImportarPlanilha(arquivoEnviado);
             if (!sucesso) return BadRequest();
-            return RedirectToAction("Index", new { erro = "Arquivo não selecionado" });
+            return RedirectToAction("Index", new { sucesso = "Arquivo importado com sucesso" });
         }
     }
 }
