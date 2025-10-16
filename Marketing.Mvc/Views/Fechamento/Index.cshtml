@@ -1,28 +1,40 @@
 @model Marketing.Application.DTOs.ProcessamentoMensalDto
-<div class="row">
-    <form asp-action="Gerar" asp-antiforgery="true" method="post">
-        <div class="form-group">
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <label asp-asp-for="Competencia" >Data Competência</label>
-            </div>
-            <div class="col-sm-3 col-md-3 col-lg-3">
-                <input asp-for="Competencia" class="form-control" type="month" asp-format="{0:yyyy-MM}" placeholder="Informe a competência:" value="@ViewBag.CompetenciaVigente">
-            </div>
-        </div>
-        <input type="submit" value="Processar" class="btn btn-primary">        
-    </form>
-    <div class="row">
-        <div class="col">
-            @if (ViewBag.Gerou == true)
-            {
-                <div class="p-3 text-sucess-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
-                    processamento efetuado com sucesso!
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Gerar PDFs e fila de envios</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <form asp-action="Gerar" asp-antiforgery="true" method="post">
+                <div class="form-group">
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label asp-asp-for="Competencia" >Data Competência</label>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3">
+                        <input asp-for="Competencia" class="form-control" type="month" asp-format="{0:yyyy-MM}" placeholder="Informe a competência:" value="@ViewBag.CompetenciaVigente">
+                    </div>
                 </div>
-            }
-            @if (ViewBag.Gerou == false)
-            {
-                <p class="btn btn-danger">Erro asp-for Gerar processamento!</p>
-            }
+                <input type="submit" value="Processar" class="btn btn-sm btn-primary">        
+            </form>
         </div>
     </div>
 </div>
+@if (@ViewData["Erro"] != null){
+    <div class="col-12">
+        <div class="card bg-danger text-white text-sm shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["Erro"]
+            </div>
+        </div>
+    </div>
+}
+@if (@ViewData["OK"] != null){
+    <div class="col-12">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["OK"]
+            </div>
+        </div>
+    </div>
+}

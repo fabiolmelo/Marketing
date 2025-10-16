@@ -9,15 +9,17 @@
         <h6 class="m-0 font-weight-bold text-primary">Contatos</h6>
     </div>
     <div class="card-body">
-        <div class"row">
-            <div class="col-6">
-                <button class="btn btn=sm btn-primary" asp-action="Create">Novo Contato</button>
+        <div class="container-fluid mb-3">
+            <div class = "row align-items-center">
+                <div class="col-2">
+                    <button class="btn btn-sm btn-primary" asp-action="Create">Novo Contato</button>
+                </div>
+                <div class="col-4 offset-6">
+                    <h6 class="">Contatos cadastrados: @Model.TotalRecords</h6>
+                </div>
             </div>
-            <div class="col-6">
-                <h6>Contatos</h6>>
-            </div>
-        </div>>
-        <div class="table-responsive">
+        </div>
+        <div class="table-responsive p-6">
             <table class="table table-sm table-bordered">
                 <thead class="table-primary">
                     <tr>

@@ -5,9 +5,16 @@
         <h6 class="m-0 font-weight-bold text-primary">Estabelecimentos</h6>
     </div>
     <div class="card-body">
-        <p>
-            <button class="btn btn=sm btn-primary" asp-action="Create">Novo Estabelecimento</button>
-        </p>
+        <div class="container-fluid mb-3">
+            <div class = "row align-items-center">
+                <div class="col-3">
+                    <button class="btn btn-sm btn-primary" asp-action="Create">Novo Estabelecimento</button>
+                </div>
+                <div class="col-4 offset-5">
+                    <h6 class="">Estabelecimentos cadastrados: @Model.TotalRecords</h6>
+                </div>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-sm table-bordered">
                 <thead class="table-primary">
@@ -42,7 +49,7 @@
                                 @Html.DisplayFor(modelItem => item.Uf)
                             </td>
                             <td>
-                                <button class="btn btn-danger" asp-action="Edit" asp-route-id="@item.Cnpj">Alterar</button> |
+                                <button class="btn btn-sm btn-danger" asp-action="Edit" asp-route-id="@item.Cnpj">Alterar</button> |
                             </td>
                         </tr>
                         linha = linha + 1;

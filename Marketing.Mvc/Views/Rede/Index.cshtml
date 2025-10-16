@@ -8,9 +8,16 @@
         <h6 class="m-0 font-weight-bold text-primary">Redes</h6>
     </div>
     <div class="card-body">
-        <p>
-            <button class="btn btn=sm btn-primary" asp-action="Create">Nova Rede</button>
-        </p>
+        <div class="container-fluid mb-3">
+            <div class = "row align-items-center">
+                <div class="col-2">
+                    <button class="btn btn-sm btn-primary" asp-action="Create">Nova Rede</button>
+                </div>
+                <div class="col-4 offset-6">
+                    <h6 class="">Redes cadastradas: @Model.TotalRecords</h6>
+                </div>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-sm table-bordered">
                 <thead class="table-primary">

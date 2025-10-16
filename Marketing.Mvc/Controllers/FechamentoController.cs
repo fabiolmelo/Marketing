@@ -25,11 +25,12 @@ namespace Marketing.Mvc.Controllers
             _servicoExtratoVendas = servicoExtratoVendas;
         }
 
-        public async Task<ActionResult> Index(bool? gerou)
+        public async Task<ActionResult> Index(string? erro = null, string? sucesso = null)
         {
             var competenciaVigente = await _servicoExtratoVendas.BuscarCompetenciaVigente();
-            ViewBag.Gerou = gerou;
             ViewBag.CompetenciaVigente = competenciaVigente.ToString("yyyy-MM");
+            ViewData["Erro"] = erro;
+            ViewData["OK"] = sucesso;
             return View();
         }
 
@@ -44,13 +45,13 @@ namespace Marketing.Mvc.Controllers
                                 processamentoMensalDto.Competencia,
                                 _webHostEnviroment.ContentRootPath, caminhoApp);
                 return RedirectToAction("Index",
-                    new { gerou = true });
+                    new { sucesso = "Processamento efetuado com sucesso!" });
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return RedirectToAction("Index",
-                    new { gerou = false });
+                    new { erro = "Erro. Processamento não efetuado!" });
             }
         }
 
