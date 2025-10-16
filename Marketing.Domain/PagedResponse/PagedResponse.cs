@@ -17,7 +17,9 @@ namespace Marketing.Domain.PagedResponse
             PageNumber = pageNumber;
             PageSize = pageSize;
             TotalRecords = totalRecords;
-            TotalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)pageSize);
+            //TotalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)pageSize);
+            decimal temp = Math.Ceiling((decimal)totalRecords / (decimal)pageSize);
+            TotalPages = (int)temp;
         }
     }
 }

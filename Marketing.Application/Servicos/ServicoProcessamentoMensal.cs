@@ -27,11 +27,12 @@ namespace Marketing.Application.Servicos
             {
                 foreach (Estabelecimento estabelecimento in estabelecimentos)
                 {
-                    if (await _unitOfWork.repositorioContato.EstabelecimentoPossuiContatoQueAceitaMensagem(estabelecimento.Cnpj))
+                    var contatos = await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
+                    //if (await _unitOfWork.repositorioContato.EstabelecimentoPossuiContatoQueAceitaMensagem(estabelecimento.Cnpj))
+                    if (contatos.Count > 0)
                     {
                         await GerarProcessamentoPorEstabelecimento(estabelecimento, competencia,
                                                                contentRootPath, caminhoApp);
-                        var contatos = await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
                         foreach (Contato contato in contatos)
                         {
                             var telefone = contato.Telefone ?? "";
