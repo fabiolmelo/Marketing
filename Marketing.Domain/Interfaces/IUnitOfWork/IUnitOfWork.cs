@@ -1,6 +1,6 @@
 using Marketing.Domain.Interfaces.Repositorio;
 
-namespace Marketing.Domain.Interfaces.IUnityOfWork
+namespace Marketing.Domain.Interfaces.IUnitOfWork
 {
     public interface IUnitOfWork
     {

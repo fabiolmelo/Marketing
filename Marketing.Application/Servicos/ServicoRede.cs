@@ -1,11 +1,11 @@
 using System.Linq.Expressions;
 using Marketing.Application.Servicos;
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Interfaces.IUnityOfWork;
-using Marketing.Domain.Interfaces.Repositorio;
+using Marketing.Domain.Interfaces.IUnitOfWork;
+using Marketing.Domain.Interfaces.Servicos;
 using Marketing.Domain.PagedResponse;
 
-namespace Marketing.Domain.Interfaces.Servicos
+namespace Marketing.Application.Servicos
 {
     public class ServicoRede : Servico<Rede>, IServicoRede
     {

@@ -1,5 +1,5 @@
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Interfaces.IUnityOfWork;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Marketing.Domain.PagedResponse;
 
@@ -13,11 +13,14 @@ namespace Marketing.Application.Servicos
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarMensagensNaoEnviadas(int pageNumber,
-                                                int pageSize, bool somenteEnvioPendente)
+        public async Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarMensagensNaoEnviadas(int pageNumber, int pageSize)
         {
-            return await _unitOfWork.repositorioEnvioMensagemMensal
-                                    .BuscarMensagensNaoEnviadas(pageNumber, pageSize, somenteEnvioPendente);
+            return await _unitOfWork.repositorioEnvioMensagemMensal.BuscarMensagensNaoEnviadas(pageNumber, pageSize);
+        }
+
+        public async Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarTodasMensagens(int pageNumber, int pageSize)
+        {
+            return await _unitOfWork.repositorioEnvioMensagemMensal.BuscarTodasMensagens(pageNumber, pageSize);
         }
 
         public async Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas()

@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using Marketing.Domain.Interfaces.Servicos;
-using Marketing.Domain.PagedResponse;
-using Marketing.Domain.Interfaces.IUnityOfWork;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 
 namespace Marketing.Application.Servicos
 {

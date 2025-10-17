@@ -1,6 +1,5 @@
 ﻿using Marketing.Domain.Entidades;
 using Marketing.Domain.PagedResponse;
-using System.Threading.Tasks;
 
 namespace Marketing.Domain.Interfaces.Repositorio
 {
@@ -9,5 +8,6 @@ namespace Marketing.Domain.Interfaces.Repositorio
         Task<PagedResponse<List<Estabelecimento>>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro);
         Task<Estabelecimento?> FindEstabelecimentoPorCnpj(string cnpj);
         Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj);
+        Task<List<Estabelecimento>> GetAllEstabelecimentoPorContato(string telefone);
     }
 }

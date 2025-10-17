@@ -3,7 +3,7 @@ using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.IdentityModel.Tokens;
 using Marketing.Domain.PagedResponse;
 using System.Linq.Expressions;
-using Marketing.Domain.Interfaces.IUnityOfWork;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 
 namespace Marketing.Application.Servicos
 {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Marketing.Domain.Extensoes;
-using Marketing.Domain.Interfaces.IUnityOfWork;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 
 namespace Marketing.Application.Servicos
 {

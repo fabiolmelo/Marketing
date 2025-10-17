@@ -1,3 +1,4 @@
+using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,7 +6,6 @@ namespace Marketing.Mvc.Controllers
 {
     public static class ServicosController
     {
-
         public static void AddApiServicosController(this WebApplication app)
         {
             app.MapGet("contato/aceite/{token}",
@@ -26,7 +26,7 @@ namespace Marketing.Mvc.Controllers
             })
             .WithName("AceiteContato")
             .WithOpenApi();
-            
+
             app.MapGet("contato/recusa/{token}",
                 async ([FromServices] IServicoContato _servicoContato,
                        [FromRoute] Guid token) =>
@@ -46,6 +46,62 @@ namespace Marketing.Mvc.Controllers
             .WithName("RecusaContato")
             .WithOpenApi();
 
+            app.MapPost("HandleWebhook",
+                async ([FromServices] IServicoMeta _servicoMeta,
+                       [FromBody] WhatsAppWebhookPayload payload) =>
+            {
+                if (payload == null)
+                {
+                    return Results.BadRequest();
+                }
+                // Processar o payload...
+                foreach (var entry in payload.Entry)
+                {
+                    foreach (var change in entry.Changes)
+                    {
+                        if (change.Field == "messages")
+                        {
+                            foreach (var message in change.Value.Messaging.Messages)
+                            {
+                                // Processar a mensagem...
+                                var texto = message.Text.Body;
+                                // ...
+                            }
+                        }
+                        else if (change.Field == "statuses")
+                        {
+                            foreach (var status in change.Value.Statuses.StatusesList)
+                            {
+                                // Processar o status...
+                                var statusId = status.Id;
+                                var statusStatus = status.StatusName;
+                                // ...
+                            }
+                        }
+                    }
+                }
+                return Results.Ok();
+            })
+            .WithName("HandleWebhook")
+            .WithOpenApi();
+
+        app.MapPost("VerifyWebhook",
+                async([FromServices] IServicoMeta _servicoMeta,
+                      [FromServices] IConfiguration _configuration,
+                      [FromBody] WhatsAppVerify whatsAppVerify) =>
+                {
+                    var tokenVerificar = _configuration["Meta:TokenVerificacaoApi"];
+                    if (whatsAppVerify.hubMode == "subscribe" && whatsAppVerify.hubVerifyToken == tokenVerificar)
+                    {
+                        return Results.Ok(whatsAppVerify.hubChallenge);
+                    }
+                    else
+                    {
+                        return Results.BadRequest();
+                    }
+                    })
+                .WithName("VerifyWebhook")
+                .WithOpenApi();
         }
     }
 }

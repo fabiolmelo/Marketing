@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase");
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
 builder.Services.AdicionarServicosAppIOC();
+RegistrarServicos.ConfigureHttpClient(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 

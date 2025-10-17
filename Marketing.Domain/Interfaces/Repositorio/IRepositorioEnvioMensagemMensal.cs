@@ -5,9 +5,9 @@ namespace Marketing.Domain.Interfaces.Repositorio
 {
     public interface IRepositorioEnvioMensagemMensal : IRepository<EnvioMensagemMensal>
     {
-        Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarMensagensNaoEnviadas(
-                        int pageNumber, int pageSize, bool somenteEnvioPendente = true);
-        Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas();
+        Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarMensagensNaoEnviadas(int pageNumber, int pageSize);
+        Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarTodasMensagens(int pageNumber, int pageSize); 
+        Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas(); 
         Task<EnvioMensagemMensal?> GetByIdChaveComposta3(DateTime id1, string id2, string id3);
     }
 }

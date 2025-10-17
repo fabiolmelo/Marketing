@@ -18,7 +18,6 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var estabelecimentos = await _context.Set<Estabelecimento>()
                                                 .Include(x => x.ContatoEstabelecimentos)
-                                                    .ThenInclude(X=>X.Contato)
                                                 .Include(x => x.Rede)
                                                 .Include(x => x.ExtratoVendas)
                                                 .ToListAsync();
@@ -31,10 +30,19 @@ namespace Marketing.Infraestrutura.Repositorio
             var estabelecimentos = await _context.Set<Estabelecimento>()
                                  .Include(x => x.Rede)
                                  .Include(x => x.ContatoEstabelecimentos)
-                                    .ThenInclude(X=>X.Estabelecimento)
+                                 .Include(x => x.ExtratoVendas)
                                  .ToListAsync();
             var estabelecimento = estabelecimentos.Find(x => x.Cnpj == cnpj);
             return estabelecimento;
+        }
+
+        public async Task<List<Estabelecimento>> GetAllEstabelecimentoPorContato(string telefone)
+        {
+            IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.Telefone == telefone)
+                                                join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
+                                                join E in _context.Estabelecimentos on CE.EstabelecimentoCnpj equals E.Cnpj
+                                                select E;
+            return await query.ToListAsync();
         }
 
         public async Task<PagedResponse<List<Estabelecimento>>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)

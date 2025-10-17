@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Interfaces.IUnityOfWork;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketing.Mvc.Controllers;

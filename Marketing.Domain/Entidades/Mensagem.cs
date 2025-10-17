@@ -4,6 +4,7 @@ namespace Marketing.Domain.Entidades
     {
         public Mensagem()
         {
+            Id = Guid.NewGuid().ToString();
         }
         
         public Mensagem(string id)
@@ -11,17 +12,19 @@ namespace Marketing.Domain.Entidades
             Id = id;
         }
 
-        public string Id { get; set; } = null!;
+        public string Id { get; set; } 
         public virtual EnvioMensagemMensal? EnvioMensagemMensal { get; set; }
         public ICollection<MensagemItem> MensagemItems { get; private set; } = null!;
 
         public void AdicionarEvento(MensagemItem evento)
         {
+            if (this.MensagemItems == null) this.MensagemItems = new List<MensagemItem>();
             this.MensagemItems.Add(evento);
         }
 
         public void AdicionarEvento(MensagemStatus mensagemStatus)
         {
+            if (this.MensagemItems == null) this.MensagemItems = new List<MensagemItem>();
             var evento = new MensagemItem();
             evento.MensagemId = this.Id;
             evento.Mensagem = this;

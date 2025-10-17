@@ -1,6 +1,6 @@
 ﻿using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
-using Marketing.Domain.Interfaces.IUnityOfWork;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 
 namespace Marketing.Application.Servicos
@@ -20,46 +20,45 @@ namespace Marketing.Application.Servicos
                                                    String contentRootPath,
                                                    string caminhoApp)
         {
-            var estabelecimentos = await _unitOfWork.repositorioProcessamentoMensal.GetAllEstabelecimentosParaGerarPdf(competencia);
+            var contatos = await _unitOfWork.repositorioContato.BuscarContatosComAceite();
             string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
 
             try
             {
-                foreach (Estabelecimento estabelecimento in estabelecimentos)
+                foreach (Contato contato in contatos)
                 {
-                    var contatos = await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(estabelecimento.Cnpj);
-                    //if (await _unitOfWork.repositorioContato.EstabelecimentoPossuiContatoQueAceitaMensagem(estabelecimento.Cnpj))
-                    if (contatos.Count > 0)
+                    if (contato.Telefone == null) throw new Exception("TELEFONE NULO NO CADASTRO");
+                    var estabelecimentos = await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentoPorContato(contato.Telefone);
+                    foreach(Estabelecimento estabelecimento in estabelecimentos)
                     {
-                        await GerarProcessamentoPorEstabelecimento(estabelecimento, competencia,
+                        var estabelecimentoPdf = await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoPorCnpj(estabelecimento.Cnpj);
+                        if (estabelecimentoPdf == null) throw new Exception("ESTABELECIMENTO COM DADOS CORROMPIDOS");
+                        await GerarProcessamentoPorEstabelecimento(estabelecimentoPdf, competencia,
                                                                contentRootPath, caminhoApp);
-                        foreach (Contato contato in contatos)
-                        {
-                            var telefone = contato.Telefone ?? "";
-                            var mensagem = new EnvioMensagemMensal(competencia, estabelecimento.Cnpj, telefone);
-                            await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
-                            await _unitOfWork.CommitAsync();
+                        var telefone = contato.Telefone ?? "";
+                        var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone);
+                        await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
+                        await _unitOfWork.CommitAsync();
 
-                            // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
-                            // if (response.IsSuccessStatusCode)
-                            // {
-                            //     WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
-                            //     if (json != null && contato.Telefone != null)
-                            //     {
-                            //         foreach (Message message in json.messages)
-                            //         {
-                            //             var mensagemId = message.id;
-                            //             if (mensagemId != null)
-                            //             {
-                            //                 // var length = mensagemId.Length;
-                            //                 // var mensagem = new MensagemEnviada(mensagemId);
-                            //                 // //mensagem.AdicionarEvento(MensagemStatus.sent);
-                            //                 // await _servicoMensagemEnviada.AddAsyncWithCommit(mensagem);
-                            //             }
-                            //         }
-                            //     }
-                            // }
-                        }
+                        // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
+                        // if (response.IsSuccessStatusCode)
+                        // {
+                        //     WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
+                        //     if (json != null && contato.Telefone != null)
+                        //     {
+                        //         foreach (Message message in json.messages)
+                        //         {
+                        //             var mensagemId = message.id;
+                        //             if (mensagemId != null)
+                        //             {
+                        //                 // var length = mensagemId.Length;
+                        //                 // var mensagem = new MensagemEnviada(mensagemId);
+                        //                 // //mensagem.AdicionarEvento(MensagemStatus.sent);
+                        //                 // await _servicoMensagemEnviada.AddAsyncWithCommit(mensagem);
+                        //             }
+                        //         }
+                        //     }
+                        // }
                     }
                 }
             }

@@ -20,7 +20,7 @@ namespace Marketing.Application.Servicos
         public async Task<ServicoExtratoResponseDto> EnviarExtrato(Contato contato,
                         Estabelecimento estabelecimento, string caminhoApp)
         {
-            var urlExtrato = Path.Combine(caminhoApp, "Fechamento", "Download", estabelecimento.Cnpj);
+            var urlExtrato = Path.Combine("Fechamento", "Download", estabelecimento.Cnpj);
             if (contato.Telefone == null || estabelecimento.RazaoSocial == null)
             {
                 throw new Exception("Erro ao enviar extrato");

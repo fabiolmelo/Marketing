@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using Marketing.Application.Servicos;
 using Marketing.Domain.Interfaces.IHttpClient;
-using Marketing.Domain.Interfaces.IUnityOfWork;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
 using Marketing.Infraestrutura.Repositorio;

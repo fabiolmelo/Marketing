@@ -1,5 +1,5 @@
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Interfaces.IUnityOfWork;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 
 namespace Marketing.Application.Servicos
 {

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Marketing.Domain.Entidades;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,8 +14,9 @@ namespace Marketing.Mvc.Controllers
         private readonly IServicoContato _servicoContato;
         private readonly IServicoEstabelecimento _servicoEstabelecimento;
         private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EnvioMensagemController(IServicoExtratoVendas servicoExtratoVendas, IServicoEnvioMensagemMensal servicoEnvioMensagemMensal, IConfiguration configuration, IServicoMeta servicoMeta, IServicoContato servicoContato, IServicoEstabelecimento servicoEstabelecimento)
+        public EnvioMensagemController(IServicoExtratoVendas servicoExtratoVendas, IServicoEnvioMensagemMensal servicoEnvioMensagemMensal, IConfiguration configuration, IServicoMeta servicoMeta, IServicoContato servicoContato, IServicoEstabelecimento servicoEstabelecimento, IUnitOfWork unitOfWork)
         {
             _servicoExtratoVendas = servicoExtratoVendas;
             _servicoEnvioMensagemMensal = servicoEnvioMensagemMensal;
@@ -22,13 +24,13 @@ namespace Marketing.Mvc.Controllers
             _servicoMeta = servicoMeta;
             _servicoContato = servicoContato;
             _servicoEstabelecimento = servicoEstabelecimento;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public async Task<ActionResult> Index(int pageNumber = 1, int pageSize = 5, bool pendentes = true)
         {
-            var enviosPendentes = await _servicoEnvioMensagemMensal
-                                            .BuscarMensagensNaoEnviadas(pageNumber, pageSize, pendentes);
+            var enviosPendentes = await _servicoEnvioMensagemMensal.BuscarMensagensNaoEnviadas(pageNumber, pageSize);
             return View(enviosPendentes);
         }
 
@@ -62,7 +64,9 @@ namespace Marketing.Mvc.Controllers
                                     {
                                         var mensagem = new Mensagem(mensagemId);
                                         mensagem.AdicionarEvento(MensagemStatus.sent);
-                                        envio.Mensagem = mensagem;
+                                        await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                                        await _servicoEnvioMensagemMensal.CommitAsync();
+                                        envio.MensagemId = mensagemId;
                                         _servicoEnvioMensagemMensal.Update(envio);
                                         await _servicoEnvioMensagemMensal.CommitAsync();
                                     }
@@ -73,10 +77,65 @@ namespace Marketing.Mvc.Controllers
                         {
                             var mensagem = new Mensagem(Guid.NewGuid().ToString());
                             mensagem.AdicionarEvento(MensagemStatus.failed);
+                            await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                            await _servicoEnvioMensagemMensal.CommitAsync();
+                            envio.MensagemId = mensagem.Id;
                             _servicoEnvioMensagemMensal.Update(envio);
                             await _servicoEnvioMensagemMensal.CommitAsync();
                         }
-                     }
+                    }
+                }
+            }
+            return RedirectToAction("Index");
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult> Enviar(DateTime competencia, string estabelecimentoCnpj,
+                                               string contatoTelefone)
+        {
+            var caminhoApp = _configuration["Aplicacao:Url"];
+            if (caminhoApp == null) throw new Exception("Arquivo de configuração inválido");
+            var envio = await _servicoEnvioMensagemMensal.GetByIdChaveComposta3(competencia,
+                                                            contatoTelefone, estabelecimentoCnpj);
+            if (envio != null)
+            {
+                var contato = await _servicoContato.GetByIdStringAsync(envio.ContatoTelefone);
+                var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
+
+                if (contato != null && estabelecimento != null)
+                {
+                    ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
+                        if (json != null && contato.Telefone != null)
+                        {
+                            foreach (Message message in json.messages)
+                            {
+                                var mensagemId = message.id;
+                                if (mensagemId != null)
+                                {
+                                    var mensagem = new Mensagem(mensagemId);
+                                    mensagem.AdicionarEvento(MensagemStatus.sent);
+                                    await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                                    await _servicoEnvioMensagemMensal.CommitAsync();
+                                    envio.MensagemId = mensagemId;
+                                    _servicoEnvioMensagemMensal.Update(envio);
+                                    await _servicoEnvioMensagemMensal.CommitAsync();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var mensagem = new Mensagem(Guid.NewGuid().ToString());
+                        mensagem.AdicionarEvento(MensagemStatus.failed);
+                        await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                        await _servicoEnvioMensagemMensal.CommitAsync();
+                        envio.MensagemId = mensagem.Id;
+                        _servicoEnvioMensagemMensal.Update(envio);
+                        await _servicoEnvioMensagemMensal.CommitAsync();
+                    }
                 }
             }
             return RedirectToAction("Index");

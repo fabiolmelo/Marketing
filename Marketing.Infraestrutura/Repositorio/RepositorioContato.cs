@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.PagedResponse;
@@ -15,6 +14,13 @@ namespace Marketing.Infraestrutura.Repositorio
         public RepositorioContato(DataContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<List<Contato>> BuscarContatosComAceite()
+        {
+            IQueryable<Contato> query = from C in _context.Contatos.Where(x => x.AceitaMensagem == true)
+                                        select C;
+            return await query.ToListAsync();
         }
 
         public async Task<Contato?> BuscarContatosIncludeEstabelecimento(string telefone)
@@ -39,10 +45,12 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<bool> EstabelecimentoPossuiContatoQueAceitaMensagem(string cnpj)
         {
-            var estabelecimento = await _context.Set<Estabelecimento>()
-                                                .Include(x => x.ContatoEstabelecimentos)
-                                                .ThenInclude(x => x.Contato).ToListAsync();
-            return estabelecimento.Any(x => x.ContatoEstabelecimentos.Any(x => x.Contato.AceitaMensagem == true));
+            IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.AceitaMensagem == true)
+                                                join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
+                                                join E in _context.Estabelecimentos.Where(x=>x.Cnpj == cnpj) on CE.EstabelecimentoCnpj equals E.Cnpj
+                                                select E;
+            var estabelecimentos = await query.ToListAsync();
+            return estabelecimentos.Count > 0;
         }
 
         public async Task<PagedResponse<List<Contato>>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null, params Expression<Func<Contato, object>>[] includes)
