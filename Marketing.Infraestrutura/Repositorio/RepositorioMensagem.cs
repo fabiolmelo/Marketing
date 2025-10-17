@@ -15,6 +15,13 @@ namespace Marketing.Infraestrutura.Repositorio
             _dataContext = dataContext;
         }
 
+        public async Task<Mensagem?> FindByIdIncludeEventosAsync(string id)
+        {
+            return await _dataContext.Mensagens
+                                       .Include(x => x.MensagemItems)
+                                       .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<List<Mensagem>> GetAllMensagemsAsync(DateTime competencia)
         {
             var mensagens = new List<Mensagem>();
