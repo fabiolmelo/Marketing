@@ -63,7 +63,7 @@ namespace Marketing.Mvc.Controllers
                                     if (mensagemId != null)
                                     {
                                         var mensagem = new Mensagem(mensagemId);
-                                        mensagem.AdicionarEvento(MensagemStatus.sent);
+                                        mensagem.AdicionarEvento(MensagemStatus.Disparado);
                                         await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
                                         await _servicoEnvioMensagemMensal.CommitAsync();
                                         envio.MensagemId = mensagemId;
@@ -76,7 +76,7 @@ namespace Marketing.Mvc.Controllers
                         else
                         {
                             var mensagem = new Mensagem(Guid.NewGuid().ToString());
-                            mensagem.AdicionarEvento(MensagemStatus.failed);
+                            mensagem.AdicionarEvento(MensagemStatus.Falha);
                             await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
                             await _servicoEnvioMensagemMensal.CommitAsync();
                             envio.MensagemId = mensagem.Id;
@@ -116,7 +116,7 @@ namespace Marketing.Mvc.Controllers
                                 if (mensagemId != null)
                                 {
                                     var mensagem = new Mensagem(mensagemId);
-                                    mensagem.AdicionarEvento(MensagemStatus.sent);
+                                    mensagem.AdicionarEvento(MensagemStatus.Disparado);
                                     await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
                                     await _servicoEnvioMensagemMensal.CommitAsync();
                                     envio.MensagemId = mensagemId;
@@ -129,7 +129,7 @@ namespace Marketing.Mvc.Controllers
                     else
                     {
                         var mensagem = new Mensagem(Guid.NewGuid().ToString());
-                        mensagem.AdicionarEvento(MensagemStatus.failed);
+                        mensagem.AdicionarEvento(MensagemStatus.Falha);
                         await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
                         await _servicoEnvioMensagemMensal.CommitAsync();
                         envio.MensagemId = mensagem.Id;
