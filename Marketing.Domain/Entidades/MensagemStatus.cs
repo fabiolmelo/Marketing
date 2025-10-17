@@ -2,10 +2,11 @@ namespace Marketing.Domain.Entidades
 {
     public enum MensagemStatus
     {
-        failed = 0,
-        sent = 1,
-        delivered = 2,
-        read = 3,
-        download = 4
+        Disparado = 0,        
+        Enviado = 1,
+        Entregue = 2,
+        Lida = 3,
+        ClicouLink = 4,
+        Falha = 5,
     }
 }

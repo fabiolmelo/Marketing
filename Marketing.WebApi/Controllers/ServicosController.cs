@@ -1,4 +1,6 @@
+using Marketing.Domain.Entidades;
 using Marketing.Domain.Entidades.Meta;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,8 +48,11 @@ namespace Marketing.Mvc.Controllers
             .WithName("RecusaContato")
             .WithOpenApi();
 
+            
+            
             app.MapPost("HandleWebhook",
                 async ([FromServices] IServicoMeta _servicoMeta,
+                       [FromServices] IUnitOfWork _unitOfWork,
                        [FromBody] WhatsAppWebhookPayload payload) =>
             {
                 if (payload == null)
@@ -75,7 +80,30 @@ namespace Marketing.Mvc.Controllers
                                 // Processar o status...
                                 var statusId = status.Id;
                                 var statusStatus = status.StatusName;
-                                // ...
+
+                                if (statusId != null)
+                                {
+                                    var mensagem = await _unitOfWork.repositorioMensagem.FindByIdIncludeEventosAsync(statusId);
+                                    if (mensagem != null)
+                                    {
+                                        switch (statusStatus)
+                                        {
+                                            case "sent":
+                                                mensagem.AdicionarEvento(MensagemStatus.Enviado);
+                                                break;
+                                            case "delivered":
+                                                mensagem.AdicionarEvento(MensagemStatus.Entregue);
+                                                break;
+                                            case "read":
+                                                mensagem.AdicionarEvento(MensagemStatus.Lida );
+                                                break;
+                                            default:
+                                                mensagem.AdicionarEvento(MensagemStatus.Falha);
+                                                break;
+                                        }    
+                                    }
+                                    
+                                }
                             }
                         }
                     }
