@@ -22,6 +22,7 @@ namespace Marketing.Infraestrutura.Contexto
         public DbSet<EnvioMensagemMensal> EnviosMensagemMensais { get; set; }
         public DbSet<Mensagem> Mensagens { get; set; }
         public DbSet<MensagemItem> MensagemItems { get; set; }
+        public DbSet<ConfiguracaoApp> Configuracoes { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

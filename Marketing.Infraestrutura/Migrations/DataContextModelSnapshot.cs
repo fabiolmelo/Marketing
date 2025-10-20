@@ -17,6 +17,35 @@ namespace Marketing.Infraestrutura.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.16");
 
+            modelBuilder.Entity("Marketing.Domain.Entidades.ConfiguracaoApp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AppUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FoneFrom")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("IntervaloEntreDisparos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("LoteProcessamento")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MetaApiUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetaToken")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Configuracoes");
+                });
+
             modelBuilder.Entity("Marketing.Domain.Entidades.Contato", b =>
                 {
                     b.Property<string>("Telefone")

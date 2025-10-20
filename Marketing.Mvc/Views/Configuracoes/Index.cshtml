@@ -1,0 +1,62 @@
+@model Marketing.Domain.Entidades.ConfiguracaoApp
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Configurações Gerais</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <form method="post" form asp-action="Edit" asp-antiforgery="true" >
+                <div class="form-group">
+                    @Html.Label("Id", "#", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @readonly="readonly", @display="none"} })
+                        @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Url", "Fone Origem das Mensagens ", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FoneFrom, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
+                        @Html.ValidationMessageFor(model => model.FoneFrom, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("MetaUrl", "URL da Meta", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.MetaApiUrl, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.MetaApiUrl, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("MetaToken", "Token da Meta", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.MetaToken, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.MetaApiUrl, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Salvar" class="btn btn-xs btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@if (@ViewData["Erro"] != null){
+    <div class="col-12">
+        <div class="card bg-danger text-white text-sm shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["Erro"]
+            </div>
+        </div>
+    </div>
+}
+@if (@ViewData["OK"] != null){
+    <div class="col-12">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["OK"]
+            </div>
+        </div>
+    </div>
+}

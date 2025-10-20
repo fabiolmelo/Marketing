@@ -77,11 +77,34 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Importar planilha de dados</span></a>
             </li>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMensagem"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Mensagens</span>
+                </a>
+                <div id="collapseMensagem" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opções de Mensagens:</h6>
+                        <a class="collapse-item" asp-controller="EnvioMensagem" asp-action="Index">Mensagens pendentes de envio</a>
+                        <a class="collapse-item" asp-controller="EnvioMensagem" asp-action="Todas">Todas mensagens</a>
+                    </div>
+                </div>
+            </li>
             <!-- Nav Item - Importar arquivo -->
              <li class="nav-item">
                 <a class="nav-link" asp-controller="EnvioMensagem" asp-action="Index">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Mensagens pendentes</span></a>
+            </li>
+            
+            <!-- Nav Item - Configurações -->
+             <li class="nav-item">
+                <a class="nav-link" asp-controller="Configuracoes" asp-action="Index">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Configurações</span></a>
             </li>
 
         </ul>

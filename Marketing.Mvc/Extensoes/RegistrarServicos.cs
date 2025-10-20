@@ -13,9 +13,6 @@ namespace Marketing.Mvc.Extensoes
     {
         public static void AdicionarServicosAppIOC(this IServiceCollection servicos)
         {
-
-            servicos.AddSingleton<IHttpClientsFactoryPerson, HttpClientsFactoryPerson>();
-
             servicos.AddScoped<IUnitOfWork, UnitOfWork>();
             servicos.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             servicos.AddScoped(typeof(IServico<>), typeof(Servico<>));
@@ -32,6 +29,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IServicoProcessamentoMensal, ServicoProcessamentoMensal>();
             servicos.AddScoped<IServicoExtratoVendas, ServicoExtratoVenda>();
             servicos.AddScoped<IServicoEnvioMensagemMensal, ServicoEnvioMensagemMensal>();
+            servicos.AddScoped<IServicoSeed, ServicoSeed>();
 
             servicos.AddScoped<IRepositorioContato, RepositorioContato>();
             servicos.AddScoped<IRepositorioExtratoVendas, RepositorioExtratoVendas>();
@@ -39,6 +37,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IRepositorioProcessamentoMensal, RepositorioFechamentoMensal>();
             servicos.AddScoped<IRepositorioEnvioMensagemMensal, RepositorioEnvioMensagemMensal>();
             servicos.AddScoped<IRepositorioRede, RepositorioRede>();
+            servicos.AddSingleton<IHttpClientsFactoryPerson, HttpClientsFactoryPerson>();
         }
 
         public static void ConfigureHttpClient(IServiceCollection services,

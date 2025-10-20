@@ -34,6 +34,12 @@ namespace Marketing.Mvc.Controllers
             return View(enviosPendentes);
         }
 
+        public async Task<ActionResult> Todas(int pageNumber = 1, int pageSize = 5, bool pendentes = true)
+        {
+            var mensagens = await _servicoEnvioMensagemMensal.BuscarTodasMensagens(pageNumber, pageSize);
+            return View(mensagens);
+        }
+
         [HttpPost]
         public async Task<ActionResult> EnviarTodos()
         {
