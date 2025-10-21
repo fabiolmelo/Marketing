@@ -13,20 +13,37 @@
                 <div class="col-2">
                     <button class="btn btn-sm btn-primary" asp-action="Create">Nova Rede</button>
                 </div>
-                <div class="col-4 offset-6">
+                <div class="col-6">
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Filtrar"
+                                aria-label="Filtro" aria-describedby="basic-addon2" value=@(@ViewData["Filtro"] ?? "")>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-4">
                     <h6 class="">Redes cadastradas: @Model.TotalRecords</h6>
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-sm table-bordered">
-                <thead class="table-primary">
+        <div class="table-responsive ">
+            <table class="table table-sm table-bordered ">
+                <thead class="table-primary align-itens">
                     <tr>
                         <th>
                             Rede
                         </th>
                         <th>
-                            DataCadastro
+                            Data de Cadastro
+                        </th>
+                        <th>
+                            Logo
                         </th>
                         <th></th>
                     </tr>
@@ -35,14 +52,20 @@
                     @{int linha = 1;}
                     @foreach (var item in Model.Dados) {
                         <tr class="@(linha % 2 == 0 ? "" : "")">
-                            <td>
+                            <td class="align-items-center">
                                 @Html.DisplayFor(modelItem => item.Nome)
                             </td>
-                            <td>
+                            <td class="align-items-center">
                                 @Html.DisplayFor(modelItem => item.DataCadastro)
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.Nome" class="btn btn-danger btn-sm">Alterar</a>
+                                @if(item.Logo != null){
+                                    var Image = String.Format("data:image/png;base64,{0}", item.Logo);
+                                    <img src="@Image" alt="" class="img-fluid" width="50" height="50">
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="UploadLogo" asp-route-id="@item.Nome" class="btn btn-danger btn-sm">Alterar</a>
                             </td>
                         </tr>
                         linha = linha + 1;

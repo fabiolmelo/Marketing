@@ -330,7 +330,6 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Logo")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Nome");

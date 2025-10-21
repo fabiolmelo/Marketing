@@ -28,7 +28,7 @@ namespace Marketing.Mvc.Controllers
         public async Task<ActionResult> Index(string? erro = null, string? sucesso = null)
         {
             var competenciaVigente = await _servicoExtratoVendas.BuscarCompetenciaVigente();
-            ViewBag.CompetenciaVigente = competenciaVigente.ToString("yyyy-MM");
+            if (competenciaVigente != null) ViewBag.CompetenciaVigente = competenciaVigente?.ToString("yyyy-MM");
             ViewData["Erro"] = erro;
             ViewData["OK"] = sucesso;
             return View();

@@ -11,7 +11,7 @@ namespace Marketing.Application.Servicos
         {
             _unitOfWork  = unitOfWork;
         }
-        public async Task<DateTime> BuscarCompetenciaVigente()
+        public async Task<DateTime?> BuscarCompetenciaVigente()
         {
             return await _unitOfWork.repositorioExtratoVendas.BuscarCompetenciaVigente();
         }

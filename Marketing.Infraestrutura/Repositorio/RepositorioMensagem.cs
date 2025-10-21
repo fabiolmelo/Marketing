@@ -22,18 +22,21 @@ namespace Marketing.Infraestrutura.Repositorio
                                        .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<Mensagem>> GetAllMensagemsAsync(DateTime competencia)
+        public async Task<List<Mensagem>> GetAllMensagemsAsync(DateTime? competencia)
         {
             var mensagens = new List<Mensagem>();
-            var envios = await _dataContext.EnviosMensagemMensais.Where(x => x.Competencia == competencia)
+            if (competencia != null)
+            {
+                var envios = await _dataContext.EnviosMensagemMensais.Where(x => x.Competencia == competencia)
                                      .Include(x => x.Mensagem)
                                      .ToListAsync();
-            foreach (var envio in envios)
-            {
-                var mensagem = await _dataContext.Mensagens
-                                        .Include(x => x.MensagemItems)
-                                    .FirstOrDefaultAsync(x => x.Id == envio.MensagemId);
-                if (mensagem != null) mensagens.Add(mensagem);
+                foreach (var envio in envios)
+                {
+                    var mensagem = await _dataContext.Mensagens
+                                            .Include(x => x.MensagemItems)
+                                        .FirstOrDefaultAsync(x => x.Id == envio.MensagemId);
+                    if (mensagem != null) mensagens.Add(mensagem);
+                }    
             }
             return mensagens;
         }

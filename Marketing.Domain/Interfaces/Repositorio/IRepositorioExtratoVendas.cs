@@ -4,6 +4,6 @@ namespace Marketing.Domain.Interfaces.Repositorio
 {
     public interface IRepositorioExtratoVendas : IRepository<ExtratoVendas>
     {
-        Task<DateTime> BuscarCompetenciaVigente();
+        Task<DateTime?> BuscarCompetenciaVigente();
     }
 }

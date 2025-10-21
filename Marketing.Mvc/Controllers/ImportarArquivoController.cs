@@ -22,7 +22,9 @@ namespace Marketinf.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(IFormFile arquivoEnviado)
         {
-            if (arquivoEnviado == null) return RedirectToAction("Index", new { erro = "Arquivo não selecionado" }); 
+            if (arquivoEnviado == null || arquivoEnviado.Length == 0) return RedirectToAction("Index", new { erro = "Nenhum arquivo foi selecionado!" });
+            var extensao = Path.GetExtension(arquivoEnviado.FileName);
+            if (extensao.ToLower() != ".xlsx") return RedirectToAction("Index", new { erro = "O arquivo selecionado não é uma planilha Excel!" });
             var sucesso = await _servicoImportarPlanilha.ImportarPlanilha(arquivoEnviado);
             if (!sucesso) return BadRequest();
             return RedirectToAction("Index", new { sucesso = "Arquivo importado com sucesso" });

@@ -26,7 +26,11 @@ public class HomeController : Controller
     {
         await _servicoSeed.SeedConfiguracoesApp();
         var competencia = await _unitOfWork.repositorioExtratoVendas.BuscarCompetenciaVigente();
-        var mensagens = await _unitOfWork.repositorioMensagem.GetAllMensagemsAsync(competencia);
+        var mensagens = new List<Mensagem>(); 
+        if (competencia != null)
+        {
+            mensagens = await _unitOfWork.repositorioMensagem.GetAllMensagemsAsync(competencia);
+        }
         return View(mensagens);
     }
     

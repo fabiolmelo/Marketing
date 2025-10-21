@@ -7,9 +7,14 @@
             <form method="post" enctype="multipart/form-data" asp-controller="ImportarArquivo"  
                 asp-action="Index"> 
                 <span>Selecionar planilha:</span> 
-                <input type="file" name="arquivoEnviado" /> 
-                <input type="submit" value="Upload" /> 
-                <br /> 
+                <div class="row">
+                    <div class="col-10">
+                        <input type="file" name="arquivoEnviado" value="Selecione o arquivo:"/> 
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" value="Upload" /> 
+                    </div>
+                </div>
             </form> 
         </div>
     </div>

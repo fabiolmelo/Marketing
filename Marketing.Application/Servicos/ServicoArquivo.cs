@@ -16,14 +16,13 @@ namespace Marketing.Application.Servicos
 
         public async Task<string?> UploadArquivo(IFormFile arquivo)
         {
-            if (arquivo == null){
-                return null;
-            }
-            var arquivoImportado = $"{Guid.NewGuid().ToString()}.xlsx"; 
-            var filePath = Path.Combine("DadosApp","Planilhas", arquivoImportado);
+            if (arquivo == null) return null;
+            var arquivoImportado = $"{Guid.NewGuid().ToString()}.xlsx";
+            var filePath = Path.Combine("DadosApp", "Planilhas", arquivoImportado);
             try
             {
-                using (FileStream filestream = System.IO.File.Create(filePath)){
+                using (FileStream filestream = System.IO.File.Create(filePath))
+                {
                     await arquivo.CopyToAsync(filestream);
                     filestream.Flush();
                 }
@@ -34,6 +33,7 @@ namespace Marketing.Application.Servicos
             }
             return filePath;
         }
+
         public string GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf,
                                       int posicao, String contentRootPath,
                                       string caminhoApp)
@@ -504,10 +504,7 @@ namespace Marketing.Application.Servicos
                         var receitaNaoCapturada = (decimal)linha.Cell("L").Value.GetNumber();
                         var rede = linha.Cell("M").Value.ToString();
                         var fone = linha.Cell("N").Value.ToString().RemoverCaracteresEspeciais();
-                        if (fone.Length == 11)
-                        {
-                            fone = $"55{fone}";
-                        }
+                        if (fone.Length == 10 || fone.Length == 11) fone = $"55{fone}";
 
                         dadosPlanilha.Add(
                             new DadosPlanilha(data, uf, cidade, cnpj, restaurante, totalPedidos, 
