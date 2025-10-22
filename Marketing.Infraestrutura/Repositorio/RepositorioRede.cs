@@ -44,7 +44,7 @@ namespace Marketing.Infraestrutura.Repositorio
             var query = _context.Redes.AsNoTracking();
             if (filtros != null)
             {
-                query.Where(filtros);
+                query = query.Where(filtros);
             }
             if (includes != null)
             {
@@ -54,7 +54,8 @@ namespace Marketing.Infraestrutura.Repositorio
             var totalRecords = await query.CountAsync();
             query = query.Skip((pageNumber - 1) * pageSize)
                          .Take(pageSize);
-            return new PagedResponse<List<Rede>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
+            var redes = await query.ToListAsync();
+            return new PagedResponse<List<Rede>>(redes, pageNumber, pageSize, totalRecords);
         }
     }
 }

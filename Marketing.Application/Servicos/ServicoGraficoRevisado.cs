@@ -33,9 +33,10 @@ namespace Marketing.Application.Servicos
             var caminhoSetaIncidencia60 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia60.png");
             var caminhoSetaIncidencia80 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia80.png");
             var caminhoSetaIncidencia95 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia95.png");
-            var caminhoLogoRede = Path.Combine(contentRootPath, "DadosApp", "Logos", estabelecimento.Rede?.Logo ?? "0.png"); 
+            var caminhoLogoRede = Path.Combine(contentRootPath, "DadosApp", "Logos", "LogoTmp.png"); 
 
-            using (var image = File.OpenRead(caminhoFundo))
+
+           using (var image = File.OpenRead(caminhoFundo))
             {
                 if (File.Exists(caminhoPdf)) File.Delete(caminhoPdf);
                 using (FileStream filestream = new FileStream(caminhoPdf, FileMode.OpenOrCreate, FileAccess.Write))
@@ -74,16 +75,26 @@ namespace Marketing.Application.Servicos
                     pic.ScaleToFit(document.PageSize);
                     document.Add(pic);
 
-                    //GRAVA O LOGO DA REDE
-                    if (File.Exists(caminhoLogoRede))
-                    {
-                        var logoRede = iTextSharp.text.Image.GetInstance(caminhoFundo);
-                        logoRede.SetAbsolutePosition(300, 30);
-                        logoRede.ScaleAbsoluteHeight(100);
-                        logoRede.ScaleAbsoluteWidth(100);
-                        document.Add(logoRede);    
-                    }
 
+                    //GRAVA O LOGO DA REDE
+                    if (estabelecimento.Rede != null)
+                    {
+                        if (estabelecimento.Rede.Logo != null)
+                        {
+                            byte[] imageBytes = Convert.FromBase64String(estabelecimento.Rede.Logo);
+                            File.WriteAllBytes(caminhoLogoRede, imageBytes);
+                            if (File.Exists(caminhoLogoRede))
+                            {
+                                var logoRede = iTextSharp.text.Image.GetInstance(caminhoLogoRede);
+                                logoRede.SetAbsolutePosition(196, 690);
+                                logoRede.ScaleAbsoluteHeight(60);
+                                logoRede.ScaleAbsoluteWidth(70);
+                                logoRede.CompressionLevel = 8;
+                                document.Add(logoRede);
+                            }
+                        }
+                    }
+                    
                     // DADOS DO ESTABELECIMENTO
                     var dadosEstabelecimento1 = $"Loja: {estabelecimento.RazaoSocial}";
                     var dadosEstabelecimento2 = $"Cidade: {estabelecimento.Cidade} - {estabelecimento.Uf}";

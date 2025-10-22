@@ -1,7 +1,9 @@
-﻿using Marketing.Application.DTOs;
+﻿using System.Linq.Expressions;
+using Marketing.Application.DTOs;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Marketing.Mvc.Controllers
 {
@@ -14,11 +16,22 @@ namespace Marketing.Mvc.Controllers
             _servicoRede = servicoRede;
         }
 
-        public async Task<ActionResult> Index(int? pageNumber, int? pageSize, IFormCollection collection)
+        public async Task<ActionResult> Index(int? pageNumber, int? pageSize, string? filtro)
         {
-            var filtro = collection["Filtro"];
-            var redes = await _servicoRede.GetAllRedesAsync(pageNumber ?? 1, pageSize ?? 5); 
+            ViewData["FiltroAtual"] = filtro?.ToUpper();
+            Expression<Func<Rede, bool>>? filtros = null;
+            if (filtro != null && !filtro.IsNullOrEmpty())
+            {
+                filtros = x => x.Nome.Contains(filtro.ToUpper());
+            }
+            var redes = await _servicoRede.GetAllRedesAsync(pageNumber ?? 1, pageSize ?? 5, filtros);
             return View(redes);
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult> IndexP(int? pageNumber, int? pageSize, string? filtro)
+        {
+            return RedirectToAction("Index", new {pageNumber = pageNumber, pageSize = pageSize, filtro = filtro});
         }
 
         // GET: RedeController/Create

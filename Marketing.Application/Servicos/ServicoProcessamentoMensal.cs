@@ -28,7 +28,8 @@ namespace Marketing.Application.Servicos
                 foreach (Contato contato in contatos)
                 {
                     if (contato.Telefone == null) throw new Exception("TELEFONE NULO NO CADASTRO");
-                    var estabelecimentos = await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentoPorContato(contato.Telefone);
+                    var estabelecimentos = await _unitOfWork.repositorioEstabelecimento
+                                                            .GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(contato.Telefone);
                     foreach(Estabelecimento estabelecimento in estabelecimentos)
                     {
                         var estabelecimentoPdf = await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoPorCnpj(estabelecimento.Cnpj);

@@ -44,7 +44,7 @@ namespace Marketing.Mvc.Extensoes
                                                IConfiguration configuration)
         {
             var apiUrl = configuration["Meta:ApiUrl"];
-            var token =  configuration["Meta:Token"];
+            var token = configuration["Meta:Token"];
             if (apiUrl == null || token == null) throw new Exception("Configurations not found");
 
             services.AddHttpClient("MetaHttpClient", client =>
@@ -53,7 +53,13 @@ namespace Marketing.Mvc.Extensoes
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             })
             .AddHttpMessageHandler(x => new BearerTokenHandler(token))
-            .SetHandlerLifetime(TimeSpan.FromMinutes(10));;
+            .SetHandlerLifetime(TimeSpan.FromMinutes(10));
+
+            services.AddHttpClient("ReceitaWS", client =>
+            {
+                client.BaseAddress = new Uri("https://receitaws.com.br/v1/cnpj/");
+            })
+            .SetHandlerLifetime(TimeSpan.FromMinutes(10));
         }
     }
 }

@@ -45,22 +45,41 @@ namespace Marketing.Infraestrutura.Repositorio
             return await query.ToListAsync();
         }
 
-        public async Task<PagedResponse<List<Estabelecimento>>> GetAllEstabelecimentos(int pageNumber, int pageSize, string? filtro)
+        public async Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone)
+        {
+            var movimento = _context.Set<ExtratoVendas>().Any();
+            var competenciaVigente = movimento ?
+                                     await _context.Set<ExtratoVendas>().MaxAsync(x => x.Competencia) :
+                                     new DateTime(1900, 1, 1);
+            IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.Telefone == telefone)
+                                                join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
+                                                join E in _context.Estabelecimentos on CE.EstabelecimentoCnpj equals E.Cnpj
+                                                join EXV in _context.ExtratosVendas on E.Cnpj equals EXV.EstabelecimentoCnpj 
+                                                where EXV.Competencia == competenciaVigente
+                                                select E;
+            return await query.ToListAsync();
+        }
+
+        public async Task<PagedResponse<List<Estabelecimento>>> GetAllEstabelecimentos(int? pageNumber, int? pageSize, string? filtro)
         {
             var query = _context.Set<Estabelecimento>().AsQueryable();
+            var page = pageNumber ?? 1;
+            var size = pageSize ?? 5;
             if (filtro != null)
             {
-                query.Where(x => x.RazaoSocial == filtro || x.Cidade == filtro);
+                query = query.Where(x => x.RazaoSocial.Contains(filtro) ||
+                                         x.Cnpj.Contains(filtro) ||
+                                         x.Cidade.Contains(filtro));
             }
             query = query.OrderBy(x => x.Cnpj);
             
             var totalRecords = await query.CountAsync();
-            query = query.Skip((pageNumber - 1) * pageSize)
-                         .Take(pageSize)
+            query = query.Skip((page - 1) * size)
+                         .Take(size)
                          .Include(x => x.Rede)
                          .Include(x => x.ContatoEstabelecimentos)
                          .ThenInclude(X=>X.Contato); 
-            return new PagedResponse<List<Estabelecimento>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
+            return new PagedResponse<List<Estabelecimento>>(await query.ToListAsync(), page, size, totalRecords);
         }
     }
 }

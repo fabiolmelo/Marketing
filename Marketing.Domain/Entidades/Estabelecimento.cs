@@ -6,8 +6,14 @@ namespace Marketing.Domain.Entidades
         public string? RedeNome { get; set; }
         public virtual Rede? Rede { get; set; }
         public string RazaoSocial { get; set; } = null!;
-        public string? Cidade { get; set; }
+        
+        public string? Endereco { get; set; }
+        public string? Numero { get; set; }
+        public string? Complemento { get; set; }
+        public string? Bairro { get; set; }
+        public string? Cidade { get; set; } 
         public string? Uf { get; set; } 
+        public string? Cep { get; set; } 
         public ICollection<ContatoEstabelecimento> ContatoEstabelecimentos { get; set; } = null!;
         public ICollection<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";

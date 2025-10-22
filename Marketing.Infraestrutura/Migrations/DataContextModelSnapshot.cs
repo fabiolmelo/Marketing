@@ -184,8 +184,23 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasMaxLength(14)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Bairro")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cep")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Cidade")
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Complemento")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Endereco")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Numero")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RazaoSocial")

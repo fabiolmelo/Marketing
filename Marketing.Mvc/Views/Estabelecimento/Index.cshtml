@@ -10,7 +10,18 @@
                 <div class="col-3">
                     <button class="btn btn-sm btn-primary" asp-action="Create">Novo Estabelecimento</button>
                 </div>
-                <div class="col-4 offset-5">
+                <div class="col-5">
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" asp-action="IndexP" method="post">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Filtrar" name="filtro"
+                                aria-label="Filtro" aria-describedby="basic-addon2" value=@(@ViewData["FiltroAtual"] ?? "")>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit"><i class="fas fa-search fa-sm"></i></button> 
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-4">
                     <h6 class="">Estabelecimentos cadastrados: @Model.TotalRecords</h6>
                 </div>
             </div>
@@ -49,7 +60,7 @@
                                 @Html.DisplayFor(modelItem => item.Uf)
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-danger" asp-action="Edit" asp-route-id="@item.Cnpj">Alterar</button> |
+                                <a asp-action="Edit" asp-route-id="@item.Cnpj" class="btn btn-danger btn-sm">Alterar</a>
                             </td>
                         </tr>
                         linha = linha + 1;
@@ -60,10 +71,10 @@
         
         <div class="row">
             <div class="col col-12">
-                <input class="btn btn-sm btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = 1 })'" />|
-                <input class="btn btn-sm btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.PageNumber - 1 })'" />|
-                <input class="btn btn-sm btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.PageNumber + 1 })'" />|
-                <input class="btn btn-sm btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.TotalPages })'" />|
+                <input class="btn btn-sm btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = 1, filtro = @ViewData["FiltroAtual"] ?? "" })'" />|
+                <input class="btn btn-sm btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.PageNumber - 1, filtro = @ViewData["FiltroAtual"] ?? "" })'" />|
+                <input class="btn btn-sm btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.PageNumber + 1, filtro = @ViewData["FiltroAtual"] ?? "" })'" />|
+                <input class="btn btn-sm btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Estabelecimento", new { pageNumber = Model.TotalPages, filtro = @ViewData["FiltroAtual"] ?? "" })'" />|
             </div>
             <div class="col col-12">
                 <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
