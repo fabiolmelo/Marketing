@@ -29,6 +29,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IServicoProcessamentoMensal, ServicoProcessamentoMensal>();
             servicos.AddScoped<IServicoExtratoVendas, ServicoExtratoVenda>();
             servicos.AddScoped<IServicoEnvioMensagemMensal, ServicoEnvioMensagemMensal>();
+            servicos.AddScoped<IServicoReceitaFederal, ServicoReceitaFederal>();
             servicos.AddScoped<IServicoSeed, ServicoSeed>();
 
             servicos.AddScoped<IRepositorioContato, RepositorioContato>();

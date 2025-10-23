@@ -33,6 +33,12 @@ namespace Marketing.Application.Servicos
             };
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             HttpClients.Add("MetaHttpClient", client);
+
+            HttpClient client2 = new HttpClient()
+            {
+                BaseAddress = new Uri("https://receitaws.com.br/v1/cnpj/")
+            };
+            HttpClients.Add("ReceitaWS", client2);
         }
         
         public HttpClient Client(string key)
