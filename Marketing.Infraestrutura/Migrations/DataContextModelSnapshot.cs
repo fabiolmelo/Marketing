@@ -167,10 +167,13 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<string>("EstabelecimentoCnpj")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("DataGeracao")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MensagemId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Competencia", "ContatoTelefone", "EstabelecimentoCnpj");
+                    b.HasKey("Competencia", "ContatoTelefone", "EstabelecimentoCnpj", "DataGeracao");
 
                     b.HasIndex("MensagemId")
                         .IsUnique();

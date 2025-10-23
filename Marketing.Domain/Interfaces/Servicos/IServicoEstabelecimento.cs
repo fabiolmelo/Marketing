@@ -11,5 +11,6 @@ namespace Marketing.Domain.Interfaces.Servicos
         Task AtualizarAssociacaoEstabelecimentoRede(List<DadosPlanilha> dadosPlanilhas);
         Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj);
         Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas);
+        Task<bool> AtualizarDadosCadastraisViaReceitaFederal(string cnpj, bool? forcarUpdate = false);
     }
 }

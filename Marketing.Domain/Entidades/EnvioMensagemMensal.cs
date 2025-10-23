@@ -21,6 +21,7 @@ namespace Marketing.Domain.Entidades
         public DateTime Competencia { get; set; }
         public string EstabelecimentoCnpj { get; set; } = String.Empty;
         public string ContatoTelefone { get; set; } = String.Empty;
+        public DateTime DataGeracao { get; set; } = DateTime.Now;
         public string? MensagemId { get; set; } = null!;
         public virtual Mensagem? Mensagem { get; set; } = null!;
 

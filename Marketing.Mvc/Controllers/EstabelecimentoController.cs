@@ -1,11 +1,8 @@
-﻿using System.Linq.Expressions;
-using Marketing.Application.DTOs;
+﻿using Marketing.Application.DTOs;
 using Marketing.Application.Mappers;
-using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Marketing.Mvc.Controllers
 {
@@ -31,7 +28,7 @@ namespace Marketing.Mvc.Controllers
             return View(estabelecimentos);
         }
 
-        public async Task<ActionResult> IndexP(int pageNumber = 1, int pageSize = 5, string? filtro = null)
+        public ActionResult IndexP(int pageNumber = 1, int pageSize = 5, string? filtro = null)
         {
             return RedirectToAction("Index", new {pageNumber = pageNumber, pageSize = pageSize, filtro = filtro});
         }
@@ -65,23 +62,18 @@ namespace Marketing.Mvc.Controllers
         }
 
 
-        public async Task<ActionResult> BuscarReceita(string id)
+        public async Task<ActionResult> AtualizarDadosCadastraisViaReceitaFederal(string id)
         {
-            var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(id);
-            var receita = await _servicoReceitaFederal.ConsultarDadosReceitaFederal(id);
-            if (estabelecimento == null || receita == null) return RedirectToAction("Edit",
-                    new { erro = "Erro. Processamento não efetuado!", id = id });
-            estabelecimento.Endereco = receita.Logradouro?.ToUpper() ?? "";
-            estabelecimento.Numero = receita.Numero?.ToUpper() ?? "";
-            estabelecimento.Complemento = receita.Complemento?.ToUpper() ?? "";
-            estabelecimento.Bairro = receita.Bairro?.ToUpper() ?? "";
-            estabelecimento.Cidade = receita.Municipio?.ToUpper() ?? "";
-            estabelecimento.Uf = receita.Uf?.ToUpper() ?? "";
-            estabelecimento.Cep = receita.Cep?.ToUpper() ?? "";
-            _servicoEstabelecimento.Update(estabelecimento);
-            await _servicoEstabelecimento.CommitAsync();
-            return RedirectToAction("Edit",
+            if (await _servicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(id, true))
+            {
+                return RedirectToAction("Edit",
                     new { sucesso = "Dados atualizados via Receita Federal.", id = id });
+            }
+            else
+            {
+                return RedirectToAction("Edit",
+                    new { erro = "Erro. Processamento não efetuado!", id = id });
+            }
         }
 
         // POST: EstabelecimentoController/Edit/5

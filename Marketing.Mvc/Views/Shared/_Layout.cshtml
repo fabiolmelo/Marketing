@@ -88,16 +88,10 @@
                 <div id="collapseMensagem" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opções de Mensagens:</h6>
-                        <a class="collapse-item" asp-controller="EnvioMensagem" asp-action="Index">Mensagens pendentes de envio</a>
+                        <a class="collapse-item" asp-controller="EnvioMensagem" asp-action="Index">Mensagens pendentes</a>
                         <a class="collapse-item" asp-controller="EnvioMensagem" asp-action="Todas">Todas mensagens</a>
                     </div>
                 </div>
-            </li>
-            <!-- Nav Item - Importar arquivo -->
-             <li class="nav-item">
-                <a class="nav-link" asp-controller="EnvioMensagem" asp-action="Index">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Mensagens pendentes</span></a>
             </li>
             
             <!-- Nav Item - Configurações -->
@@ -114,7 +108,6 @@
             <div id="content">
                <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>

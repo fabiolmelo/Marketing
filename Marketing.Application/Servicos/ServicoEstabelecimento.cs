@@ -8,10 +8,12 @@ namespace Marketing.Application.Servicos
     public class ServicoEstabelecimento : Servico<Estabelecimento>, IServicoEstabelecimento
     {
         private readonly IUnitOfWork _unitOfWork;
-        
-        public ServicoEstabelecimento(IUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly IServicoReceitaFederal _servicoReceitaFederal;
+
+        public ServicoEstabelecimento(IUnitOfWork unitOfWork, IServicoReceitaFederal servicoReceitaFederal) : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            _servicoReceitaFederal = servicoReceitaFederal;
         }
 
         public async Task AtualizarEstabelecimentoViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
@@ -151,6 +153,27 @@ namespace Marketing.Application.Servicos
                     }
                 }
             }
+        }
+
+        async Task<bool> IServicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(string cnpj, bool? forcarUpdate)
+        {
+            var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(cnpj);
+            if(forcarUpdate == false) await Task.Delay(20000); 
+            var receita = await _servicoReceitaFederal.ConsultarDadosReceitaFederal(cnpj);
+            if (estabelecimento == null || receita == null) return false;
+            if (estabelecimento.Endereco == null || forcarUpdate == true)
+            {
+                estabelecimento.Endereco = receita.Logradouro?.ToUpper() ?? "";
+                estabelecimento.Numero = receita.Numero?.ToUpper() ?? "";
+                estabelecimento.Complemento = receita.Complemento?.ToUpper() ?? "";
+                estabelecimento.Bairro = receita.Bairro?.ToUpper() ?? "";
+                estabelecimento.Cidade = receita.Municipio?.ToUpper() ?? "";
+                estabelecimento.Uf = receita.Uf?.ToUpper() ?? "";
+                estabelecimento.Cep = receita.Cep?.ToUpper() ?? "";
+                //_unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
+                await _unitOfWork.CommitAsync();
+            }
+            return true;
         }
     }
 }

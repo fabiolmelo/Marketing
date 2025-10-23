@@ -35,9 +35,14 @@ namespace Marketing.Infraestrutura.Repositorio
             return new PagedResponse<List<EnvioMensagemMensal>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
         }
 
-        public async Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas()
+        public async Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas(DateTime? competencia = null)
         {
-            return await _dataContext.Set<EnvioMensagemMensal>().Where(x => x.MensagemId == null).ToListAsync();
+            IQueryable<EnvioMensagemMensal> query = _dataContext.Set<EnvioMensagemMensal>().Where(x => x.MensagemId == null);
+            if(competencia != null)
+            {
+                query = query.Where(x => x.Competencia == competencia);
+            }
+            return await query.ToListAsync();
         }
 
         public async Task<EnvioMensagemMensal?> GetByIdChaveComposta3(DateTime id1, string id2, string id3)

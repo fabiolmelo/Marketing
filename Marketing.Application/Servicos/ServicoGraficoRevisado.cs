@@ -12,11 +12,13 @@ namespace Marketing.Application.Servicos
 {
     public class ServicoGraficoRevisado : IServicoGraficoRevisado
     {
-        public ServicoGraficoRevisado()
+        private readonly IServicoEstabelecimento _servicoEstabelecimento;
+        public ServicoGraficoRevisado(IServicoEstabelecimento servicoEstabelecimento)
         {
+            _servicoEstabelecimento = servicoEstabelecimento;
         }
 
-        public string GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf, int posicao, string contentRootPath, string caminhoApp)
+        public async Task<string> GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf, int posicao, string contentRootPath, string caminhoApp)
         {
             var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "FundoAtualizado.png");
             var caminhoFontes = Path.Combine(contentRootPath, "DadosApp", "Fonts");
@@ -94,11 +96,13 @@ namespace Marketing.Application.Servicos
                             }
                         }
                     }
+
+                    await _servicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(estabelecimento.Cnpj, false);
                     
                     // DADOS DO ESTABELECIMENTO
                     var dadosEstabelecimento1 = $"Loja: {estabelecimento.RazaoSocial}";
                     var dadosEstabelecimento2 = $"Cidade: {estabelecimento.Cidade} - {estabelecimento.Uf}";
-                    var dadosEstabelecimento3 = $"Endereço: ";
+                    var dadosEstabelecimento3 = $"Endereço: {estabelecimento.Endereco}, {estabelecimento.Numero}";
                     // var dadosEstabelecimento4 = $"Código:        CO";
 
                     //DADOS 1
