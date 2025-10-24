@@ -69,7 +69,7 @@ namespace Marketing.Infraestrutura.Repositorio
             {
                 query = query.Where(x => x.RazaoSocial.Contains(filtro) ||
                                          x.Cnpj.Contains(filtro) ||
-                                         x.Cidade.Contains(filtro));
+                                         (x.Cidade != null && x.Cidade.Contains(filtro)));
             }
             query = query.OrderBy(x => x.Cnpj);
             

@@ -158,25 +158,32 @@ namespace Marketing.Infraestrutura.Migrations
 
             modelBuilder.Entity("Marketing.Domain.Entidades.EnvioMensagemMensal", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Competencia")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ContatoTelefone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EstabelecimentoCnpj")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataGeracao")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("EstabelecimentoCnpj")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MensagemId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Competencia", "ContatoTelefone", "EstabelecimentoCnpj", "DataGeracao");
+                    b.HasKey("Id");
 
                     b.HasIndex("MensagemId")
                         .IsUnique();
+
+                    b.HasIndex(new[] { "Competencia", "ContatoTelefone", "EstabelecimentoCnpj", "DataGeracao" }, "IX_MENSAGEM");
 
                     b.ToTable("EnviosMensagemMensais");
                 });

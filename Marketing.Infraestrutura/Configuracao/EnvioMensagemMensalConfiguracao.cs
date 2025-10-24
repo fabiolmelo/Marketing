@@ -8,9 +8,8 @@ namespace Marketing.Infraestrutura.Configuracao
     {
         public void Configure(EntityTypeBuilder<EnvioMensagemMensal> builder)
         {
-            builder.HasKey(x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj, x.DataGeracao });
-            // builder.HasOne(x => x.Contato).WithMany(x => x.MensagensMensais).HasForeignKey(x => x.ContatoTelefone);
-            // builder.HasOne(x => x.Estabelecimento).WithMany(x => x.MensagensMensais).HasForeignKey(x => x.EstabelecimentoCnpj);
+            builder.HasKey(x => x.Id);
+            builder.HasIndex(x => new { x.Competencia, x.ContatoTelefone, x.EstabelecimentoCnpj, x.DataGeracao },"IX_MENSAGEM");
             
             builder
                 .HasOne(x => x.Mensagem)

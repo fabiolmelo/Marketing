@@ -47,8 +47,6 @@ namespace Marketing.Infraestrutura.Repositorio
             var resumo = new List<ResumoMensagem>();
             if (competencia != null)
             {
-                //var trackList = _context.MensagemItems.GroupBy(x => new { x.Id, x.DataEvento }).Select(x => x.Last()).Reverse();
-
                 var trackList = _context.MensagemItems.Include(x => x.Mensagem)
                                                       .Where(x => x.Mensagem.EnvioMensagemMensal != null &&
                                                                   x.Mensagem.EnvioMensagemMensal.Competencia == competencia)

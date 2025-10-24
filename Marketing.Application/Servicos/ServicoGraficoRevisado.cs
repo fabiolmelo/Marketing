@@ -7,6 +7,8 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Marketing.Domain.Extensoes;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using SixLabors.ImageSharp.Formats;
 
 namespace Marketing.Application.Servicos
 {
@@ -97,13 +99,17 @@ namespace Marketing.Application.Servicos
                         }
                     }
 
-                    await _servicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(estabelecimento.Cnpj, false);
+                    var sucesso = await _servicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(estabelecimento.Cnpj, false);
                     
                     // DADOS DO ESTABELECIMENTO
                     var dadosEstabelecimento1 = $"Loja: {estabelecimento.RazaoSocial}";
                     var dadosEstabelecimento2 = $"Cidade: {estabelecimento.Cidade} - {estabelecimento.Uf}";
-                    var dadosEstabelecimento3 = $"Endereço: {estabelecimento.Endereco}, {estabelecimento.Numero}";
-                    // var dadosEstabelecimento4 = $"Código:        CO";
+                    string endereco = "";
+                    if (sucesso)
+                    {
+                        endereco = $"{estabelecimento.Endereco}, {estabelecimento.Numero}";
+                    }
+                    var dadosEstabelecimento3 = $"Endereço: {endereco}" ;
 
                     //DADOS 1
                     PdfContentByte directContent = worker.DirectContent;

@@ -157,7 +157,7 @@ namespace Marketing.Application.Servicos
 
         async Task<bool> IServicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(string cnpj, bool? forcarUpdate)
         {
-            var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(cnpj);
+            var estabelecimento = await _unitOfWork.GetRepository<Estabelecimento>().GetByIdStringAsync(cnpj);
             if(forcarUpdate == false) await Task.Delay(20000); 
             var receita = await _servicoReceitaFederal.ConsultarDadosReceitaFederal(cnpj);
             if (estabelecimento == null || receita == null) return false;
@@ -170,7 +170,7 @@ namespace Marketing.Application.Servicos
                 estabelecimento.Cidade = receita.Municipio?.ToUpper() ?? "";
                 estabelecimento.Uf = receita.Uf?.ToUpper() ?? "";
                 estabelecimento.Cep = receita.Cep?.ToUpper() ?? "";
-                //_unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
+                _unitOfWork.GetRepository<Estabelecimento>().Update(estabelecimento);
                 await _unitOfWork.CommitAsync();
             }
             return true;

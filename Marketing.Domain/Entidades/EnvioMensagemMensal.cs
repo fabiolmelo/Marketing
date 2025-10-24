@@ -18,6 +18,7 @@ namespace Marketing.Domain.Entidades
             ContatoTelefone = contatoTelefone;
         }
 
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public DateTime Competencia { get; set; }
         public string EstabelecimentoCnpj { get; set; } = String.Empty;
         public string ContatoTelefone { get; set; } = String.Empty;

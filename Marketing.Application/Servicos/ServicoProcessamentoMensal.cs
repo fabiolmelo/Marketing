@@ -40,26 +40,6 @@ namespace Marketing.Application.Servicos
                         var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone);
                         await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
                         await _unitOfWork.CommitAsync();
-
-                        // ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
-                        // if (response.IsSuccessStatusCode)
-                        // {
-                        //     WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
-                        //     if (json != null && contato.Telefone != null)
-                        //     {
-                        //         foreach (Message message in json.messages)
-                        //         {
-                        //             var mensagemId = message.id;
-                        //             if (mensagemId != null)
-                        //             {
-                        //                 // var length = mensagemId.Length;
-                        //                 // var mensagem = new MensagemEnviada(mensagemId);
-                        //                 // //mensagem.AdicionarEvento(MensagemStatus.sent);
-                        //                 // await _servicoMensagemEnviada.AddAsyncWithCommit(mensagem);
-                        //             }
-                        //         }
-                        //     }
-                        // }
                     }
                 }
             }
@@ -79,7 +59,7 @@ namespace Marketing.Application.Servicos
                     var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
                     var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
                     _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
-                    _servicoGrafico.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                    await _servicoGrafico.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                         posicaoNaRede, contentRootPath, caminhoApp);
                     var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
                     if (estabelecimentoUpdate != null)
