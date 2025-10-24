@@ -8,12 +8,12 @@ namespace Marketing.Application.Servicos
     public class ServicoProcessamentoMensal : IServicoProcessamentoMensal
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IServicoGraficoRevisado _servicoGrafico;
+        private readonly IServicoGraficoRevisado _servicoGraficoRevisado;
 
-        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGraficoRevisado servicoGrafico)
+        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGraficoRevisado servicoGraficoRevisado)
         {
             _unitOfWork = unitOfWork;
-            _servicoGrafico = servicoGrafico;
+            _servicoGraficoRevisado = servicoGraficoRevisado;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
@@ -32,7 +32,8 @@ namespace Marketing.Application.Servicos
                                                             .GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(contato.Telefone);
                     foreach(Estabelecimento estabelecimento in estabelecimentos)
                     {
-                        var estabelecimentoPdf = await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoPorCnpj(estabelecimento.Cnpj);
+                        var estabelecimentoPdf = await _unitOfWork.repositorioEstabelecimento
+                                                                  .FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia);
                         if (estabelecimentoPdf == null) throw new Exception("ESTABELECIMENTO COM DADOS CORROMPIDOS");
                         await GerarProcessamentoPorEstabelecimento(estabelecimentoPdf, competencia,
                                                                contentRootPath, caminhoApp);
@@ -58,8 +59,8 @@ namespace Marketing.Application.Servicos
                 {
                     var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
                     var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
-                    _servicoGrafico.GerarGrafico(estabelecimento, contentRootPath);
-                    await _servicoGrafico.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                    _servicoGraficoRevisado.GerarGrafico(estabelecimento, contentRootPath);
+                    _servicoGraficoRevisado.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                         posicaoNaRede, contentRootPath, caminhoApp);
                     var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
                     if (estabelecimentoUpdate != null)

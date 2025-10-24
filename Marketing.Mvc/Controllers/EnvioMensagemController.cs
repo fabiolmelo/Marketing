@@ -48,8 +48,7 @@ namespace Marketing.Mvc.Controllers
             var enviosPendentes = await _servicoEnvioMensagemMensal.BuscarTodasMensagensNaoEnviadas();
             foreach (var envioPendente in enviosPendentes)
             {
-                var envio = await _servicoEnvioMensagemMensal.GetByIdChaveComposta3(envioPendente.Competencia,
-                                    envioPendente.ContatoTelefone, envioPendente.EstabelecimentoCnpj);
+                var envio = await _servicoEnvioMensagemMensal.GetByIdStringAsync(envioPendente.Id);
                 if (envio != null)
                 {
                     var contato = await _servicoContato.GetByIdStringAsync(envio.ContatoTelefone);

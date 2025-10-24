@@ -7,20 +7,18 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Marketing.Domain.Extensoes;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using SixLabors.ImageSharp.Formats;
 
 namespace Marketing.Application.Servicos
 {
     public class ServicoGraficoRevisado : IServicoGraficoRevisado
     {
-        private readonly IServicoEstabelecimento _servicoEstabelecimento;
+        // private readonly IServicoEstabelecimento _servicoEstabelecimento;
         public ServicoGraficoRevisado(IServicoEstabelecimento servicoEstabelecimento)
         {
-            _servicoEstabelecimento = servicoEstabelecimento;
+            //_servicoEstabelecimento = servicoEstabelecimento;
         }
 
-        public async Task<string> GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf, int posicao, string contentRootPath, string caminhoApp)
+        public string GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf, int posicao, string contentRootPath, string caminhoApp)
         {
             var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "FundoAtualizado.png");
             var caminhoFontes = Path.Combine(contentRootPath, "DadosApp", "Fonts");
@@ -99,16 +97,16 @@ namespace Marketing.Application.Servicos
                         }
                     }
 
-                    var sucesso = await _servicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(estabelecimento.Cnpj, false);
+                    //var sucesso = await _servicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(estabelecimento.Cnpj, false);
                     
                     // DADOS DO ESTABELECIMENTO
                     var dadosEstabelecimento1 = $"Loja: {estabelecimento.RazaoSocial}";
                     var dadosEstabelecimento2 = $"Cidade: {estabelecimento.Cidade} - {estabelecimento.Uf}";
-                    string endereco = "";
-                    if (sucesso)
-                    {
-                        endereco = $"{estabelecimento.Endereco}, {estabelecimento.Numero}";
-                    }
+                    string endereco = endereco = $"{estabelecimento.Endereco ?? ""}, {estabelecimento.Numero ?? ""}";;
+                    // if (sucesso)
+                    // {
+                    //     endereco = $"{estabelecimento.Endereco}, {estabelecimento.Numero}";
+                    // }
                     var dadosEstabelecimento3 = $"Endereço: {endereco}" ;
 
                     //DADOS 1

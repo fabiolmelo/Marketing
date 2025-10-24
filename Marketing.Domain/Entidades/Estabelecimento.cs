@@ -15,7 +15,7 @@ namespace Marketing.Domain.Entidades
         public string? Uf { get; set; } 
         public string? Cep { get; set; } 
         public ICollection<ContatoEstabelecimento> ContatoEstabelecimentos { get; set; } = null!;
-        public ICollection<ExtratoVendas> ExtratoVendas { get; private set; } = new List<ExtratoVendas>();
+        public List<ExtratoVendas> ExtratoVendas { get; set; } = new List<ExtratoVendas>();
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);
         public string? UltimoPdfGerado { get; set; }
