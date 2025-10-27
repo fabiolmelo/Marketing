@@ -129,5 +129,22 @@
         </div>
     </div>
 </div>
+@if (@ViewData["Erro"] != null){
+    <div class="col-12">
+        <div class="card bg-danger text-white text-sm shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["Erro"]
+            </div>
+        </div>
+    </div>
+}
+@if (@ViewData["OK"] != null){
+    <div class="col-12">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["OK"]
+            </div>
+        </div>
+    </div>
+}
 
-<!-- Content Row -->

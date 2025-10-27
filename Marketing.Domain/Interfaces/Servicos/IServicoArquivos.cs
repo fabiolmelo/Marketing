@@ -9,6 +9,7 @@ namespace Marketing.Domain.Interfaces.Servicos
         string GerarArquivoPdf(Estabelecimento estabelecimento, string arquivos, int posicao,
                                String contentRootPath, string caminhoApp);
         List<DadosPlanilha> LerDados(string pathArquivo);
-
+        void GerarRelatorioEnvios(string pathArquivo, List<Mensagem> mensagens,
+                                         List<ResumoMensagem> resumo, string pathArquivoBase);
     }
 }

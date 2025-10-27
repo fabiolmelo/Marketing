@@ -34,6 +34,7 @@ namespace Marketing.Infraestrutura.Repositorio
                 foreach (var envio in envios)
                 {
                     var mensagem = await _context.Mensagens
+                                            .Include(x => x.EnvioMensagemMensal) 
                                             .Include(x => x.MensagemItems)
                                         .FirstOrDefaultAsync(x => x.Id == envio.MensagemId);
                     if (mensagem != null) mensagens.Add(mensagem);

@@ -12,20 +12,24 @@ public class HomeController : Controller
     private readonly IUnitOfWork _unitOfWork;
     private readonly IWebHostEnvironment _webHostEnviroment;
     private readonly IServicoSeed _servicoSeed;
+    private readonly IServicoArquivos _servicoArquivos;
     private readonly IServicoEnvioMensagemMensal _servicoEnvioMensagemMensal;
 
-    public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnviroment, IServicoSeed servicoSeed, IServicoEnvioMensagemMensal servicoEnvioMensagemMensal)
+    public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnviroment, IServicoSeed servicoSeed, IServicoEnvioMensagemMensal servicoEnvioMensagemMensal, IServicoArquivos servicoArquivos)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _webHostEnviroment = webHostEnviroment;
         _servicoSeed = servicoSeed;
         _servicoEnvioMensagemMensal = servicoEnvioMensagemMensal;
+        _servicoArquivos = servicoArquivos;
     }
 
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? erro = null, string? sucesso = null)
     {
+        ViewData["Erro"] = erro;
+        ViewData["OK"] = sucesso;
         await _servicoSeed.SeedConfiguracoesApp();
         var competencia = await _unitOfWork.repositorioExtratoVendas.BuscarCompetenciaVigente();
         var mensagens = new List<ResumoMensagem>(); 
@@ -45,12 +49,31 @@ public class HomeController : Controller
     }
     
     [HttpGet]
-    public IActionResult Download()
+    public async Task<IActionResult> Download()
     {
-        var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio", "Base.xlsx");
-            byte[] fileBytes = System.IO.File.ReadAllBytes(pathRoot);
-            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        $"Base.xlsx");
+        try
+        {
+            var competencia = await _unitOfWork.repositorioExtratoVendas.BuscarCompetenciaVigente();
+            var mensagens = new List<Mensagem>();
+
+            if (competencia != null)
+            {
+                mensagens = await _unitOfWork.repositorioMensagem.GetAllMensagemsAsync(competencia);
+                var resumo = await _unitOfWork.repositorioMensagem.BuscaResumoMensagemPorCompetencia(competencia);
+                var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio", "Base.xlsx");
+                var pathRootBase = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio",
+                                                $"Relatório de Envio de Extratos de Incidência_{competencia?.ToString("MMMMyyyy")}.xlsx");
+                _servicoArquivos.GerarRelatorioEnvios(pathRoot, mensagens, resumo, pathRootBase);
+                byte[] fileBytes = System.IO.File.ReadAllBytes(pathRootBase);
+                return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            $"Relatório de Envio de Extratos de Incidência_{competencia?.ToString("MMMMyyyy")}.xlsx");
+            }
+            return RedirectToAction("Index", new {erro = "Não existe nenhum fechamento realizado!"});
+        }
+        catch (System.Exception)
+        {
+            return RedirectToAction("Index", new {erro = "Erro ao buscar relatório de incidências!"});
+        }
     }
 
 

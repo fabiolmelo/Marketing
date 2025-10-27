@@ -6,7 +6,7 @@ namespace Marketing.Domain.Entidades
         {
             Id = Guid.NewGuid().ToString();
         }
-        
+
         public Mensagem(string id)
         {
             Id = id;

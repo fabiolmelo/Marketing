@@ -517,5 +517,34 @@ namespace Marketing.Application.Servicos
             }
             return dadosPlanilha;
         }
+
+        public void GerarRelatorioEnvios(string pathArquivo, List<Mensagem> mensagens,
+                                         List<ResumoMensagem> resumo, string pathArquivoBase)
+        {
+            using(var excel = new ClosedXML.Excel.XLWorkbook(pathArquivo))
+            {
+                var linha = 7;
+                var planilha = excel.Worksheet(1);
+                foreach (var mensagem in mensagens)
+                {
+                    var ultimoStatus = mensagem.MensagemItems.OrderByDescending(x => x.DataEvento).FirstOrDefault();
+                    planilha.Cell($"A{linha}").Value = mensagem.EnvioMensagemMensal?.DataGeracao.ToShortDateString() ?? "";
+                    planilha.Cell($"B{linha}").Value = "";
+                    planilha.Cell($"C{linha}").Value = "";
+                    planilha.Cell($"D{linha}").Value = mensagem.EnvioMensagemMensal?.EstabelecimentoCnpj ?? "";
+                    planilha.Cell($"E{linha}").Value = mensagem.EnvioMensagemMensal?.ContatoTelefone ?? "";
+                    planilha.Cell($"F{linha}").Value = ultimoStatus?.MensagemStatus.ToString() ?? "";
+                    planilha.Row(linha+1).InsertRowsBelow(1);
+                    linha++;
+                }
+
+                planilha.Cell($"B{linha + 5}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.Entregue)?.Qtd ?? 0;
+                planilha.Cell($"B{linha + 6}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.Lida)?.Qtd ?? 0;
+                planilha.Cell($"B{linha + 7}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.ClicouLink)?.Qtd ?? 0;
+                planilha.Cell($"B{linha + 8}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.Disparado ||
+                                                                             x.MensagemStatus == MensagemStatus.Falha)?.Qtd ?? 0;
+                excel.SaveAs(pathArquivoBase);
+            }
+        }
     }
 }
