@@ -521,6 +521,7 @@ namespace Marketing.Application.Servicos
         public void GerarRelatorioEnvios(string pathArquivo, List<Mensagem> mensagens,
                                          List<ResumoMensagem> resumo, string pathArquivoBase)
         {
+            if (System.IO.File.Exists(pathArquivoBase)) File.Delete(pathArquivoBase);
             using(var excel = new ClosedXML.Excel.XLWorkbook(pathArquivo))
             {
                 var linha = 7;
@@ -528,12 +529,15 @@ namespace Marketing.Application.Servicos
                 foreach (var mensagem in mensagens)
                 {
                     var ultimoStatus = mensagem.MensagemItems.OrderByDescending(x => x.DataEvento).FirstOrDefault();
+                    planilha.Range($"A{linha}:H{linha}").Style.Font.FontSize = 10;  
                     planilha.Cell($"A{linha}").Value = mensagem.EnvioMensagemMensal?.DataGeracao.ToShortDateString() ?? "";
-                    planilha.Cell($"B{linha}").Value = "";
-                    planilha.Cell($"C{linha}").Value = "";
+                    planilha.Cell($"B{linha}").Value = mensagem.EnvioMensagemMensal?.RedeNome ?? "";
+                    planilha.Cell($"C{linha}").Value = mensagem.EnvioMensagemMensal?.NomeFranquia ?? "";
                     planilha.Cell($"D{linha}").Value = mensagem.EnvioMensagemMensal?.EstabelecimentoCnpj ?? "";
                     planilha.Cell($"E{linha}").Value = mensagem.EnvioMensagemMensal?.ContatoTelefone ?? "";
                     planilha.Cell($"F{linha}").Value = ultimoStatus?.MensagemStatus.ToString() ?? "";
+                    planilha.Cell($"G{linha}").Value = ultimoStatus?.Observacao?.ToString() ?? "";
+                    planilha.Row(linha + 1).AdjustToContents(); 
                     planilha.Row(linha+1).InsertRowsBelow(1);
                     linha++;
                 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Marketing.Infraestrutura.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial10 : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -125,6 +125,8 @@ namespace Marketing.Infraestrutura.Migrations
                     Competencia = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EstabelecimentoCnpj = table.Column<string>(type: "TEXT", nullable: false),
                     ContatoTelefone = table.Column<string>(type: "TEXT", nullable: false),
+                    RedeNome = table.Column<string>(type: "TEXT", nullable: false),
+                    NomeFranquia = table.Column<string>(type: "TEXT", nullable: false),
                     DataGeracao = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MensagemId = table.Column<string>(type: "TEXT", nullable: true)
                 },

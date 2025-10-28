@@ -54,7 +54,7 @@ namespace Marketing.Application.Servicos
 
                     // FONTES
                     var fontes = FontFactory.RegisteredFonts;
-                    Font fontDadosEstabelecimento = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.WHITE);
+                    Font fontDadosEstabelecimento = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 6, Font.NORMAL, BaseColor.WHITE);
                     Font fontPosicaoRede = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
                     Font fontMesReferencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 11, Font.NORMAL, BaseColor.BLACK);
 
@@ -102,7 +102,7 @@ namespace Marketing.Application.Servicos
                     // DADOS DO ESTABELECIMENTO
                     var dadosEstabelecimento1 = $"Loja: {estabelecimento.RazaoSocial}";
                     var dadosEstabelecimento2 = $"Cidade: {estabelecimento.Cidade} - {estabelecimento.Uf}";
-                    string endereco = endereco = $"{estabelecimento.Endereco ?? ""}, {estabelecimento.Numero ?? ""}";;
+                    string endereco = endereco = $"{estabelecimento.Endereco ?? ""}, {estabelecimento.Numero ?? ""}";
                     // if (sucesso)
                     // {
                     //     endereco = $"{estabelecimento.Endereco}, {estabelecimento.Numero}";
@@ -539,6 +539,5 @@ namespace Marketing.Application.Servicos
             });
             imagem.SaveAsJpeg(caminhoGrafico);
         }
-        
     }
 }

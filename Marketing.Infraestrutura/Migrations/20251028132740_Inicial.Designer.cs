@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketing.Infraestrutura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251024010129_Inicial10")]
-    partial class Inicial10
+    [Migration("20251028132740_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,6 +179,14 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MensagemId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NomeFranquia")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RedeNome")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

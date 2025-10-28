@@ -38,7 +38,9 @@ namespace Marketing.Application.Servicos
                         await GerarProcessamentoPorEstabelecimento(estabelecimentoPdf, competencia,
                                                                contentRootPath, caminhoApp);
                         var telefone = contato.Telefone ?? "";
-                        var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone);
+                        var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone,
+                                                               estabelecimentoPdf?.RedeNome ?? "",
+                                                               estabelecimentoPdf?.RazaoSocial ?? "");
                         await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
                         await _unitOfWork.CommitAsync();
                     }

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Marketing.Domain.Entidades;
+using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +63,7 @@ namespace Marketing.Mvc.Controllers
                             WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
                             if (json != null && contato.Telefone != null)
                             {
-                                foreach (Message message in json.messages)
+                                foreach (Domain.Entidades.Message message in json.messages)
                                 {
                                     var mensagemId = message.id;
                                     if (mensagemId != null)
@@ -80,8 +81,9 @@ namespace Marketing.Mvc.Controllers
                         }
                         else
                         {
+                            WhatsAppResponseError? erro = JsonSerializer.Deserialize<WhatsAppResponseError>(response.Response, JsonSerializerOptions.Default);
                             var mensagem = new Mensagem(Guid.NewGuid().ToString());
-                            mensagem.AdicionarEvento(MensagemStatus.Falha);
+                            mensagem.AdicionarEvento(MensagemStatus.Falha, erro?.error?.MessageError  ?? "" );
                             await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
                             await _servicoEnvioMensagemMensal.CommitAsync();
                             envio.MensagemId = mensagem.Id;
@@ -115,7 +117,7 @@ namespace Marketing.Mvc.Controllers
                         WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
                         if (json != null && contato.Telefone != null)
                         {
-                            foreach (Message message in json.messages)
+                            foreach (Domain.Entidades.Message message in json.messages)
                             {
                                 var mensagemId = message.id;
                                 if (mensagemId != null)

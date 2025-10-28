@@ -29,7 +29,18 @@ namespace Marketing.Domain.Entidades
             evento.MensagemId = this.Id;
             evento.Mensagem = this;
             evento.DataEvento = DateTime.Now;
-            evento.MensagemStatus = mensagemStatus;  
+            evento.MensagemStatus = mensagemStatus;
+            this.MensagemItems.Add(evento);
+        }
+          public void AdicionarEvento(MensagemStatus mensagemStatus, string observacao)
+        {
+            if (this.MensagemItems == null) this.MensagemItems = new List<MensagemItem>();
+            var evento = new MensagemItem();
+            evento.MensagemId = this.Id;
+            evento.Mensagem = this;
+            evento.DataEvento = DateTime.Now;
+            evento.MensagemStatus = mensagemStatus;
+            evento.Observacao = observacao; 
             this.MensagemItems.Add(evento);
         }
     }

@@ -178,6 +178,14 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<string>("MensagemId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NomeFranquia")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RedeNome")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MensagemId")

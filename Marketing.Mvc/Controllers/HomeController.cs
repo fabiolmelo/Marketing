@@ -60,7 +60,7 @@ public class HomeController : Controller
             {
                 mensagens = await _unitOfWork.repositorioMensagem.GetAllMensagemsAsync(competencia);
                 var resumo = await _unitOfWork.repositorioMensagem.BuscaResumoMensagemPorCompetencia(competencia);
-                var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio", "Base.xlsx");
+                var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio", "BaseNova.xlsx");
                 var pathRootBase = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio",
                                                 $"Relatório de Envio de Extratos de Incidência_{competencia?.ToString("MMMMyyyy")}.xlsx");
                 _servicoArquivos.GerarRelatorioEnvios(pathRoot, mensagens, resumo, pathRootBase);

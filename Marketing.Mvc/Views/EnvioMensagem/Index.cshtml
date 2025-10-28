@@ -18,7 +18,9 @@
                             <tr>
                                 <th></th>
                                 <th>Competência</th>
-                                <th>Estabelecimento</th>
+                                <th>Rede</th>
+                                <th>Cnpj</th>
+                                <th>Franquia</th>
                                 <th>Contato</th>
                                 <th>Enviado</th>
                                 <th></th>
@@ -33,7 +35,13 @@
                                         @item.Competencia.ToString("MMM/yyyy") 
                                     </td>
                                     <td>
+                                        @item.RedeNome 
+                                    </td>
+                                    <td>
                                         @item.EstabelecimentoCnpj
+                                    </td>
+                                    <td>
+                                        @item.NomeFranquia 
                                     </td>
                                     <td>
                                         @item.ContatoTelefone

@@ -29,7 +29,7 @@ namespace Marketing.Mvc.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> IndexP(int? pageNumber, int? pageSize, string? filtro)
+        public ActionResult IndexP(int? pageNumber, int? pageSize, string? filtro)
         {
             return RedirectToAction("Index", new {pageNumber = pageNumber, pageSize = pageSize, filtro = filtro});
         }
@@ -82,32 +82,29 @@ namespace Marketing.Mvc.Controllers
                     return RedirectToAction("UploadLogo", new { id = redeDto.Nome, erro = "Nenhum arquivo foi selecionado!" });
                 }
                 var extensao = Path.GetExtension(redeDto.ArquivoLogo.FileName);
-                if (extensao.ToLower() != ".png") return RedirectToAction("UploadLogo", new { id = redeDto.Nome, erro = "O arquivo selecionado não é uma imagem PNG!" });
+                if (extensao.ToLower() != ".png" && extensao.ToLower() != ".jpg" && extensao.ToLower() != ".jpeg")
+                {
+                    return RedirectToAction("UploadLogo", new { id = redeDto.Nome, erro = "O arquivo selecionado não é uma imagem PNG ou JPEG!" });
+                } 
                 var rede = new Rede(redeDto.Nome);
                 rede.DataCadastro = redeDto.DataCadastro;
                 var filePath = Path.Combine("DadosApp", "Logos", redeDto.ArquivoLogo.FileName);
-                try
+                if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
+                using (FileStream filestream = System.IO.File.Create(filePath))
                 {
-                    using (FileStream filestream = System.IO.File.Create(filePath))
-                    {
-                        await redeDto.ArquivoLogo.CopyToAsync(filestream);
-                        filestream.Flush();
-                    }
-                    byte[] imageBytes = System.IO.File.ReadAllBytes(filePath);
-                    string base64String = Convert.ToBase64String(imageBytes);
-                    rede.Logo = base64String;
-                    _servicoRede.Update(rede);
-                    await _servicoRede.CommitAsync();
+                    await redeDto.ArquivoLogo.CopyToAsync(filestream);
+                    filestream.Flush();
                 }
-                catch (System.Exception)
-                {
-                    return RedirectToAction("UploadLogo", new { id = redeDto.Nome, erro = "Erro ao processar imagem!" });
-                }
+                byte[] imageBytes = System.IO.File.ReadAllBytes(filePath);
+                string base64String = Convert.ToBase64String(imageBytes);
+                rede.Logo = base64String;
+                _servicoRede.Update(rede);
+                await _servicoRede.CommitAsync();
                 return RedirectToAction("UploadLogo", new { id = redeDto.Nome, sucesso = "Rede atualizada com sucesso!" });
             }
-            catch
+            catch (System.Exception ex)
             {
-                return RedirectToAction("Index", new { id = redeDto.Nome, erro = "Erro ao atualizar Rede" });
+                return RedirectToAction("UploadLogo", new { id = redeDto.Nome, erro = $"Erro ao atualizar Rede.\n {ex.Message}" });
             }
         }
 
