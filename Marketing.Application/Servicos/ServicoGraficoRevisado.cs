@@ -102,12 +102,14 @@ namespace Marketing.Application.Servicos
                     // DADOS DO ESTABELECIMENTO
                     var dadosEstabelecimento1 = $"Loja: {estabelecimento.RazaoSocial}";
                     var dadosEstabelecimento2 = $"Cidade: {estabelecimento.Cidade} - {estabelecimento.Uf}";
-                    string endereco = endereco = $"{estabelecimento.Endereco ?? ""}, {estabelecimento.Numero ?? ""}";
+                    string endereco = $"{estabelecimento.Endereco ?? ""},";
+                    string endereco2 = $"{estabelecimento.Numero ?? ""} - {estabelecimento.Complemento ?? ""} - {estabelecimento.Bairro ?? ""}";
                     // if (sucesso)
                     // {
                     //     endereco = $"{estabelecimento.Endereco}, {estabelecimento.Numero}";
                     // }
-                    var dadosEstabelecimento3 = $"Endereço: {endereco}" ;
+                    var dadosEstabelecimento3 = $"Endereço: {endereco}";
+                    var dadosEstabelecimento4 = $"Número..: {endereco2}";
 
                     //DADOS 1
                     PdfContentByte directContent = worker.DirectContent;
@@ -127,6 +129,12 @@ namespace Marketing.Application.Servicos
                     var posicaoDados3 = new Phrase(new Chunk(dadosEstabelecimento3, fontDadosEstabelecimento));
                     columnText3.SetSimpleColumn(posicaoDados3, 450, 100, 50, 680, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
                     columnText3.Go();
+
+                    //DADOS 4
+                    ColumnText columnText4 = new ColumnText(directContent);
+                    var posicaoDados4 = new Phrase(new Chunk(dadosEstabelecimento4, fontDadosEstabelecimento));
+                    columnText4.SetSimpleColumn(posicaoDados4, 450, 100, 50, 670, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
+                    columnText4.Go();
 
                     //DADOS 4
                     // ColumnText columnText4 = new ColumnText(directContent);
@@ -202,12 +210,13 @@ namespace Marketing.Application.Servicos
                     string[] volumePedidoText = new string[qtdExtrato];
                     Phrase[] volumePedidoPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    int fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         volumePedido[index] = new ColumnText(directContent);
                         volumePedidoText[index] = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidos.ToString("N0");
                         volumePedidoPhrase[index] = new Phrase(new Chunk(volumePedidoText[index], fontValoresGraf));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 285 + fatorPosicao, 382, 200 + fatorPosicao, 432, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedido[index].Go();
                     }
@@ -217,12 +226,13 @@ namespace Marketing.Application.Servicos
                     string[] volumePedidoCocaText = new string[qtdExtrato];
                     Phrase[] volumePedidoCocaPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         volumePedidoCoca[index] = new ColumnText(directContent);
                         volumePedidoCocaText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PedidosComCocaCola.ToString("N0");
                         volumePedidoCocaPhrase[index] = new Phrase(new Chunk(volumePedidoCocaText[index], fontValoresGraf));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 285 + fatorPosicao, 367, 200 + fatorPosicao, 417, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedidoCoca[index].Go();
                     }
@@ -232,12 +242,13 @@ namespace Marketing.Application.Servicos
                     string[] mesesText2 = new string[qtdExtrato];
                     Phrase[] mesesPhrase2 = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         meses2[index] = new ColumnText(directContent);
                         mesesText2[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
                         mesesPhrase2[index] = new Phrase(new Chunk(mesesText2[index], fontValoresGraf));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         meses2[index].SetSimpleColumn(mesesPhrase2[index], 285 + fatorPosicao, 397, 200 + fatorPosicao, 447, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         meses2[index].Go();
                     }
@@ -247,12 +258,13 @@ namespace Marketing.Application.Servicos
                     string[] mesesText = new string[qtdExtrato];
                     Phrase[] mesesPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         meses[index] = new ColumnText(directContent);
                         mesesText[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
                         mesesPhrase[index] = new Phrase(new Chunk(mesesText[index], fontValoresGraf));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         meses[index].SetSimpleColumn(mesesPhrase[index], 285 + fatorPosicao, 212, 200 + fatorPosicao, 272, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         meses[index].Go();
                     }
@@ -262,13 +274,14 @@ namespace Marketing.Application.Servicos
                     string[] aproveitamentoText = new string[qtdExtrato];
                     Phrase[] aproveitamentoPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         decimal aprovMeta = estabelecimento.ExtratoVendas.ElementAt(index).IncidenciaReal - estabelecimento.ExtratoVendas.ElementAt(index).Meta;
                         aproveitamento[index] = new ColumnText(directContent);
                         aproveitamentoText[index] = aprovMeta.ToString("P0");
                         aproveitamentoPhrase[index] = new Phrase(new Chunk(aproveitamentoText[index], fontValoresGraf));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         aproveitamento[index].SetSimpleColumn(aproveitamentoPhrase[index], 197 + fatorPosicao, 195, 217 + fatorPosicao, 252, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         aproveitamento[index].Go();
                     }
@@ -278,14 +291,15 @@ namespace Marketing.Application.Servicos
                     string[] naoCapituradosText = new string[qtdExtrato];
                     Phrase[] naoCapituradosPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         int qtde = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidosNaoCapturados * -1;
                         Font fontNaoCap = qtde < 0 ? fontValoresGrafRed : qtde == 0 ? fontValoresGraf : fontValoresGrafGreen;
                         naoCapiturados[index] = new ColumnText(directContent);
                         naoCapituradosText[index] = qtde.ToString("N0");
                         naoCapituradosPhrase[index] = new Phrase(new Chunk(naoCapituradosText[index], fontNaoCap));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         naoCapiturados[index].SetSimpleColumn(naoCapituradosPhrase[index], 197 + fatorPosicao, 173, 217 + fatorPosicao, 228, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         naoCapiturados[index].Go();
                     }
@@ -295,12 +309,13 @@ namespace Marketing.Application.Servicos
                     string[] precoMedioText = new string[qtdExtrato];
                     Phrase[] precoMedioPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         precoMedio[index] = new ColumnText(directContent);
                         precoMedioText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PrecoUnitarioMedio.ToString("C2");
                         precoMedioPhrase[index] = new Phrase(new Chunk(precoMedioText[index], fontValoresGraf));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 197 + fatorPosicao, 173, 217 + fatorPosicao, 211, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         precoMedio[index].Go();
                     }
@@ -310,14 +325,15 @@ namespace Marketing.Application.Servicos
                     string[] crifaofixoText = new string[qtdExtrato];
                     Phrase[] crifaofixoPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         decimal receita = estabelecimento.ExtratoVendas.ElementAt(index).ReceitaNaoCapturada * -1;
                         Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
                         crifaofixo[index] = new ColumnText(directContent);
                         crifaofixoText[index] = "R$";
                         crifaofixoPhrase[index] = new Phrase(new Chunk(crifaofixoText[index], fontNaoCap));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         crifaofixo[index].SetSimpleColumn(crifaofixoPhrase[index], 203 + fatorPosicao, 167, 213 + fatorPosicao, 197, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
                         crifaofixo[index].Go();
                     }
@@ -327,14 +343,15 @@ namespace Marketing.Application.Servicos
                     string[] receitaNaoCapituradosText = new string[qtdExtrato];
                     Phrase[] receitaNaoCapituradosPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         decimal receita = estabelecimento.ExtratoVendas.ElementAt(index).ReceitaNaoCapturada * -1;
                         Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
                         receitaNaoCapiturados[index] = new ColumnText(directContent);
                         receitaNaoCapituradosText[index] = receita.ToString("N2");
                         receitaNaoCapituradosPhrase[index] = new Phrase(new Chunk(receitaNaoCapituradosText[index], fontNaoCap));
-                        int fatorPosicao = (index * FATOR_FIXO);
+                        fatorPosicao -= FATOR_FIXO;
                         receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 197 + fatorPosicao, 157, 227 + fatorPosicao, 187, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
                         receitaNaoCapiturados[index].Go();
                     }
@@ -440,38 +457,70 @@ namespace Marketing.Application.Servicos
                     string[] incidenciaRealText = new string[qtdExtrato];
                     Phrase[] incidenciaRealPhrase = new Phrase[qtdExtrato];
 
-                    for (var index = 0; index < qtdExtrato; index++)
+                    fatorPosicao = 12;
+                    for (var index = qtdExtrato - 1; index >= 0; index--)
                     {
                         int incidenciaRealValor = (int)(estabelecimento.ExtratoVendas.ElementAt(index).IncidenciaReal * 100);
                         incidenciaReal[index] = new ColumnText(directContent);
                         incidenciaRealText[index] = $"{incidenciaRealValor.ToString("N0")}%";
                         incidenciaRealPhrase[index] = new Phrase(new Chunk(incidenciaRealText[index], fontValoresIncidencia));
-                    }
 
-                    if (qtdExtrato > 0) incidenciaReal[0].SetSimpleColumn(incidenciaRealPhrase[0], 200, 265, 218, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 0) incidenciaReal[0].Go();
-                    if (qtdExtrato > 1) incidenciaReal[1].SetSimpleColumn(incidenciaRealPhrase[1], 230, 265, 250, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 1) incidenciaReal[1].Go();
-                    if (qtdExtrato > 2) incidenciaReal[2].SetSimpleColumn(incidenciaRealPhrase[2], 261, 265, 281, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 2) incidenciaReal[2].Go();
-                    if (qtdExtrato > 3) incidenciaReal[3].SetSimpleColumn(incidenciaRealPhrase[3], 290, 265, 310, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 3) incidenciaReal[3].Go();
-                    if (qtdExtrato > 4) incidenciaReal[4].SetSimpleColumn(incidenciaRealPhrase[4], 322, 265, 342, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 4) incidenciaReal[4].Go();
-                    if (qtdExtrato > 5) incidenciaReal[5].SetSimpleColumn(incidenciaRealPhrase[5], 354, 265, 372, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 5) incidenciaReal[5].Go();
-                    if (qtdExtrato > 6) incidenciaReal[6].SetSimpleColumn(incidenciaRealPhrase[6], 382, 265, 402, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 6) incidenciaReal[6].Go();
-                    if (qtdExtrato > 7) incidenciaReal[7].SetSimpleColumn(incidenciaRealPhrase[7], 414, 265, 432, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 7) incidenciaReal[7].Go();
-                    if (qtdExtrato > 8) incidenciaReal[8].SetSimpleColumn(incidenciaRealPhrase[8], 446, 265, 464, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 8) incidenciaReal[8].Go();
-                    if (qtdExtrato > 9) incidenciaReal[9].SetSimpleColumn(incidenciaRealPhrase[9], 476, 265, 494, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 9) incidenciaReal[9].Go();
-                    if (qtdExtrato > 10) incidenciaReal[10].SetSimpleColumn(incidenciaRealPhrase[10], 506, 265, 524, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 10) incidenciaReal[10].Go();
-                    if (qtdExtrato > 11) incidenciaReal[11].SetSimpleColumn(incidenciaRealPhrase[11], 536, 265, 555, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                    if (qtdExtrato > 11) incidenciaReal[11].Go();
+                        while (fatorPosicao > 0)
+                        {
+                            switch (fatorPosicao)
+                            {
+                                case 1:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 200, 265, 218, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 2:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 230, 265, 250, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 3:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 261, 265, 281, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 4:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 290, 265, 310, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 5:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 322, 265, 342, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 6:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 354, 265, 372, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 7:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 382, 265, 402, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go(); 
+                                    break;
+                                case 8:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 414, 265, 432, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 9:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 446, 265, 464, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 10:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 476, 265, 494, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 11:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 506, 265, 524, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                                case 12:
+                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 536, 265, 555, 295, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                    incidenciaReal[index].Go();
+                                    break;
+                            }
+                            fatorPosicao--;
+                        }
+                    }
 
                     filestream.Flush();
                     document.CloseDocument();
@@ -519,10 +568,11 @@ namespace Marketing.Application.Servicos
                 ctx.Fill(Color.White);
 
                 // Barras
-                for (int i = 0; i < estabelecimento.ExtratoVendas.Count(); i++)
+                int posicaoGrafico = 11;
+                for (int i = estabelecimento.ExtratoVendas.Count()-1; i >=0; i--)
                 {
                     // BARRA VERMELHA
-                    float x = margem + i * (larguraBarra + espacamento);
+                    float x = margem + posicaoGrafico * (larguraBarra + espacamento);
                     float y = altura - margem - (int)(230 * estabelecimento.ExtratoVendas.ElementAt(i).CorVermelhaGrafico);
                     var ret = new RectangleF(x, y, larguraBarra, (float)(230 * estabelecimento.ExtratoVendas.ElementAt(i).CorVermelhaGrafico));
                     ctx.Fill(Color.FromRgb(237, 34, 36), ret);
@@ -535,6 +585,7 @@ namespace Marketing.Application.Servicos
                         var ret2 = new RectangleF(x, y2, larguraBarra, (float)(230 * estabelecimento.ExtratoVendas.ElementAt(i).CorVerdeGrafico));
                         ctx.Fill(Color.FromRgb(13, 163, 13), ret2);
                     }
+                    posicaoGrafico--;
                 }
             });
             imagem.SaveAsJpeg(caminhoGrafico);
