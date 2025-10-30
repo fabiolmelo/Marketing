@@ -66,6 +66,9 @@ namespace Marketing.Application.Servicos
                     Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.BLACK);
                     Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.RED);
                     Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, new BaseColor(13, 163, 13));
+                    Font fontCorMeta = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, new BaseColor(0, 176, 76));
+                    Font fontCorIncidencia = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, new BaseColor(146, 39, 143));
+                    
                     Font fontValoresIncidencia = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.WHITE);
 
                     Font fontTextoIncidencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.GRAY);
@@ -368,6 +371,14 @@ namespace Marketing.Application.Servicos
                     setaMeta.SetAbsolutePosition(425, 445);
                     document.Add(setaMeta);
 
+                    // Plotar Valor Meta
+                    int metaValor = (int)(estabelecimento.ExtratoMesCompetencia.Meta * 100);
+                    var columnTextMeta = new ColumnText(directContent);
+                    var metaValorText = $"{metaValor.ToString("N0")}%";
+                    var metaValorPhrase = new Phrase(new Chunk(metaValorText, fontCorMeta));
+                    columnTextMeta.SetSimpleColumn(metaValorPhrase, 506, 510, 556, 480, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    columnTextMeta.Go();
+
                     //PLOTAR A IMAGEM DA SETA INCIDENCIA
                     iTextSharp.text.Image setaIncidencia;
 
@@ -407,6 +418,8 @@ namespace Marketing.Application.Servicos
                     
                     setaIncidencia.SetAbsolutePosition(275, 445);
                     document.Add(setaIncidencia);
+
+                    
 
                     // DESENHAR A LINHA TRACEJADA DA META
                     float posicaoMetaY = 260 + (float)(estabelecimento.ExtratoMesCompetencia.Meta * 110);
