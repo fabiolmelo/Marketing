@@ -1,0 +1,43 @@
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "768797859218229",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "daruma",
+              "phone_number_id": "718225858051731"
+            },
+            "statuses": [
+              {
+                "id": "718225858051731",
+                "status": "sent",
+                "timestamp": "718225858051731",
+                "recipient_id": "<USER_PHONE_NUMBER_OR_GROUP_ID>",
+                "conversation": {
+                  "id": "HBgNNTUxMTk3NzUxNTkxNBUCABEYEkEzMzE4NzlDOTUwRUEwOUJCMQA",
+                  "expiration_timestamp": "718225858051731",
+                  "origin": {
+                    "type": "service"
+                  }
+                },
+                "pricing": {
+                  "billable": <IS_BILLABLE?>,
+                  "pricing_model": "<PRICING_MODEL>",
+                  "type": "<PRICING_TYPE>",
+                  "category": "<PRICING_CATEGORY>"
+                },
+                "errors": [
+                ]
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
