@@ -379,6 +379,12 @@ namespace Marketing.Application.Servicos
                     columnTextMeta.SetSimpleColumn(metaValorPhrase, 506, 510, 556, 480, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     columnTextMeta.Go();
 
+
+                    int[,] incidenciaValorPosicao = { { 236, 480, 276, 450 }, { 236, 500, 286, 450 },
+                                                      { 256, 520, 306, 490 }, { 310, 520, 350, 490 },
+                                                      { 335, 505, 385, 475 }, { 365, 500, 405, 460 },
+                                                      { 375, 480, 415, 450 }};
+                    int indicePosicaoIncidenciaValor = 0;
                     //PLOTAR A IMAGEM DA SETA INCIDENCIA
                     iTextSharp.text.Image setaIncidencia;
 
@@ -390,36 +396,53 @@ namespace Marketing.Application.Servicos
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) < 0)
                     {
                         setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia20);
+                        indicePosicaoIncidenciaValor = 1;
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.35) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) < 0)
                     {
                         setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia40);
+                        indicePosicaoIncidenciaValor = 2;
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.45) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) < 0)
                     {
                         setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia50);
+                        indicePosicaoIncidenciaValor = 3;
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.55) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) < 0)
                     {
                         setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia60);
+                        indicePosicaoIncidenciaValor = 4;
                     }
                     else if (estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.75) >= 0 &&
                              estabelecimento.ExtratoMesCompetencia.IncidenciaReal.CompareTo((decimal)0.95) < 0)
                     {
                         setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia80);
+                        indicePosicaoIncidenciaValor = 5;
                     }
                     else
                     {
                         setaIncidencia = iTextSharp.text.Image.GetInstance(caminhoSetaIncidencia95);
+                        indicePosicaoIncidenciaValor = 6;
                     }
-                    
+
+                    // Plotar Valor Meta
+                    int incValor = (int)(estabelecimento.ExtratoMesCompetencia.IncidenciaReal * 100);
+                    var columnTextInc = new ColumnText(directContent);
+                    var incValorText = $"{incValor.ToString("N0")}%";
+                    var incValorPhrase = new Phrase(new Chunk(incValorText, fontCorIncidencia));
+                    columnTextInc.SetSimpleColumn(incValorPhrase,
+                                                  incidenciaValorPosicao[indicePosicaoIncidenciaValor, 0],
+                                                  incidenciaValorPosicao[indicePosicaoIncidenciaValor, 1],
+                                                  incidenciaValorPosicao[indicePosicaoIncidenciaValor, 2],
+                                                  incidenciaValorPosicao[indicePosicaoIncidenciaValor, 3],
+                                                  25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    columnTextInc.Go();
+
                     setaIncidencia.SetAbsolutePosition(275, 445);
                     document.Add(setaIncidencia);
-
-                    
 
                     // DESENHAR A LINHA TRACEJADA DA META
                     float posicaoMetaY = 260 + (float)(estabelecimento.ExtratoMesCompetencia.Meta * 110);
