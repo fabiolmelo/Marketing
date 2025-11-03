@@ -25,7 +25,7 @@ namespace Marketing.Application.Servicos
             //var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "CocaColaFundo.jpeg");
             var caminhoPdf = Path.Combine(contentRootPath, "DadosApp", "tmp.pdf");
             var caminhoPdfCompleto = Path.Combine(contentRootPath, "DadosApp", "images", $"{arquivoPdf}");
-            var caminhoPdfPage2 = Path.Combine(contentRootPath, "DadosApp", "Entenda seu extrato Coca-Cola_v3.pdf");
+            var caminhoPdfPage2 = Path.Combine(contentRootPath, "DadosApp", "Entenda seu extrato Coca-Cola_v4.pdf");
             var caminhoGrafico = Path.Combine(contentRootPath, "DadosApp", "Grafico.jpg");
             var caminhoSetaMeta = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaMeta.png");
             var caminhoSetaIncidencia5 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia5.png");
@@ -382,7 +382,7 @@ namespace Marketing.Application.Servicos
 
                     int[,] incidenciaValorPosicao = { { 236, 480, 276, 450 }, { 236, 500, 286, 450 },
                                                       { 256, 520, 306, 490 }, { 310, 520, 350, 490 },
-                                                      { 335, 505, 385, 475 }, { 365, 500, 405, 460 },
+                                                      { 345, 515, 395, 485 }, { 365, 500, 405, 460 },
                                                       { 375, 480, 415, 450 }};
                     int indicePosicaoIncidenciaValor = 0;
                     //PLOTAR A IMAGEM DA SETA INCIDENCIA
