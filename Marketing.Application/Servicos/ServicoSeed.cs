@@ -32,5 +32,24 @@ namespace Marketing.Application.Servicos
                 await _unitOfWork.CommitAsync();
             }
         }
+
+        public async Task SeedRedes()
+        {
+            var existeRedes = await _unitOfWork.repositorioRede.GetAllAsync(1, 99999);
+            if (existeRedes.Dados.Count == 0)
+            {
+                var redes = new List<Rede>();
+                redes.Add(new Rede("DOMINOS"));
+                redes.Add(new Rede("SPOLETO"));
+                redes.Add(new Rede("KONI"));
+                redes.Add(new Rede("CIB"));
+                redes.Add(new Rede("GENDAI"));
+                redes.Add(new Rede("LEBONTON"));
+                redes.Add(new Rede("GURUME"));
+                redes.Add(new Rede("BOBS"));
+                await _unitOfWork.GetRepository<Rede>().AddRangeAsync(redes);
+                await _unitOfWork.CommitAsync();
+            }
+        }
     }
 }

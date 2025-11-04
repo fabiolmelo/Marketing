@@ -57,6 +57,9 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<DateTime?>("DataAceite")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("DataRecusa")
                         .HasColumnType("TEXT");
 
@@ -65,6 +68,9 @@ namespace Marketing.Infraestrutura.Migrations
 
                     b.Property<string>("Nome")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("OrigemContato")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("RecusaMensagem")
                         .HasColumnType("INTEGER");

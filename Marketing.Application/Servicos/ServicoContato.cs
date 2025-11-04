@@ -50,6 +50,8 @@ namespace Marketing.Application.Servicos
                     if (contato == null)
                     {
                         contato = new Contato(linhaPlanilha.Fone);
+                        contato.OrigemContato = OrigemContato.PlanilhaIncidencia;
+                        contato.DataCadastro = DateTime.UtcNow;
                         await _unitOfWork.repositorioContato.AddAsync(contato);
                         await _unitOfWork.CommitAsync();
                     }

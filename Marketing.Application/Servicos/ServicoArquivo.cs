@@ -10,8 +10,10 @@ namespace Marketing.Application.Servicos
 {
     public class ServicoArquivo : Servico<ImportacaoEfetuada>, IServicoArquivos
     {
+        private readonly IUnitOfWork _unitOfWork;
         public ServicoArquivo(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<string?> UploadArquivo(IFormFile arquivo)
@@ -478,7 +480,7 @@ namespace Marketing.Application.Servicos
             return arquivoPdf; 
         }
 
-        public List<DadosPlanilha> LerDados(string pathArquivo)
+        public List<DadosPlanilha> LerDados(string pathArquivo, string rede)
         {
             int row = 2;
             var dadosPlanilha = new List<DadosPlanilha>();
@@ -502,7 +504,6 @@ namespace Marketing.Application.Servicos
                         var precoUnitarioMedio = (decimal)linha.Cell("J").Value.GetNumber();
                         var qtdPedidosNaoCapiturados = (int)linha.Cell("K").Value;
                         var receitaNaoCapturada = (decimal)linha.Cell("L").Value.GetNumber();
-                        var rede = linha.Cell("M").Value.ToString();
                         var fone = linha.Cell("N").Value.ToString().RemoverCaracteresEspeciais();
                         if (fone.Length == 10 || fone.Length == 11) fone = $"55{fone}";
 
@@ -549,6 +550,68 @@ namespace Marketing.Application.Servicos
                                                                              x.MensagemStatus == MensagemStatus.Falha)?.Qtd ?? 0;
                 excel.SaveAs(pathArquivoBase);
             }
+        }
+
+        public async Task<bool> AtualizarContatoViaPlanilhaEmailMarketing(string pathArquivo)
+        {
+            int row = 2;
+            var dadosPlanilha = new List<DadosPlanilha>();
+
+            try
+            {
+                using (var excel = new ClosedXML.Excel.XLWorkbook(pathArquivo))
+                {
+                    var planilha = excel.Worksheet(1).RowsUsed();
+                    foreach (var linha in planilha)
+                    {
+                        if (linha.RowNumber() > 1 && !linha.IsEmpty())
+                        {
+                            var dataCadastro = linha.Cell("A").Value.GetDateTime();
+                            var fone = linha.Cell("B") == null ? "" : linha.Cell("B").Value.ToString().RemoverCaracteresEspeciais();
+                            if (fone.Length == 11) fone = $"55{fone}";
+                            var nome = linha.Cell("C") == null ? "" : linha.Cell("C").Value.ToString().ToUpper();
+                            var contato = await _unitOfWork.repositorioContato.BuscarContatosIncludeEstabelecimento(fone);
+                            string cnpj;
+                            if (contato == null)
+                            {
+                                contato = new Contato()
+                                {
+                                    Telefone = fone,
+                                    Nome = nome,
+                                    DataCadastro = dataCadastro,
+                                    OrigemContato = OrigemContato.EmailMarketing
+
+                                };
+                                await _unitOfWork.repositorioContato.AddAsync(contato);
+                                await _unitOfWork.CommitAsync();
+                            }
+                            for(int index = 4; index<=31; index+=3)
+                            {
+                                cnpj = linha.Cell(index).Value.ToString();
+                                var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(cnpj);
+                                if(estabelecimento != null)
+                                {
+                                    var contatoEstabelecimento = await _unitOfWork.GetRepository<ContatoEstabelecimento>()
+                                                                .GetByIdChaveComposta(fone, cnpj);
+                                    if (contatoEstabelecimento == null)
+                                    {
+                                        contatoEstabelecimento = new ContatoEstabelecimento(fone, cnpj);
+                                        await _unitOfWork.GetRepository<ContatoEstabelecimento>().AddAsync(contatoEstabelecimento);
+                                        await _unitOfWork.CommitAsync();
+                                    }
+                                }
+                            }
+                        }
+                        row++;
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro na linha: {row}.\n{ex.Message}");
+                return false;
+            }     
         }
     }
 }

@@ -27,6 +27,7 @@
                         <th>Nome</th>
                         <th>Email</th>
                         <th>Aceita Mensagem</th>
+                        <th>Origem Cadastro</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -49,6 +50,9 @@
                                 } else {
                                     @("Não")
                                 }
+                            </td>
+                              <td>
+                                 @Html.DisplayFor(modelItem => item.OrigemContato)
                             </td>
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.Telefone" class="btn btn-danger btn-sm">Alterar</a>

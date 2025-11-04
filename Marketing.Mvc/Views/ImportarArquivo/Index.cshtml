@@ -1,3 +1,5 @@
+@model Marketing.Application.DTOs.ImportarIncidenciaDto
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Importação de Dados</h6>
@@ -11,6 +13,12 @@
                     <div class="col-10">
                         <input type="file" name="arquivoEnviado" value="Selecione o arquivo:"/> 
                     </div>
+                    <div class="form-group row justify-content-between">
+                    <div class="col-4">
+                        @Html.LabelFor(model => model.Rede , htmlAttributes: new { @class = "control-label" })
+                        <select class="form-control dropdown-toggle" asp-for="Rede" asp-items=@(ViewBag.Redes)></select>
+                    </div>
+                </div>
                     <div class="col-2">
                         <input type="submit" value="Upload" /> 
                     </div>

@@ -12,6 +12,8 @@ namespace Marketing.Domain.Entidades
         public Guid Token { get; set; }
         public DateTime? UltimaCompetenciaEnviada { get; set; }
         public ICollection<ContatoEstabelecimento> ContatoEstabelecimentos { get; set; } = null!;
+        public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
+        public OrigemContato? OrigemContato { get; set; }
         
         public Contato()
         {

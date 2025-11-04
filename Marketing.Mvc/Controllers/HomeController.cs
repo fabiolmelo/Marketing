@@ -31,6 +31,7 @@ public class HomeController : Controller
         ViewData["Erro"] = erro;
         ViewData["OK"] = sucesso;
         await _servicoSeed.SeedConfiguracoesApp();
+        await _servicoSeed.SeedRedes();
         var competencia = await _unitOfWork.repositorioExtratoVendas.BuscarCompetenciaVigente();
         var mensagens = new List<ResumoMensagem>(); 
         if (competencia != null)
