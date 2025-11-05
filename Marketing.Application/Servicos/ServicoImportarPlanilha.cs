@@ -69,7 +69,7 @@ namespace Marketing.Application.Servicos
             await _servicoArquivos.AddAsync(importacaoEfetuada);
             await _servicoArquivos.CommitAsync();
             await AtualizarContatosViaPlanilha(dadosPlanilha);
-            await _servicoEstabelecimento.AtualizarEstabelecimentoViaPlanilha(dadosPlanilha);
+            await AtualizarEstabelecimentoViaPlanilha(dadosPlanilha);
             //await _servicoEstabelecimento.AtualizarAssociacaoEstabelecimentoContato(dadosPlanilha);
             await _servicoContato.AtualizarAssociacaoContatoEstabelecimento(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarAssociacaoEstabelecimentoRede(dadosPlanilha);
@@ -90,6 +90,37 @@ namespace Marketing.Application.Servicos
             }
             var contatosNaoCadastrados = contatosPlanilha.Except(contatosCadastrados.Dados).ToList();
             await _unitOfWork.repositorioContato.AddRangeAsync(contatosNaoCadastrados);
+            await _unitOfWork.CommitAsync();
+        }
+
+          private async Task AtualizarEstabelecimentoViaPlanilha(List<DadosPlanilha> dadosPlanilha)
+        {
+            var estabelecimentosCadastrados = await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentos(1, 999999, "");
+            List<Estabelecimento> estabelecimentoPlanilha = new List<Estabelecimento>();
+            foreach (var estabelecimento in
+                        dadosPlanilha.Select(
+                                          x => new
+                                          {
+                                              x.Cnpj,
+                                              x.Restaurante,
+                                              x.Cidade,
+                                              x.Uf,
+                                              x.Rede
+                                          })
+                                     .Distinct()
+                                     .ToList())
+            {
+                estabelecimentoPlanilha.Add(new Estabelecimento()
+                {
+                    Cnpj = estabelecimento.Cnpj,
+                    RazaoSocial = estabelecimento.Restaurante,
+                    Cidade = estabelecimento.Cidade,
+                    Uf = estabelecimento.Uf,
+                    RedeNome = estabelecimento.Rede
+                });
+            }
+            var estabelecimentoNaoCadastrados = estabelecimentoPlanilha.Except(estabelecimentosCadastrados.Dados).ToList();
+            await _unitOfWork.repositorioEstabelecimento.AddRangeAsync(estabelecimentoNaoCadastrados);
             await _unitOfWork.CommitAsync();
         }
     }
