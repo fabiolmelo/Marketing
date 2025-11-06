@@ -33,21 +33,7 @@ namespace Marketing.Mvc.Controllers
             return RedirectToAction("Index", new {pageNumber = pageNumber, pageSize = pageSize, filtro = filtro});
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: EstabelecimentoController/Edit/5
+     
         public async Task<ActionResult> Edit(string id, string? erro = null, string? sucesso = null)
         {
             ViewData["Erro"] = erro;
@@ -91,25 +77,13 @@ namespace Marketing.Mvc.Controllers
             }
         }
 
-        // GET: EstabelecimentoController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Contatos(string id, string? erro = null, string? sucesso = null)
         {
-            return View();
-        }
-
-        // POST: EstabelecimentoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ViewData["Erro"] = erro;
+            ViewData["OK"] = sucesso;
+            var estabelecimento = await _servicoEstabelecimento.FindEstabelecimentoIncludeContatoRede(id);
+            if (estabelecimento == null) return BadRequest();        
+            return View(estabelecimento);
         }
     }
 }

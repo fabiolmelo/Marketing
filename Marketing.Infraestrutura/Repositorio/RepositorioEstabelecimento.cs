@@ -19,6 +19,8 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var estabelecimentos = await _context.Set<Estabelecimento>()
                                                 .Include(x => x.ContatoEstabelecimentos)
+                                                    .ThenInclude(x=>x.Contato)
+                                                    .IgnoreAutoIncludes()
                                                 .Include(x => x.Rede)
                                                 .Include(x => x.ExtratoVendas)
                                                 .ToListAsync();
@@ -106,7 +108,7 @@ namespace Marketing.Infraestrutura.Repositorio
                          .Take(size)
                          .Include(x => x.Rede)
                          .Include(x => x.ContatoEstabelecimentos)
-                         .ThenInclude(X=>X.Contato); 
+                         .ThenInclude(X=>X.Contato).IgnoreAutoIncludes(); 
             return new PagedResponse<List<Estabelecimento>>(await query.ToListAsync(), page, size, totalRecords);
         }
     }

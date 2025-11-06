@@ -495,7 +495,8 @@ namespace Marketing.Application.Servicos
                         var data = linha.Cell("A").Value.GetDateTime();
                         var uf = linha.Cell("B").Value.ToString();
                         var cidade = linha.Cell("C").Value.ToString();
-                        var cnpj = linha.Cell("D").Value.ToString();
+                        var cnpj = "00000" + linha.Cell("D").Value.ToString().RemoverCaracteresEspeciais();
+                        cnpj = cnpj.Substring(cnpj.Length - 14, 14);
                         var restaurante = linha.Cell("E").Value.ToString();
                         var totalPedidos = (int)linha.Cell("F").Value.GetNumber();
                         var totalPedidosCoca = (int)linha.Cell("G").Value.GetNumber();
@@ -504,7 +505,7 @@ namespace Marketing.Application.Servicos
                         var precoUnitarioMedio = (decimal)linha.Cell("J").Value.GetNumber();
                         var qtdPedidosNaoCapiturados = (int)linha.Cell("K").Value;
                         var receitaNaoCapturada = (decimal)linha.Cell("L").Value.GetNumber();
-                        var fone = linha.Cell("N").Value.ToString().RemoverCaracteresEspeciais();
+                        var fone = linha.Cell("M").Value.ToString().RemoverCaracteresEspeciais();
                         if (fone.Length == 10 || fone.Length == 11) fone = $"55{fone}";
 
                         dadosPlanilha.Add(
