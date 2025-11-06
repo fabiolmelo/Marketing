@@ -108,7 +108,7 @@ namespace Marketing.Infraestrutura.Repositorio
                          .Take(size)
                          .Include(x => x.Rede)
                          .Include(x => x.ContatoEstabelecimentos)
-                         .ThenInclude(X=>X.Contato).IgnoreAutoIncludes(); 
+                            .ThenInclude(x=>x.Contato).IgnoreAutoIncludes(); 
             return new PagedResponse<List<Estabelecimento>>(await query.ToListAsync(), page, size, totalRecords);
         }
     }

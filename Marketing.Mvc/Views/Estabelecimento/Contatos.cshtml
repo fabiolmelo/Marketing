@@ -15,11 +15,12 @@
             </div>
             <div class="table-responsive">
                 <table class="table table-sm table-bordered">
-                    <thead class="table-primary">
+                    <thead class="table-danger">
                         <tr>
                             <th>Telefone</th>
                             <th>Nome</th>
                             <th>Email</th>
+                            <th>Origem Cadastro</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -37,6 +38,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Contato.Email)
                                 </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Contato.OrigemContato)
+                                </td>
                             </tr>
                             linha = linha + 1;
                         }
@@ -44,7 +48,7 @@
                 </table>
             </div>
         </form>
-        <div class="row p-5">
+        <div class="p-5">
             <div>
                 <a asp-action="Index">Retornar</a>
             </div>           
