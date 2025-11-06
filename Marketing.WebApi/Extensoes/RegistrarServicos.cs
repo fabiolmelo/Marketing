@@ -13,11 +13,6 @@ namespace Marketing.WebApi.Extensoes
     {
         public static void AdicionarServicosAppIOC(this IServiceCollection servicos)
         {
-            servicos.AddSingleton<IHttpClientsFactoryPerson, Application.Servicos.HttpClientsFactoryPerson>();
-
-            servicos.AddScoped<IUnitOfWork, UnitOfWork>();
-            servicos.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            servicos.AddScoped(typeof(IServico<>), typeof(Servico<>));
             servicos.AddScoped<IUnitOfWork, UnitOfWork>();
             servicos.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             servicos.AddScoped(typeof(IServico<>), typeof(Servico<>));
@@ -34,6 +29,8 @@ namespace Marketing.WebApi.Extensoes
             servicos.AddScoped<IServicoProcessamentoMensal, ServicoProcessamentoMensal>();
             servicos.AddScoped<IServicoExtratoVendas, ServicoExtratoVenda>();
             servicos.AddScoped<IServicoEnvioMensagemMensal, ServicoEnvioMensagemMensal>();
+            servicos.AddScoped<IServicoReceitaFederal, ServicoReceitaFederal>();
+            servicos.AddScoped<IServicoSeed, ServicoSeed>();
 
             servicos.AddScoped<IRepositorioContato, RepositorioContato>();
             servicos.AddScoped<IRepositorioExtratoVendas, RepositorioExtratoVendas>();
@@ -41,6 +38,7 @@ namespace Marketing.WebApi.Extensoes
             servicos.AddScoped<IRepositorioProcessamentoMensal, RepositorioFechamentoMensal>();
             servicos.AddScoped<IRepositorioEnvioMensagemMensal, RepositorioEnvioMensagemMensal>();
             servicos.AddScoped<IRepositorioRede, RepositorioRede>();
+            servicos.AddSingleton<IHttpClientsFactoryPerson, HttpClientsFactoryPerson>();
         }
 
         public static void ConfigureHttpClient(IServiceCollection services,

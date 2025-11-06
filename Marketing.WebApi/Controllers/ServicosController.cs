@@ -10,7 +10,7 @@ namespace Marketing.Mvc.Controllers
     {
         public static void AddApiServicosController(this WebApplication app)
         {
-            app.MapGet("contato/aceite/{token}",
+            app.MapGet("api/contato/aceite/{token}",
                 async ([FromServices] IServicoContato _servicoContato,
                        [FromRoute] Guid token) =>
             {
@@ -29,7 +29,7 @@ namespace Marketing.Mvc.Controllers
             .WithName("AceiteContato")
             .WithOpenApi();
 
-            app.MapGet("contato/recusa/{token}",
+            app.MapGet("api/contato/recusa/{token}",
                 async ([FromServices] IServicoContato _servicoContato,
                        [FromRoute] Guid token) =>
             {
@@ -50,7 +50,7 @@ namespace Marketing.Mvc.Controllers
 
             
             
-            app.MapPost("HandleWebhook",
+            app.MapPost("api/HandleWebhook",
                 async ([FromServices] IServicoMeta _servicoMeta,
                        [FromServices] IUnitOfWork _unitOfWork,
                        [FromBody] WhatsAppWebhookPayload payload) =>
@@ -110,7 +110,7 @@ namespace Marketing.Mvc.Controllers
                 }
                 return Results.Ok();
             })
-            .WithName("HandleWebhook")
+            .WithName("api/HandleWebhook")
             .WithOpenApi();
 
         app.MapPost("VerifyWebhook",
