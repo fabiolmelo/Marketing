@@ -53,7 +53,7 @@ switch (bancoDeDados)
 }
 
 builder.WebHost.ConfigureKestrel(options =>
-           options.ListenLocalhost(8080));     
+            options.ListenLocalhost(8000));     
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
