@@ -22,9 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-  <Content Include=".\DadosApp\**">
-    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </Content>
-</ItemGroup>
-
+    <Content Include=".\DadosApp\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\**" CopyToPublishDirectory="Always" />
+  </ItemGroup>
 </Project>
