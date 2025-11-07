@@ -1,7 +1,5 @@
 using System.Linq.Expressions;
-using EFCore.BulkExtensions;
 using Marketing.Domain.Interfaces.Repositorio;
-using Marketing.Domain.PagedResponse;
 using Marketing.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +21,7 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
-            await _dataContext.BulkInsertAsync<T>(entities);
+            await _dataContext.AddRangeAsync(entities);
         }
 
         public async Task<bool> Any(Expression<Func<T, bool>> expression)
