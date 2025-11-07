@@ -40,8 +40,8 @@ switch (bancoDeDados)
         break;
 }
 
-// builder.WebHost.ConfigureKestrel(options =>
-//            options.ListenLocalhost(9090)); 
+ builder.WebHost.ConfigureKestrel(options =>
+            options.ListenLocalhost(9000)); 
 
 var app = builder.Build();
 
