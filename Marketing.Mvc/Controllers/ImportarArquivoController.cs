@@ -9,11 +9,16 @@ namespace Marketinf.Mvc.Controllers
     {
         private readonly IServicoImportarPlanilha _servicoImportarPlanilha;
         private readonly IServicoRede _servicoRede;
+        private readonly IWebHostEnvironment _webHostEnviroment;
+        private readonly ILogger<ImportarArquivoController> _logger;
 
-        public ImportarArquivoController(IServicoImportarPlanilha servicoImportarPlanilha, IServicoRede servicoRede)
+
+        public ImportarArquivoController(IServicoImportarPlanilha servicoImportarPlanilha, IServicoRede servicoRede, IWebHostEnvironment webHostEnviroment, ILogger<ImportarArquivoController> logger)
         {
             _servicoImportarPlanilha = servicoImportarPlanilha;
             _servicoRede = servicoRede;
+            _webHostEnviroment = webHostEnviroment;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(string? erro = null, string? sucesso = null)
@@ -29,16 +34,25 @@ namespace Marketinf.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(ImportarIncidenciaDto importarIncidenciaDto)
         {
-            if(importarIncidenciaDto.Rede == null) return RedirectToAction("Index", new { erro = "Selecione a Rede" });
-            if (importarIncidenciaDto.arquivoEnviado == null || importarIncidenciaDto.arquivoEnviado.Length == 0) return RedirectToAction("Index", new { erro = "Nenhum arquivo foi selecionado!" });
-            var extensao = Path.GetExtension(importarIncidenciaDto.arquivoEnviado.FileName);
-            if (extensao.ToLower() != ".xlsx") return RedirectToAction("Index", new { erro = "O arquivo selecionado não é uma planilha Excel!" });
-            var nomeArquivo = importarIncidenciaDto.arquivoEnviado.FileName.Replace(extensao, "").Split("_"); 
-            if(nomeArquivo[2] != importarIncidenciaDto.Rede) return RedirectToAction("Index",
-                    new { erro = $"O arquivo anexado contém dados da rede {nomeArquivo[2]}. É necessário selecionar a rede correspondente!" });
-            var sucesso = await _servicoImportarPlanilha.ImportarPlanilha(importarIncidenciaDto.arquivoEnviado, importarIncidenciaDto.Rede);
-            if (!sucesso) return BadRequest();
-            return RedirectToAction("Index", new { sucesso = "Arquivo importado com sucesso" });
+            try
+            {
+                if (importarIncidenciaDto.Rede == null) return RedirectToAction("Index", new { erro = "Selecione a Rede" });
+                if (importarIncidenciaDto.arquivoEnviado == null || importarIncidenciaDto.arquivoEnviado.Length == 0) return RedirectToAction("Index", new { erro = "Nenhum arquivo foi selecionado!" });
+                var extensao = Path.GetExtension(importarIncidenciaDto.arquivoEnviado.FileName);
+                if (extensao.ToLower() != ".xlsx") return RedirectToAction("Index", new { erro = "O arquivo selecionado não é uma planilha Excel!" });
+                var nomeArquivo = importarIncidenciaDto.arquivoEnviado.FileName.Replace(extensao, "").Split("_");
+                if (nomeArquivo[2] != importarIncidenciaDto.Rede) return RedirectToAction("Index",
+                        new { erro = $"O arquivo anexado contém dados da rede {nomeArquivo[2]}. É necessário selecionar a rede correspondente!" });
+                var sucesso = await _servicoImportarPlanilha.ImportarPlanilha(importarIncidenciaDto.arquivoEnviado,
+                                            importarIncidenciaDto.Rede, _webHostEnviroment.ContentRootPath);
+                return RedirectToAction("Index", new { sucesso = "Arquivo importado com sucesso" });
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                return RedirectToAction("Index", new { sucesso = "Erro importando arquivo! Contate o administrador do sistema para detalhes." });
+            }
+            
         }
 
         [HttpGet]
@@ -49,15 +63,22 @@ namespace Marketinf.Mvc.Controllers
             return View();
         }
 
-          [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> ImportarContato(IFormFile arquivoEnviado)
         {
-            if (arquivoEnviado == null || arquivoEnviado.Length == 0) return RedirectToAction("Index", new { erro = "Nenhum arquivo foi selecionado!" });
-            var extensao = Path.GetExtension(arquivoEnviado.FileName);
-            if (extensao.ToLower() != ".xlsx") return RedirectToAction("Index", new { erro = "O arquivo selecionado não é uma planilha Excel!" });
-            var sucesso = await _servicoImportarPlanilha.ImportarContato(arquivoEnviado);
-            if (!sucesso) return BadRequest();
-            return RedirectToAction("ImportarContato", new { sucesso = "Contatos atualizados com sucesso!" });
+            try
+            {
+                if (arquivoEnviado == null || arquivoEnviado.Length == 0) return RedirectToAction("Index", new { erro = "Nenhum arquivo foi selecionado!" });
+                var extensao = Path.GetExtension(arquivoEnviado.FileName);
+                if (extensao.ToLower() != ".xlsx") return RedirectToAction("Index", new { erro = "O arquivo selecionado não é uma planilha Excel!" });
+                var sucesso = await _servicoImportarPlanilha.ImportarContato(arquivoEnviado, _webHostEnviroment.ContentRootPath);
+                return RedirectToAction("ImportarContato", new { sucesso = "Contatos atualizados com sucesso!" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                return RedirectToAction("Index", new { erro = "Erro importando arquivo! Contate o administrador do sistema para detalhes." });
+            }
         }
     }
 }

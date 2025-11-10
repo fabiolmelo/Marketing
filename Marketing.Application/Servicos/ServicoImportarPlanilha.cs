@@ -29,18 +29,18 @@ namespace Marketing.Application.Servicos
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> ImportarContato(IFormFile formFile)
+        public async Task<bool> ImportarContato(IFormFile formFile, string contentRootPath)
         {
-            var arquivoImportado = await _servicoArquivos.UploadArquivo(formFile);
+            var arquivoImportado = await _servicoArquivos.UploadArquivo(formFile, contentRootPath);
             if (arquivoImportado == null)
                 return false;
             await _servicoArquivos.AtualizarContatoViaPlanilhaEmailMarketing(arquivoImportado);
             return true;
         }
 
-        public async Task<bool> ImportarPlanilha(IFormFile formFile, string rede)
+        public async Task<bool> ImportarPlanilha(IFormFile formFile, string rede, string contentRootPath)
         {
-            var arquivoImportado = await _servicoArquivos.UploadArquivo(formFile);
+            var arquivoImportado = await _servicoArquivos.UploadArquivo(formFile, contentRootPath);
             if (arquivoImportado == null)
                 return false;
             var dadosPlanilha = _servicoArquivos.LerDados(arquivoImportado, rede);
@@ -58,9 +58,9 @@ namespace Marketing.Application.Servicos
             return true;
         }
 
-        public async Task<bool> ImportarPlanilhaNovo(IFormFile formFile, string rede)
+        public async Task<bool> ImportarPlanilhaNovo(IFormFile formFile, string rede, string contentRootPath)
         {
-            var arquivoImportado = await _servicoArquivos.UploadArquivo(formFile);
+            var arquivoImportado = await _servicoArquivos.UploadArquivo(formFile, contentRootPath);
             if (arquivoImportado == null)
                 return false;
             var dadosPlanilha = _servicoArquivos.LerDados(arquivoImportado, rede);

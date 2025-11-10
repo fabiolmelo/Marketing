@@ -1,77 +1,110 @@
 using System.Threading.RateLimiting;
 using Marketing.Infraestrutura.Contexto;
 using Marketing.Mvc.Extensoes;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
-// Rate limit
-builder.Services.AddRateLimiter(options =>
+try
 {
-    options.AddFixedWindowLimiter("fixed", opt =>
+    // Configure NLog
+    builder.Services.AddLogging(logging =>
     {
-        opt.PermitLimit = 4;
-        opt.Window = TimeSpan.FromSeconds(12);
-        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        opt.QueueLimit = 2;
+        logging.ClearProviders();
+        logging.SetMinimumLevel(LogLevel.Trace);
     });
-});
+    builder.Services.AddSingleton<ILoggerProvider, NLogLoggerProvider>();
 
-// Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddControllersWithViews();
-builder.Services.AdicionarServicosAppIOC();
-RegistrarServicos.ConfigureHttpClient(builder.Services, builder.Configuration);
+    // Rate limit
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.AddFixedWindowLimiter("fixed", opt =>
+        {
+            opt.PermitLimit = 4;
+            opt.Window = TimeSpan.FromSeconds(12);
+            opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+            opt.QueueLimit = 2;
+        });
+    });
 
-string connectionString;
-var bancoDeDados = builder.Configuration["BancoDeDados"] ?? "";
+    // Add services to the container.
+    builder.Services.AddControllers();
+    builder.Services.AddControllersWithViews();
+    builder.Services.AdicionarServicosAppIOC();
+    RegistrarServicos.ConfigureHttpClient(builder.Services, builder.Configuration);
 
-switch (bancoDeDados)
-{
-    case "SqLite":
-        connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase") ?? "";
-        builder.Services.AddDbContext<DataContext>(
-            dbContextOptions => dbContextOptions
-                .UseSqlite(connectionString)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+    string connectionString;
+    var bancoDeDados = builder.Configuration["BancoDeDados"] ?? "";
+
+    switch (bancoDeDados)
+    {
+        case "SqLite":
+            connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase") ?? "";
+            builder.Services.AddDbContext<DataContext>(
+                dbContextOptions => dbContextOptions
+                    .UseSqlite(connectionString)
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                );
+            break;
+        default:
+            connectionString = builder.Configuration.GetConnectionString("MySql") ?? "";
+            var serverVersion = new MySqlServerVersion(new Version(10, 2));
+
+            builder.Services.AddDbContext<DataContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(connectionString, serverVersion)
+                    .LogTo(Console.WriteLine, LogLevel.Information)
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
             );
-        break;
-    default:
-        connectionString = builder.Configuration.GetConnectionString("MySql") ?? "";
-        var serverVersion = new MySqlServerVersion(new Version(10, 2));
+            break;
+    }
 
-        builder.Services.AddDbContext<DataContext>(
-            dbContextOptions => dbContextOptions
-                .UseMySql(connectionString, serverVersion)
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-        );
-        break;
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    });
+
+    builder.WebHost.ConfigureKestrel(options =>
+                options.ListenLocalhost(8000));
+
+    var app = builder.Build();
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Home/Error");
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
+    app.UseRouting();
+    app.UseAuthorization();
+    app.UseRateLimiter();
+
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}").RequireRateLimiting("fixed");
+        
+    System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+    app.Run();
+
 }
-
-builder.WebHost.ConfigureKestrel(options =>
-            options.ListenLocalhost(8000));     
-var app = builder.Build();
-
-if (!app.Environment.IsDevelopment())
+catch (Exception exception)
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    // Loga erros de inicialização
+    logger.Fatal(exception, "Aplicação encerrada inesperadamente durante a inicialização");
+    throw;
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthorization();
-app.UseRateLimiter();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}").RequireRateLimiting("fixed");
-    
-System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-app.Run();
+finally
+{
+    NLog.LogManager.Shutdown();
+}

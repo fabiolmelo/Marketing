@@ -16,14 +16,14 @@ namespace Marketing.Application.Servicos
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<string?> UploadArquivo(IFormFile arquivo)
+        public async Task<string?> UploadArquivo(IFormFile arquivo, string contentRootPath)
         {
             if (arquivo == null) return null;
             var arquivoImportado = $"{Guid.NewGuid().ToString()}.xlsx";
-            var filePath = Path.Combine("DadosApp", "Planilhas", arquivoImportado);
+            var filePath = Path.Combine(contentRootPath, "DadosApp", "Planilhas", arquivoImportado);
             try
             {
-                using (FileStream filestream = System.IO.File.Create(filePath))
+                using (FileStream filestream = File.Create(filePath))
                 {
                     await arquivo.CopyToAsync(filestream);
                     filestream.Flush();
