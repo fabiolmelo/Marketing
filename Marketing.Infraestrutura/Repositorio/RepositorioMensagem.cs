@@ -1,6 +1,4 @@
-using System.Security.Cryptography.X509Certificates;
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +41,7 @@ namespace Marketing.Infraestrutura.Repositorio
             return mensagens;
         }
 
-        public async Task<List<ResumoMensagem>> BuscaResumoMensagemPorCompetencia(DateTime? competencia)
+        public List<ResumoMensagem> BuscaResumoMensagemPorCompetencia(DateTime? competencia)
         {
             var resumo = new List<ResumoMensagem>();
             if (competencia != null)

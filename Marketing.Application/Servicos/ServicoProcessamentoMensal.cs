@@ -2,6 +2,7 @@
 using Marketing.Domain.Extensoes;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
+using Microsoft.Extensions.Logging;
 
 namespace Marketing.Application.Servicos
 {
@@ -9,22 +10,23 @@ namespace Marketing.Application.Servicos
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IServicoGraficoRevisado _servicoGraficoRevisado;
+        private readonly ILogger<ServicoProcessamentoMensal> _logger;
 
-        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGraficoRevisado servicoGraficoRevisado)
+        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGraficoRevisado servicoGraficoRevisado, ILogger<ServicoProcessamentoMensal> logger)
         {
             _unitOfWork = unitOfWork;
             _servicoGraficoRevisado = servicoGraficoRevisado;
+            _logger = logger;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
                                                    String contentRootPath,
                                                    string caminhoApp)
         {
-            var contatos = await _unitOfWork.repositorioContato.BuscarContatosComAceite();
-            string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
-
             try
             {
+                var contatos = await _unitOfWork.repositorioContato.BuscarContatosComAceite();
+                string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
                 foreach (Contato contato in contatos)
                 {
                     if (contato.Telefone == null) throw new Exception("TELEFONE NULO NO CADASTRO");
@@ -33,14 +35,14 @@ namespace Marketing.Application.Servicos
                     foreach(Estabelecimento estabelecimento in estabelecimentos)
                     {
                         var estabelecimentoPdf = await _unitOfWork.repositorioEstabelecimento
-                                                                  .FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia);
+                                                                    .FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia);
                         if (estabelecimentoPdf == null) throw new Exception("ESTABELECIMENTO COM DADOS CORROMPIDOS");
                         await GerarProcessamentoPorEstabelecimento(estabelecimentoPdf, competencia,
-                                                               contentRootPath, caminhoApp);
+                                                                contentRootPath, caminhoApp);
                         var telefone = contato.Telefone ?? "";
                         var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone,
-                                                               estabelecimentoPdf?.RedeNome ?? "",
-                                                               estabelecimentoPdf?.RazaoSocial ?? "");
+                                                                estabelecimentoPdf?.RedeNome ?? "",
+                                                                estabelecimentoPdf?.RazaoSocial ?? "");
                         await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
                         await _unitOfWork.CommitAsync();
                     }
@@ -48,36 +50,30 @@ namespace Marketing.Application.Servicos
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro {ex.Message}");
+                _logger.LogCritical(ex.Message);
+                throw;
             }
+            
         }
 
         public async Task GerarProcessamentoPorEstabelecimento(Estabelecimento estabelecimento,
                         DateTime competencia, string contentRootPath, string caminhoApp)
         {
-            try
+            if (estabelecimento.ExtratoVendas.Count > 0)
             {
-                if (estabelecimento.ExtratoVendas.Count > 0)
+                var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
+                var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
+                _servicoGraficoRevisado.GerarGrafico(estabelecimento, contentRootPath);
+                _servicoGraficoRevisado.GerarArquivoPdf(estabelecimento, arquivoPdf,
+                                                    posicaoNaRede, contentRootPath, caminhoApp);
+                var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
+                if (estabelecimentoUpdate != null)
                 {
-                    var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
-                    var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
-                    _servicoGraficoRevisado.GerarGrafico(estabelecimento, contentRootPath);
-                    _servicoGraficoRevisado.GerarArquivoPdf(estabelecimento, arquivoPdf,
-                                                        posicaoNaRede, contentRootPath, caminhoApp);
-                    var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
-                    if (estabelecimentoUpdate != null)
-                    {
-                        estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
-                        _unitOfWork.repositorioEstabelecimento.Update(estabelecimentoUpdate);
-                        await _unitOfWork.CommitAsync();
-                    }
-                }     
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro {ex.Message}");
-            }
-                                           
+                    estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
+                    _unitOfWork.repositorioEstabelecimento.Update(estabelecimentoUpdate);
+                    await _unitOfWork.CommitAsync();
+                }
+            }     
         }
     }
 }

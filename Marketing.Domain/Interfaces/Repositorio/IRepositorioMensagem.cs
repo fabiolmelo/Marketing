@@ -6,7 +6,7 @@ namespace Marketing.Domain.Interfaces.Repositorio
     {
         Task<Mensagem?> FindByIdIncludeEventosAsync(string id);
         Task<List<Mensagem>> GetAllMensagemsAsync(DateTime? competencia);
-        Task<List<ResumoMensagem>> BuscaResumoMensagemPorCompetencia(DateTime? competencia);
+        List<ResumoMensagem> BuscaResumoMensagemPorCompetencia(DateTime? competencia);
 
     }
 }

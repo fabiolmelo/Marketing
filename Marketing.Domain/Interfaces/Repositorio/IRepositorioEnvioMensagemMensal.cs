@@ -7,7 +7,7 @@ namespace Marketing.Domain.Interfaces.Repositorio
     {
         Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarMensagensNaoEnviadas(int pageNumber, int pageSize);
         Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarTodasMensagens(int pageNumber, int pageSize); 
-        Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas(DateTime? competencia = null); 
-        Task<EnvioMensagemMensal?> GetByIdChaveComposta3(DateTime id1, string id2, string id3);
+        Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas(DateTime? competencia = null);
+        Task<EnvioMensagemMensal?> GetByCompetenciaEstabelecimentoContato(DateTime? competencia, string cnpj, string telefone);
     }
 }

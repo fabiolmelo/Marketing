@@ -70,10 +70,10 @@ namespace Marketing.Application.Servicos
             await _servicoArquivos.CommitAsync();
             await AtualizarContatosViaPlanilha(dadosPlanilha);
             await AtualizarEstabelecimentoViaPlanilha(dadosPlanilha);
-            //await _servicoEstabelecimento.AtualizarAssociacaoEstabelecimentoContato(dadosPlanilha);
             await _servicoContato.AtualizarAssociacaoContatoEstabelecimento(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarAssociacaoEstabelecimentoRede(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarExtratosViaPlanilha(dadosPlanilha);
+            if (File.Exists(arquivoImportado)) File.Delete(arquivoImportado);
             return true;
         }
 

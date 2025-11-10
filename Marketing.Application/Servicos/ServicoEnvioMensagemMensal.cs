@@ -28,9 +28,9 @@ namespace Marketing.Application.Servicos
             return await _unitOfWork.repositorioEnvioMensagemMensal.BuscarTodasMensagensNaoEnviadas();
         }
 
-        public async Task<EnvioMensagemMensal?> GetByIdChaveComposta3(DateTime id1, string id2, string id3)
+        public async Task<EnvioMensagemMensal?> GetByCompetenciaEstabelecimentoContato(DateTime? competencia, string cnpj, string telefone)
         {
-            return await _unitOfWork.repositorioEnvioMensagemMensal.GetByIdChaveComposta3(id1, id2, id3);
+            return await _unitOfWork.repositorioEnvioMensagemMensal.GetByCompetenciaEstabelecimentoContato(competencia, cnpj, telefone);
         }
     }
 }

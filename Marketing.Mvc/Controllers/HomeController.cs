@@ -3,7 +3,7 @@ using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
-using NLog;
+
 
 namespace Marketing.Mvc.Controllers;
 
@@ -40,7 +40,7 @@ public class HomeController : Controller
             var mensagens = new List<ResumoMensagem>();
             if (competencia != null)
             {
-                mensagens = await _unitOfWork.repositorioMensagem.BuscaResumoMensagemPorCompetencia(competencia);
+                mensagens = _unitOfWork.repositorioMensagem.BuscaResumoMensagemPorCompetencia(competencia);
                 var naoDisparados = await _unitOfWork.repositorioEnvioMensagemMensal.BuscarTodasMensagensNaoEnviadas(competencia);
                 ViewData["Falhas"] = mensagens.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.Falha)?.Qtd ?? 0;
                 ViewData["Pendentes"] = naoDisparados.Count();
@@ -70,7 +70,7 @@ public class HomeController : Controller
             if (competencia != null)
             {
                 mensagens = await _unitOfWork.repositorioMensagem.GetAllMensagemsAsync(competencia);
-                var resumo = await _unitOfWork.repositorioMensagem.BuscaResumoMensagemPorCompetencia(competencia);
+                var resumo = _unitOfWork.repositorioMensagem.BuscaResumoMensagemPorCompetencia(competencia);
                 var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio", "BaseNova.xlsx");
                 var pathRootBase = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio",
                                                 $"Relatório de Envio de Extratos de Incidência_{competencia?.ToString("MMMMyyyy")}.xlsx");

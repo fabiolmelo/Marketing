@@ -45,9 +45,11 @@ namespace Marketing.Infraestrutura.Repositorio
             return await query.ToListAsync();
         }
 
-        public async Task<EnvioMensagemMensal?> GetByIdChaveComposta3(DateTime id1, string id2, string id3)
+        public async Task<EnvioMensagemMensal?> GetByCompetenciaEstabelecimentoContato(DateTime? competencia, string cnpj, string telefone)
         {
-            return await _dataContext.EnviosMensagemMensais.FindAsync(id1, id2, id3);
+            return await _dataContext.Set<EnvioMensagemMensal>().FirstOrDefaultAsync(x => x.Competencia == competencia &&
+                                                                                          x.EstabelecimentoCnpj == cnpj &&
+                                                                                          x.ContatoTelefone == telefone);
         }
     }
 }

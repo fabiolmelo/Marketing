@@ -38,6 +38,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IRepositorioProcessamentoMensal, RepositorioFechamentoMensal>();
             servicos.AddScoped<IRepositorioEnvioMensagemMensal, RepositorioEnvioMensagemMensal>();
             servicos.AddScoped<IRepositorioRede, RepositorioRede>();
+            servicos.AddScoped<IRepositorioMensagem, RepositorioMensagem>();
             servicos.AddSingleton<IHttpClientsFactoryPerson, HttpClientsFactoryPerson>();
         }
 

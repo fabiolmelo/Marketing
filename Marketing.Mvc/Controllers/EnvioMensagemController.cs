@@ -102,7 +102,7 @@ namespace Marketing.Mvc.Controllers
         {
             var caminhoApp = _configuration["Aplicacao:Url"];
             if (caminhoApp == null) throw new Exception("Arquivo de configuração inválido");
-            var envio = await _servicoEnvioMensagemMensal.GetByIdChaveComposta3(competencia,
+            var envio = await _servicoEnvioMensagemMensal.GetByCompetenciaEstabelecimentoContato(competencia,
                                                             contatoTelefone, estabelecimentoCnpj);
             if (envio != null)
             {
