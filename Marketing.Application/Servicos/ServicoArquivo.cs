@@ -557,7 +557,9 @@ namespace Marketing.Application.Servicos
         {
             int row = 2;
             var dadosPlanilha = new List<DadosPlanilha>();
-
+            var contatosCadastrados = await _unitOfWork.GetRepository<Contato>().GetAll();
+            var contatoUpdate = new List<Contato>();
+            var contatoAdd = new List<Contato>();
             try
             {
                 using (var excel = new ClosedXML.Excel.XLWorkbook(pathArquivo))
