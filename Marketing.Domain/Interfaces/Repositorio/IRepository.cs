@@ -13,7 +13,10 @@ namespace Marketing.Domain.Interfaces.Repositorio
         Task<bool> Any(Expression<Func<T, bool>> expression);
         Task<int> Count(Expression<Func<T, bool>> expression);
         Task<T?> FindByPredicate(Expression<Func<T, bool>> expression);
+        Task<List<T>> FindAllByPredicate(Expression<Func<T, bool>> expression);
         void Update(T entity);
         void UpdateCommit(T entity);
+        void UpdateRange(List<T> entities);
+        Task<List<T>> GetAll();
     }
 }

@@ -43,6 +43,11 @@ namespace Marketing.Infraestrutura.Repositorio
             return await _dataContext.Set<T>().
                                       Where(expression).FirstOrDefaultAsync();
         }
+        public async Task<List<T>> FindAllByPredicate(Expression<Func<T, bool>> expression)
+        {
+            return await _dataContext.Set<T>().
+                                      Where(expression).ToListAsync();
+        }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
@@ -66,7 +71,13 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public void Update(T entity)
         {
-            _dataContext.Entry(entity).State = EntityState.Modified;
+            //_dataContext.Entry(entity).State = EntityState.Modified;
+            _dataContext.Update(entity);
+        }
+
+        public void UpdateRange(List<T> entities)
+        {
+            _dataContext.UpdateRange(entities);
         }
 
         public void UpdateCommit(T entity)
@@ -74,5 +85,12 @@ namespace Marketing.Infraestrutura.Repositorio
             _dataContext.Entry(entity).State = EntityState.Modified;
             _dataContext.SaveChanges();
         }
+
+        public async Task<List<T>> GetAll()
+        {
+            return await _dataContext.Set<T>().ToListAsync();
+        }
+
+        
     }
 }

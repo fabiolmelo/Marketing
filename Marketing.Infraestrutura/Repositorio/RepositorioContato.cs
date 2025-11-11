@@ -27,6 +27,7 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var contatos = await _context.Contatos.Where(x => x.Telefone == telefone)
                                         .Include(x => x.ContatoEstabelecimentos)
+                                        .AsSplitQuery()
                                         //    .ThenInclude(x => x.Contato)
                                         //.AsNoTrackingWithIdentityResolution()
                                         .FirstOrDefaultAsync();
@@ -38,6 +39,7 @@ namespace Marketing.Infraestrutura.Repositorio
             var estabelecimento = await _context.Estabelecimentos.AsNoTracking()
                                                 .Include(x => x.ContatoEstabelecimentos)
                                                     .ThenInclude(x=>x.Contato)
+                                                .AsSplitQuery()
                                                 .FirstOrDefaultAsync(x => x.Cnpj == cnpj);
             var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem).Select(x=>x.Contato).ToList();
             return contatos ?? new List<Contato>();

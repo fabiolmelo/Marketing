@@ -65,21 +65,21 @@ namespace Marketing.Infraestrutura.Repositorio
             var competenciaVigente = movimento ?
                                      await _context.Set<ExtratoVendas>().MaxAsync(x => x.Competencia) :
                                      new DateTime(1900, 1, 1);
-            // IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.Telefone == telefone)
-            //                                     join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
-            //                                     join E in _context.Estabelecimentos on CE.EstabelecimentoCnpj equals E.Cnpj
-            //                                     join EXV in _context.ExtratosVendas on E.Cnpj equals EXV.EstabelecimentoCnpj
-            //                                     where EXV.Competencia == competenciaVigente
+            IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.Telefone == telefone)
+                                                join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
+                                                join E in _context.Estabelecimentos on CE.EstabelecimentoCnpj equals E.Cnpj
+                                                join EXV in _context.ExtratosVendas on E.Cnpj equals EXV.EstabelecimentoCnpj
+                                                where EXV.Competencia == competenciaVigente
 
-            //                                     select E;
-            //var estabelecimentos = await query.ToListAsync();
+                                                select E;
+            var estabelecimentos = await query.ToListAsync();
 
-            var estabelecimentos = await _context.Set<Estabelecimento>().AsQueryable()
-                                                 .Include(x => x.ExtratoVendas)
-                                                 .Include(x => x.ContatoEstabelecimentos)
-                                                 .Where(x => x.ExtratoVendas.Any(x => x.Competencia == competenciaVigente))
-                                                 .Where(x=> x.ContatoEstabelecimentos.Any(x=>x.Contato.Telefone == telefone))
-                                                 .ToListAsync();
+            // var estabelecimentos = await _context.Set<Estabelecimento>().AsQueryable()
+            //                                      .Include(x => x.ExtratoVendas)
+            //                                      .Include(x => x.ContatoEstabelecimentos)
+            //                                      .Where(x => x.ExtratoVendas.Any(x => x.Competencia == competenciaVigente))
+            //                                      .Where(x=> x.ContatoEstabelecimentos.Any(x=>x.Contato.Telefone == telefone))
+            //                                      .ToListAsync();
 
             // //REMOVE OS ESTABELECIMENTOS QUE NÃO TEM FECHAMENTO NO MES CORRENTE E NAO GERA PDF
             // estabelecimentos.RemoveAll(x => !x.ExtratoVendas.Any(x => x.Competencia == competenciaVigente));
@@ -108,7 +108,8 @@ namespace Marketing.Infraestrutura.Repositorio
                          .Take(size)
                          .Include(x => x.Rede)
                          .Include(x => x.ContatoEstabelecimentos)
-                            .ThenInclude(x=>x.Contato).IgnoreAutoIncludes(); 
+                            .ThenInclude(x => x.Contato).IgnoreAutoIncludes() 
+                         .AsSplitQuery();
             return new PagedResponse<List<Estabelecimento>>(await query.ToListAsync(), page, size, totalRecords);
         }
     }
