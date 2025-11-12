@@ -35,7 +35,6 @@ namespace Marketing.Application.Servicos
             }
             return filePath;
         }
-
         public string GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf,
                                       int posicao, String contentRootPath,
                                       string caminhoApp)
@@ -479,7 +478,6 @@ namespace Marketing.Application.Servicos
             }
             return arquivoPdf; 
         }
-
         public List<DadosPlanilha> LerDados(string pathArquivo, string rede)
         {
             int row = 2;
@@ -558,8 +556,12 @@ namespace Marketing.Application.Servicos
             int row = 2;
             var dadosPlanilha = new List<DadosPlanilha>();
             var contatosCadastrados = await _unitOfWork.GetRepository<Contato>().GetAll();
-            var contatoUpdate = new List<Contato>();
-            var contatoAdd = new List<Contato>();
+            var contatosEstabelecimentosCadastrados = await _unitOfWork.GetRepository<ContatoEstabelecimento>().GetAll();
+            var contatosUpdate = new List<Contato>();
+            var contatosAdd = new List<Contato>();
+            var contatoEstabelecimentoAdd = new List<ContatoEstabelecimento>();
+            var estabelecimentos = await _unitOfWork.GetRepository<Estabelecimento>().GetAll();
+
             try
             {
                 using (var excel = new ClosedXML.Excel.XLWorkbook(pathArquivo))
@@ -570,43 +572,63 @@ namespace Marketing.Application.Servicos
                         if (linha.RowNumber() > 1 && !linha.IsEmpty())
                         {
                             var dataCadastro = linha.Cell("A").Value.GetDateTime();
-                            var fone = linha.Cell("B") == null ? "" : linha.Cell("B").Value.ToString().RemoverCaracteresEspeciais();
-                            if (fone.Length == 11) fone = $"55{fone}";
+                            if (linha.Cell("B") == null) continue;
+                            var fone = linha.Cell("B").Value.ToString().RemoverCaracteresEspeciais();
+                            if (fone.Length == 10 || fone.Length == 11) fone = $"55{fone}";
                             var nome = linha.Cell("C") == null ? "" : linha.Cell("C").Value.ToString().ToUpper();
-                            var contato = await _unitOfWork.repositorioContato.BuscarContatosIncludeEstabelecimento(fone);
-                            string cnpj;
-                            if (contato == null)
+                            var cnpj = linha.Cell("D") == null ? "" : linha.Cell("D").Value.ToString().ToUpper();
+
+                            if (contatosCadastrados.Any(x => x.Telefone == fone) || contatosAdd.Any(x => x.Telefone == fone))
                             {
-                                contato = new Contato()
+                                contatosUpdate.Add(new Contato()
                                 {
                                     Telefone = fone,
                                     Nome = nome,
                                     DataCadastro = dataCadastro,
                                     OrigemContato = OrigemContato.EmailMarketing
 
-                                };
-                                await _unitOfWork.repositorioContato.AddAsync(contato);
-                                await _unitOfWork.CommitAsync();
+                                });
                             }
-                            for(int index = 4; index<=31; index+=3)
+                            else
+                            {
+                                contatosAdd.Add(new Contato()
+                                {
+                                    Telefone = fone,
+                                    Nome = nome,
+                                    DataCadastro = dataCadastro,
+                                    OrigemContato = OrigemContato.EmailMarketing
+
+                                });
+                            }
+
+                            if (estabelecimentos.Any(x => x.Cnpj == cnpj))
+                            {
+                                if (!contatosEstabelecimentosCadastrados.Any(x => x.ContatoTelefone == fone &&
+                                                                                x.EstabelecimentoCnpj == cnpj) &&
+                                   !contatoEstabelecimentoAdd.Any(x => x.ContatoTelefone == fone && x.EstabelecimentoCnpj == cnpj))
+                                {
+                                    contatoEstabelecimentoAdd.Add(new ContatoEstabelecimento(fone, cnpj));
+                                }
+                            }
+
+                            for (int index = 4; index <= 31; index += 3)
                             {
                                 cnpj = linha.Cell(index).Value.ToString();
-                                var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(cnpj);
-                                if(estabelecimento != null)
+                                if (!contatosEstabelecimentosCadastrados.Any(x => x.ContatoTelefone == fone &&
+                                                                                x.EstabelecimentoCnpj == cnpj))
                                 {
-                                    var contatoEstabelecimento = await _unitOfWork.GetRepository<ContatoEstabelecimento>()
-                                                                .GetByIdChaveComposta(fone, cnpj);
-                                    if (contatoEstabelecimento == null)
-                                    {
-                                        contatoEstabelecimento = new ContatoEstabelecimento(fone, cnpj);
-                                        await _unitOfWork.GetRepository<ContatoEstabelecimento>().AddAsync(contatoEstabelecimento);
-                                        await _unitOfWork.CommitAsync();
-                                    }
+                                    contatoEstabelecimentoAdd.Add(new ContatoEstabelecimento(fone, cnpj));
                                 }
                             }
                         }
                         row++;
                     }
+                    await _unitOfWork.GetRepository<Contato>().AddRangeAsync(contatosAdd);
+                    await _unitOfWork.CommitAsync();
+                    _unitOfWork.GetRepository<Contato>().UpdateRange(contatosUpdate);
+                    await _unitOfWork.CommitAsync();
+                    await _unitOfWork.GetRepository<ContatoEstabelecimento>().AddRangeAsync(contatoEstabelecimentoAdd);
+                    await _unitOfWork.CommitAsync();
                 }
                 return true;
             }
