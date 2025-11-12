@@ -1,3 +1,4 @@
+using Marketing.Domain.DTOs;
 using Microsoft.AspNetCore.Http;
 
 namespace Marketing.Domain.Interfaces.Servicos
@@ -7,5 +8,6 @@ namespace Marketing.Domain.Interfaces.Servicos
         Task<bool> ImportarPlanilha(IFormFile formFile, string Rede, string contentRootPath);
         Task<bool> ImportarPlanilhaNovo(IFormFile formFile, string rede, string contentRootPath);
         Task<bool> ImportarContato(IFormFile formFile, string contentRootPath);
+        Task<ResponseValidation> ImportarPlanilhaOriginal(IFormFile formFile, string template, string contentRootPath);
     }
 }

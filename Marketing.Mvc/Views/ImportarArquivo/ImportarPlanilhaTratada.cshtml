@@ -1,0 +1,53 @@
+@model Marketing.Application.DTOs.ImportarIncidenciaDto
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Importação de Planilha de Incidência Tratada</h6>
+    </div>
+    <div class="card-body">
+        <div>
+            <form method="post" enctype="multipart/form-data" asp-controller="ImportarArquivo"  
+                asp-action="Index"> 
+                <span>Selecionar planilha:</span> 
+                <div class="row">
+                    <div class="col-10">
+                        <input type="file" name="arquivoEnviado" value="Selecione o arquivo:"/> 
+                    </div>
+                    <div class="form-group row justify-content-between">
+                    <div class="col-4 p-3">
+                        @Html.LabelFor(model => model.Rede , htmlAttributes: new { @class = "control-label" })
+                        <select class="form-control dropdown-toggle" asp-for="Rede" asp-items=@(ViewBag.Redes)></select>
+                    </div>
+                </div>
+                    <div class="col-2">
+                        <input type="submit" value="Upload" /> 
+                    </div>
+                </div>
+            </form> 
+        </div>
+    </div>
+</div>
+@if (@ViewData["Erro"] != null){
+    <div class="col-12">
+        <div class="card bg-danger text-white text-sm shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["Erro"]
+            </div>
+        </div>
+    </div>
+}
+@if (@ViewData["OK"] != null){
+    <div class="col-12">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-sm mb-0 p-0">
+                @ViewData["OK"]
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+

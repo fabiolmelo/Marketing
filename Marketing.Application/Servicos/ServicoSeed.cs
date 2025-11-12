@@ -35,19 +35,34 @@ namespace Marketing.Application.Servicos
 
         public async Task SeedRedes()
         {
-            var existeRedes = await _unitOfWork.repositorioRede.GetAllAsync(1, 99999);
-            if (existeRedes.Dados.Count == 0)
+            var existeRedes = await _unitOfWork.repositorioRede.GetAll();
+            if (existeRedes.Count == 0)
             {
-                var redes = new List<Rede>();
-                redes.Add(new Rede("DOMINOS"));
-                redes.Add(new Rede("SPOLETO"));
-                redes.Add(new Rede("KONI"));
-                redes.Add(new Rede("CIB"));
-                redes.Add(new Rede("GENDAI"));
-                redes.Add(new Rede("LEBONTON"));
-                redes.Add(new Rede("GURUME"));
-                redes.Add(new Rede("BOBS"));
+                var redes = new List<Rede>
+                {
+                    new("DOMINOS"),
+                    new("SPOLETO"),
+                    new("KONI"),
+                    new("CIB"),
+                    new("GENDAI"),
+                    new("LEBONTON"),
+                    new("GURUME"),
+                    new("BOBS")
+                };
                 await _unitOfWork.GetRepository<Rede>().AddRangeAsync(redes);
+                await _unitOfWork.CommitAsync();
+            }
+
+            var existeTemplate = await _unitOfWork.GetRepository<TemplateImportarPlanilha>().GetAll();
+            if (existeTemplate.Count == 0)
+            {
+                var templates = new List<TemplateImportarPlanilha>
+                {
+                    new(1, "DOMINOS"),
+                    new(2, "GRUPO TRIGO")
+                };
+                
+                await _unitOfWork.GetRepository<TemplateImportarPlanilha>().AddRangeAsync(templates);
                 await _unitOfWork.CommitAsync();
             }
         }

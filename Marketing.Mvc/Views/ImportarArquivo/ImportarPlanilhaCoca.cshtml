@@ -1,22 +1,22 @@
-@model Marketing.Application.DTOs.ImportarIncidenciaDto
+@model Marketing.Application.DTOs.ImportarIncidenciaCocaDto
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Importação de Dados</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Importação de Planilha de Incidência Sem Tratamento</h6>
     </div>
     <div class="card-body">
         <div>
             <form method="post" enctype="multipart/form-data" asp-controller="ImportarArquivo"  
-                asp-action="Index"> 
+                asp-action="ImportarPlanilhaCoca"> 
                 <span>Selecionar planilha:</span> 
                 <div class="row">
                     <div class="col-10">
                         <input type="file" name="arquivoEnviado" value="Selecione o arquivo:"/> 
                     </div>
                     <div class="form-group row justify-content-between">
-                    <div class="col-4">
-                        @Html.LabelFor(model => model.Rede , htmlAttributes: new { @class = "control-label" })
-                        <select class="form-control dropdown-toggle" asp-for="Rede" asp-items=@(ViewBag.Redes)></select>
+                    <div class="col-4 p-3">
+                        @Html.LabelFor(model => model.Template, htmlAttributes: new { @class = "control-label" })
+                        <select class="form-control dropdown-toggle" asp-for="Template" asp-items=@(ViewBag.Templates)></select>
                     </div>
                 </div>
                     <div class="col-2">

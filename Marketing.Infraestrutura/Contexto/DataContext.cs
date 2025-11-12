@@ -23,6 +23,7 @@ namespace Marketing.Infraestrutura.Contexto
         public DbSet<Mensagem> Mensagens { get; set; }
         public DbSet<MensagemItem> MensagemItems { get; set; }
         public DbSet<ConfiguracaoApp> Configuracoes { get; set; }
+        public DbSet<TemplateImportarPlanilha> TemplateImportarPlanilhas { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
