@@ -23,5 +23,11 @@ namespace Marketing.Domain.Extensoes
                 return String.Empty;
             }
         }
+
+        public static string Right(this string texto, int length)
+        {
+            if (texto.Length <= length) return texto;
+            return texto.Substring(texto.Length - length, length);
+        }
     }
 }

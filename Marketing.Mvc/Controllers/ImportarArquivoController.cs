@@ -1,4 +1,6 @@
+using System.Text;
 using Marketing.Application.DTOs;
+using Marketing.Application.Servicos.LeituraDados;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
@@ -10,18 +12,20 @@ namespace Marketinf.Mvc.Controllers
     public class ImportarArquivoController : Controller
     {
         private readonly IServicoImportarPlanilha _servicoImportarPlanilha;
+        private readonly IServicoArquivos _servicoArquivos;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnviroment;
         private readonly ILogger<ImportarArquivoController> _logger;
 
 
         public ImportarArquivoController(IServicoImportarPlanilha servicoImportarPlanilha, IWebHostEnvironment webHostEnviroment,
-                                         ILogger<ImportarArquivoController> logger, IUnitOfWork unitOfWork)
+                                         ILogger<ImportarArquivoController> logger, IUnitOfWork unitOfWork, IServicoArquivos servicoArquivos)
         {
             _servicoImportarPlanilha = servicoImportarPlanilha;
             _webHostEnviroment = webHostEnviroment;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _servicoArquivos = servicoArquivos;
         }
 
         public async Task<IActionResult> ImportarPlanilhaTratada(string? erro = null, string? sucesso = null)
@@ -73,21 +77,26 @@ namespace Marketinf.Mvc.Controllers
         {
             try
             {
-                if (importarIncidenciaCocaDto.Template == 0) return RedirectToAction("ImportarPlanilhaCoca", new { erro = "Selecione o Template" });
-                if (importarIncidenciaCocaDto.arquivoEnviado == null || importarIncidenciaCocaDto.arquivoEnviado.Length == 0) return RedirectToAction("ImportarPlanilhaTratada", new { erro = "Nenhum arquivo foi selecionado!" });
-                var extensao = Path.GetExtension(importarIncidenciaCocaDto.arquivoEnviado.FileName);
-                if (extensao.ToLower() != ".xlsx") return RedirectToAction("ImportarPlanilhaCoca", new { erro = "O arquivo selecionado não é uma planilha Excel!" });
-                var nomeArquivo = importarIncidenciaCocaDto.arquivoEnviado.FileName.Replace(extensao, "").Split("_");
-                
-                var response = await _servicoImportarPlanilha.ImportarPlanilhaOriginal(importarIncidenciaCocaDto.arquivoEnviado,
-                                            importarIncidenciaCocaDto.Template.ToString(), _webHostEnviroment.ContentRootPath);
-                
-                return RedirectToAction("ImportarPlanilhaTratada", new { sucesso = "Arquivo importado com sucesso" });
+                if(importarIncidenciaCocaDto.arquivoEnviado == null) return RedirectToAction("ImportarPlanilhaCoca", new { erro = "Selecione uuma planilha!" });
+                var pathArquivo = await _servicoArquivos.UploadArquivo(importarIncidenciaCocaDto.arquivoEnviado, 
+                                                                    _webHostEnviroment.ContentRootPath);
+                if (pathArquivo == null) return RedirectToAction("ImportarPlanilhaCoca", new { erro = "Erro ao abrir planilha" });
+                var leituraDadosFactory = new LeituraDadosFactory();
+                var leituraDados = leituraDadosFactory.Criar((TemplateImportarTipo)importarIncidenciaCocaDto.Template);
+                var responseValidation = leituraDados.LerDados(pathArquivo);
+                if(responseValidation.Erros.Count == 0)
+                {
+                    return RedirectToAction("ImportarPlanilhaCoca", new { sucesso = "Arquivo importado com sucesso" });
+                } else
+                {
+                    byte[] byteArray = Encoding.UTF8.GetBytes(responseValidation.ToString());
+                    return File(byteArray, "text/plain", "erros.txt");
+                }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogCritical(ex.Message);
-                return RedirectToAction("ImportarPlanilhaTratada", new { erro = "Erro importando arquivo! Contate o administrador do sistema para detalhes." });
+                return RedirectToAction("ImportarPlanilhaCoca", new { erro = "Erro importando arquivo! Contate o administrador do sistema para detalhes." });
             }
         }
 

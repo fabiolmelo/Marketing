@@ -638,5 +638,10 @@ namespace Marketing.Application.Servicos
                 return false;
             }     
         }
+
+        public List<DadosPlanilha> LerDados(string pathArquivo, TemplateImportarTipo templateImportarTipo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

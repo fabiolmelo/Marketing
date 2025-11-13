@@ -1,4 +1,3 @@
-using Marketing.Domain.DTOs;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
@@ -76,7 +75,7 @@ namespace Marketing.Application.Servicos
             if (File.Exists(arquivoImportado)) File.Delete(arquivoImportado);
             return true;
         }
-
+        
         private async Task AtualizarContatosViaPlanilha(List<DadosPlanilha> dadosPlanilha)
         {
             var contatosCadastrados = await _unitOfWork.repositorioContato.GetAllAsync(1, 999999);
@@ -198,7 +197,7 @@ namespace Marketing.Application.Servicos
             }
         }
 
-        public async Task<ResponseValidation> ImportarPlanilhaOriginal(IFormFile formFile, string template, string contentRootPath)
+        public string ImportarPlanilhaOriginal(IFormFile formFile, TemplateImportarTipo template, string contentRootPath)
         {
             throw new NotImplementedException();
         }

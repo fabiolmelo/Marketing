@@ -1,4 +1,5 @@
 using System.Text;
+using Marketing.Domain.Entidades;
 
 namespace Marketing.Domain.DTOs
 {
@@ -7,7 +8,8 @@ namespace Marketing.Domain.DTOs
         public ResponseValidation()
         {
         }
-        public List<ResponseError> Erros { get; set; } = new List<ResponseError>();
+        public List<ResponseError> Erros { get; private set; } = new List<ResponseError>();
+        public List<DadosPlanilha> DadosPlanilhas { get; private set; } = new List<DadosPlanilha>();
         public bool Valido { get { return Erros.Count == 0; } }
 
         public void AdicionarErro(string planilha, int linha, string tipoErro, string erro)
@@ -15,6 +17,15 @@ namespace Marketing.Domain.DTOs
             Erros.Add(new ResponseError(planilha, linha, tipoErro, erro));
         }
 
+        public void AdicionarErro(string planilha, int linha, string coluna, string tipoErro, string erro)
+        {
+            Erros.Add(new ResponseError(planilha, linha, coluna, tipoErro, erro));
+        }
+
+        public void AdicioarDados(DadosPlanilha dadosPlanilha)
+        {
+            DadosPlanilhas.Add(dadosPlanilha);
+        }
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
