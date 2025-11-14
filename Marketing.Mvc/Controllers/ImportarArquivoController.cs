@@ -77,19 +77,23 @@ namespace Marketinf.Mvc.Controllers
         {
             try
             {
+                var tipoTemplate = (TemplateImportarTipo)importarIncidenciaCocaDto.Template;
                 if(importarIncidenciaCocaDto.arquivoEnviado == null) return RedirectToAction("ImportarPlanilhaCoca", new { erro = "Selecione uuma planilha!" });
                 var pathArquivo = await _servicoArquivos.UploadArquivo(importarIncidenciaCocaDto.arquivoEnviado, 
                                                                     _webHostEnviroment.ContentRootPath);
                 if (pathArquivo == null) return RedirectToAction("ImportarPlanilhaCoca", new { erro = "Erro ao abrir planilha" });
                 var leituraDadosFactory = new LeituraDadosFactory();
-                var leituraDados = leituraDadosFactory.Criar((TemplateImportarTipo)importarIncidenciaCocaDto.Template);
-                var responseValidation = leituraDados.LerDados(pathArquivo);
-                if(responseValidation.Erros.Count == 0)
+                var leituraDados = leituraDadosFactory.Criar(tipoTemplate);
+                var responseValidationCelulas = leituraDados.LerDados(pathArquivo);
+                if (responseValidationCelulas.FormatoInvalido) return RedirectToAction("ImportarPlanilhaCoca", 
+                                new { erro = $"Planilha escolhida não é uma planilha da {tipoTemplate.ToString()}" });
+                if(responseValidationCelulas.Erros.Count == 0)
                 {
+                    await _servicoImportarPlanilha.SalvarImportacaoPlanilha(responseValidationCelulas.DadosPlanilhas);
                     return RedirectToAction("ImportarPlanilhaCoca", new { sucesso = "Arquivo importado com sucesso" });
                 } else
                 {
-                    byte[] byteArray = Encoding.UTF8.GetBytes(responseValidation.ToString());
+                    byte[] byteArray = Encoding.UTF8.GetBytes(responseValidationCelulas.ToString());
                     return File(byteArray, "text/plain", "erros.txt");
                 }
             }

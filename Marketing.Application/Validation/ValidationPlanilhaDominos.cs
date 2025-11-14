@@ -9,10 +9,10 @@ namespace Marketing.Application.Validation
     {
         private ResponseValidation responseValidation = new ResponseValidation();
 
-        public override string Validate(List<DadosPlanilha> dadosPlanilhas)
+        public override ResponseValidation Validate(List<DadosPlanilha> dadosPlanilhas)
         {
             ValidateDuplicate();
-            return responseValidation.ToString();
+            return responseValidation;
         }
 
         private void ValidateDuplicate()

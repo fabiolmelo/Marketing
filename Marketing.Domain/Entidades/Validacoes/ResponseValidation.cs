@@ -11,6 +11,7 @@ namespace Marketing.Domain.DTOs
         public List<ResponseError> Erros { get; private set; } = new List<ResponseError>();
         public List<DadosPlanilha> DadosPlanilhas { get; private set; } = new List<DadosPlanilha>();
         public bool Valido { get { return Erros.Count == 0; } }
+        public bool FormatoInvalido  { get; set; }
 
         public void AdicionarErro(string planilha, int linha, string tipoErro, string erro)
         {

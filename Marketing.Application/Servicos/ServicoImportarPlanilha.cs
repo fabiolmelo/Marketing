@@ -67,15 +67,21 @@ namespace Marketing.Application.Servicos
             var importacaoEfetuada = new ImportacaoEfetuada(arquivoImportado);
             importacaoEfetuada.AdicionarDadosPlanilha(dadosPlanilha);
             await _servicoArquivos.AddAsync(importacaoEfetuada);
+            await SalvarImportacaoPlanilha(dadosPlanilha);
+            if (File.Exists(arquivoImportado)) File.Delete(arquivoImportado);
+            return true;
+        }
+        
+        public async Task<bool> SalvarImportacaoPlanilha(List<DadosPlanilha> dadosPlanilha)
+        {       
             await _servicoArquivos.CommitAsync();
             await AtualizarContatosViaPlanilha(dadosPlanilha);
             await AtualizarEstabelecimentoViaPlanilha(dadosPlanilha);
             await AtualizarAssociacaoContatoEstabelecimento(dadosPlanilha);
             await AtualizarExtratosViaPlanilha(dadosPlanilha);
-            if (File.Exists(arquivoImportado)) File.Delete(arquivoImportado);
             return true;
         }
-        
+
         private async Task AtualizarContatosViaPlanilha(List<DadosPlanilha> dadosPlanilha)
         {
             var contatosCadastrados = await _unitOfWork.repositorioContato.GetAllAsync(1, 999999);
