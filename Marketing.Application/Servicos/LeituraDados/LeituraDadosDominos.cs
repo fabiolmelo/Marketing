@@ -30,6 +30,7 @@ namespace Marketing.Application.Servicos.LeituraDados
                 decimal incidencia = 0;
                 decimal meta = 0;
                 decimal receitaNaoCapturada = 0;
+                string planilhaName = excel.Worksheet(1).Name ?? ""; 
 
                 foreach (var linha in planilha)
                 {
@@ -43,29 +44,32 @@ namespace Marketing.Application.Servicos.LeituraDados
                         try
                         {
                             coluna = "AnoMes";
-                            data = linha.Cell("A").Value.GetDateTime();
+                            ClosedXML.Excel.IXLCell cell = linha.Cell("A");
+                            cell.Style.DateFormat.Format = "dd/MM/yyyy";
+                            data = cell.GetValue<DateTime>();
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos", ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Data em formato inválido", "AnoMes precisa estar no formato DD/MM/AAAA");
                         }
                         try
                         {
                             coluna = "UF";
-                            uf = linha.Cell("B").Value.ToString().ToUpper();
+                            uf = linha.Cell("B").Value.ToString().ToUpper().Trim();
+                            if (uf.Length != 2) responseValidation.AdicionarErro(planilhaName, row, coluna, "UF inválida em branco!");
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos", ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos", ex.Message);
                         }
                         try
                         {
                             coluna = "Cidade";
-                            cidade = linha.Cell("C").Value.ToString().ToUpper();
+                            cidade = linha.Cell("C").Value.ToString().ToUpper().Trim();
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos", ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos", ex.Message);
                         }
                         try
                         {
@@ -75,27 +79,27 @@ namespace Marketing.Application.Servicos.LeituraDados
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos", ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos", ex.Message);
                         }
                         try
                         {
                             coluna = "Restaurante";
-                            restaurante = linha.Cell("F").Value.ToString();
-                            if (restaurante.IsNullOrEmpty()) responseValidation.AdicionarErro("DOMINOS", row, coluna, "Restaurante em branco!");
+                            restaurante = linha.Cell("F").Value.ToString().ToUpper().Trim();
+                            if (restaurante.IsNullOrEmpty()) responseValidation.AdicionarErro(planilhaName, row, coluna, "Restaurante em branco!");
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos", ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos", ex.Message);
                         }
                         try
                         {
                             coluna = "TotalPedidos";
                             totalPedidos = (int)linha.Cell("G").Value.GetNumber();
-                            if (totalPedidos == 0) throw new Exception("Total de pedidos zerado!");
+                            if (totalPedidos == 0) responseValidation.AdicionarErro(planilhaName, row, coluna, "TotalPedidos zerado!");;
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos", ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos", ex.Message);
                         }
                         try
                         {
@@ -104,7 +108,7 @@ namespace Marketing.Application.Servicos.LeituraDados
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos",ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos",ex.Message);
                         }
                         try
                         {
@@ -114,7 +118,7 @@ namespace Marketing.Application.Servicos.LeituraDados
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos",ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos",ex.Message);
                         }
                         try
                         {
@@ -124,7 +128,7 @@ namespace Marketing.Application.Servicos.LeituraDados
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos",ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos",ex.Message);
                         }
                         try
                         {
@@ -133,7 +137,7 @@ namespace Marketing.Application.Servicos.LeituraDados
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos",ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos",ex.Message);
                         }
                         try
                         {
@@ -142,7 +146,7 @@ namespace Marketing.Application.Servicos.LeituraDados
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos", ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos", ex.Message);
                         }
                         try
                         {
@@ -151,12 +155,12 @@ namespace Marketing.Application.Servicos.LeituraDados
                         }
                         catch (Exception ex)
                         {
-                            responseValidation.AdicionarErro("DOMINOS", row, coluna, "Dados inválidos", ex.Message);
+                            responseValidation.AdicionarErro(planilhaName, row, coluna, "Dados inválidos", ex.Message);
                         }                            
-                        responseValidation.AdicioarDados(
+                        responseValidation.AdicionarDados(
                             new DadosPlanilha(data, uf, cidade, cnpj, restaurante, totalPedidos, 
                                 totalPedidosCoca, incidencia, meta, precoUnitarioMedio, 
-                                qtdPedidosNaoCapiturados, receitaNaoCapturada, rede, "")
+                                qtdPedidosNaoCapiturados, receitaNaoCapturada, rede, "", row, planilhaName)
                         );
                         row++;
                     }

@@ -23,9 +23,15 @@ namespace Marketing.Domain.DTOs
             Erros.Add(new ResponseError(planilha, linha, coluna, tipoErro, erro));
         }
 
-        public void AdicioarDados(DadosPlanilha dadosPlanilha)
+        public void AdicionarDados(DadosPlanilha dadosPlanilha)
         {
             DadosPlanilhas.Add(dadosPlanilha);
+        }
+
+        public void JoinAllDadosAndErros(List<DadosPlanilha> dados, List<ResponseError> erros)
+        {
+            DadosPlanilhas.AddRange(dados);
+            Erros.AddRange(erros);
         }
         public override string ToString()
         {

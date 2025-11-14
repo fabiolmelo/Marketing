@@ -18,8 +18,13 @@ namespace Marketing.Domain.Entidades
         public decimal ReceitaNaoCapturada { get; set; }
         public string Rede { get; set; } 
         public string Fone { get; set; } 
+        public int? Linha { get; set; }
+        public string? Planilha { get; set; }
 
-        public DadosPlanilha(DateTime anoMes, string uf, string cidade, string cnpj, string restaurante, int totalPedidos, int pedidosComCocaCola, decimal incidenciaReal, decimal meta, decimal precoUnitarioMedio, int totalPedidosNaoCapturados, decimal receitaNaoCapturada, string rede, string fone)
+        public DadosPlanilha(DateTime anoMes, string uf, string cidade, string cnpj, string restaurante, int totalPedidos, 
+                            int pedidosComCocaCola, decimal incidenciaReal, decimal meta, decimal precoUnitarioMedio, 
+                            int totalPedidosNaoCapturados, decimal receitaNaoCapturada, string rede, string fone, 
+                            int? linha, string? planilha)
         {
             AnoMes = anoMes;
             Uf = uf;
@@ -36,6 +41,8 @@ namespace Marketing.Domain.Entidades
             Rede = rede;
             Fone = fone;
             ImportacaoEfetuada = new ImportacaoEfetuada();
+            Linha = linha;
+            Planilha = planilha;
         }
     }
 }

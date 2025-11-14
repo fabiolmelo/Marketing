@@ -509,7 +509,7 @@ namespace Marketing.Application.Servicos
                         dadosPlanilha.Add(
                             new DadosPlanilha(data, uf, cidade, cnpj, restaurante, totalPedidos, 
                                 totalPedidosCoca, incidencia, meta, precoUnitarioMedio, 
-                                qtdPedidosNaoCapiturados, receitaNaoCapturada, rede, fone)
+                                qtdPedidosNaoCapiturados, receitaNaoCapturada, rede, fone, row, excel.Worksheet(1).Name)
                         );
                     }
                     row++;

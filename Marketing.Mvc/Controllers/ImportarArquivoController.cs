@@ -1,6 +1,7 @@
 using System.Text;
 using Marketing.Application.DTOs;
 using Marketing.Application.Servicos.LeituraDados;
+using Marketing.Application.Validation;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
@@ -83,13 +84,24 @@ namespace Marketinf.Mvc.Controllers
                                                                     _webHostEnviroment.ContentRootPath);
                 if (pathArquivo == null) return RedirectToAction("ImportarPlanilhaCoca", new { erro = "Erro ao abrir planilha" });
                 var leituraDadosFactory = new LeituraDadosFactory();
-                var leituraDados = leituraDadosFactory.Criar(tipoTemplate);
-                var responseValidationCelulas = leituraDados.LerDados(pathArquivo);
+                var leituraDadosCelulas = leituraDadosFactory.Criar(tipoTemplate);
+                var responseValidationCelulas = leituraDadosCelulas.LerDados(pathArquivo);
                 if (responseValidationCelulas.FormatoInvalido) return RedirectToAction("ImportarPlanilhaCoca", 
                                 new { erro = $"Planilha escolhida não é uma planilha da {tipoTemplate.ToString()}" });
                 if(responseValidationCelulas.Erros.Count == 0)
                 {
-                    await _servicoImportarPlanilha.SalvarImportacaoPlanilha(responseValidationCelulas.DadosPlanilhas);
+                    var validationFactory = new ValidationPlanilhaFactory();
+                    var validationPlanilha = validationFactory.Criar(tipoTemplate);
+                    var responseValidationNegocio = validationPlanilha.Validate(responseValidationCelulas.DadosPlanilhas);
+                    if(responseValidationNegocio.Erros.Count == 0)
+                    {
+                        await _servicoImportarPlanilha.SalvarImportacaoPlanilha(responseValidationCelulas.DadosPlanilhas);
+                    }
+                    else
+                    {
+                        byte[] byteArray = Encoding.UTF8.GetBytes(responseValidationNegocio.ToString());
+                        return File(byteArray, "text/plain", "erros.txt");
+                    }
                     return RedirectToAction("ImportarPlanilhaCoca", new { sucesso = "Arquivo importado com sucesso" });
                 } else
                 {
