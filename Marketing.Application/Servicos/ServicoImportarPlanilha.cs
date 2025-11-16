@@ -84,10 +84,12 @@ namespace Marketing.Application.Servicos
 
         private async Task AtualizarContatosViaPlanilha(List<DadosPlanilha> dadosPlanilha)
         {
-            var contatosCadastrados = await _unitOfWork.repositorioContato.GetAllAsync(1, 999999);
-            foreach (var telefone in dadosPlanilha.Select(x => x.Fone).Distinct())
+            var contatosCadastrados = await _unitOfWork.repositorioContato.GetAll();
+            var foneLista = dadosPlanilha.Where(x=> x.Fone != String.Empty)
+                                                  .Select(x => x.Fone).Distinct();
+            foreach (var telefone in foneLista)
             {
-                if (!contatosCadastrados.Dados.Any(x=>x.Telefone == telefone))
+                if (!contatosCadastrados.Any(x=>x.Telefone == telefone))
                 {
                     var contato = new Contato(telefone);
                     contato.OrigemContato = OrigemContato.PlanilhaIncidencia;
@@ -125,7 +127,9 @@ namespace Marketing.Application.Servicos
         private async Task AtualizarAssociacaoContatoEstabelecimento(List<DadosPlanilha> dadosPlanilha)
         {
             var contatoEstabelecimentoCadastrado = await _unitOfWork.GetRepository<ContatoEstabelecimento>().GetAll();
-            foreach (var contatoEstabelecimentoPlanilha in dadosPlanilha.Select(x => new { x.Cnpj, x.Fone }).Distinct())
+            foreach (var contatoEstabelecimentoPlanilha in dadosPlanilha
+                                                        .Where(x=>x.Fone != String.Empty)
+                                                        .Select(x => new { x.Cnpj, x.Fone }).Distinct())
             {
                 if (!contatoEstabelecimentoCadastrado.Any(x => x.EstabelecimentoCnpj == contatoEstabelecimentoPlanilha.Cnpj &&
                                                      x.ContatoTelefone == contatoEstabelecimentoPlanilha.Fone))

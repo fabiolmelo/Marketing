@@ -33,11 +33,20 @@ namespace Marketing.Mvc.Controllers
 
         public async Task<ActionResult> Index(string? erro = null, string? sucesso = null)
         {
-            var competenciaVigente = await _unitOfWork.repositorioExtratoVendas.BuscarCompetenciaVigente();
-            if (competenciaVigente != null) ViewBag.CompetenciaVigente = competenciaVigente?.ToString("yyyy-MM");
-            ViewData["Erro"] = erro;
-            ViewData["OK"] = sucesso;
-            return View();
+            try
+            {
+                var competenciaVigente = await _unitOfWork.repositorioExtratoVendas.BuscarCompetenciaVigente();
+                if (competenciaVigente != null) ViewBag.CompetenciaVigente = competenciaVigente?.ToString("yyyy-MM");
+                ViewData["Erro"] = erro;
+                ViewData["OK"] = sucesso;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                return View();
+            }
+            
         }
 
         [HttpPost]

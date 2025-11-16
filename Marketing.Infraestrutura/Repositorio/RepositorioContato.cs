@@ -20,7 +20,8 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             IQueryable<Contato> query = from C in _context.Contatos.Where(x => x.AceitaMensagem == true)
                                         select C;
-            return await query.ToListAsync();
+            var contatos = await query.ToListAsync();               
+            return contatos;
         }
 
         public async Task<Contato?> BuscarContatosIncludeEstabelecimento(string telefone)

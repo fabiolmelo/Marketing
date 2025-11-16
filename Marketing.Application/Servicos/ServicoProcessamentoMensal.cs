@@ -22,38 +22,29 @@ namespace Marketing.Application.Servicos
         public async Task GerarProcessamentoMensal(DateTime competencia,
                                                    String contentRootPath,
                                                    string caminhoApp)
-        {
-            try
+        {   
+            var contatos = await _unitOfWork.repositorioContato.BuscarContatosComAceite();
+            string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
+            foreach (Contato contato in contatos)
             {
-                var contatos = await _unitOfWork.repositorioContato.BuscarContatosComAceite();
-                string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
-                foreach (Contato contato in contatos)
+                if (contato.Telefone == null || String.IsNullOrEmpty(contato.Telefone)) throw new Exception("TELEFONE NULO NO CADASTRO");
+                var estabelecimentos = await _unitOfWork.repositorioEstabelecimento
+                                                        .GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(contato.Telefone);
+                foreach(Estabelecimento estabelecimento in estabelecimentos)
                 {
-                    if (contato.Telefone == null) throw new Exception("TELEFONE NULO NO CADASTRO");
-                    var estabelecimentos = await _unitOfWork.repositorioEstabelecimento
-                                                            .GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(contato.Telefone);
-                    foreach(Estabelecimento estabelecimento in estabelecimentos)
-                    {
-                        var estabelecimentoPdf = await _unitOfWork.repositorioEstabelecimento
-                                                                    .FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia);
-                        if (estabelecimentoPdf == null) throw new Exception("ESTABELECIMENTO COM DADOS CORROMPIDOS");
-                        await GerarProcessamentoPorEstabelecimento(estabelecimentoPdf, competencia,
-                                                                contentRootPath, caminhoApp);
-                        var telefone = contato.Telefone ?? "";
-                        var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone,
-                                                                estabelecimentoPdf?.RedeNome ?? "",
-                                                                estabelecimentoPdf?.RazaoSocial ?? "");
-                        await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
-                        await _unitOfWork.CommitAsync();
-                    }
+                    var estabelecimentoPdf = await _unitOfWork.repositorioEstabelecimento
+                                                                .FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia);
+                    if (estabelecimentoPdf == null) throw new Exception("ESTABELECIMENTO COM DADOS CORROMPIDOS");
+                    await GerarProcessamentoPorEstabelecimento(estabelecimentoPdf, competencia,
+                                                            contentRootPath, caminhoApp);
+                    var telefone = contato.Telefone ?? "";
+                    var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone,
+                                                            estabelecimentoPdf?.RedeNome ?? "",
+                                                            estabelecimentoPdf?.RazaoSocial ?? "");
+                    await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
+                    await _unitOfWork.CommitAsync();
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex.Message);
-                throw;
-            }
-            
         }
 
         public async Task GerarProcessamentoPorEstabelecimento(Estabelecimento estabelecimento,

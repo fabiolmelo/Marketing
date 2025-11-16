@@ -17,26 +17,24 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
         {
-            var estabelecimentos = await _context.Set<Estabelecimento>()
+            IQueryable<Estabelecimento> query = _context.Estabelecimentos
                                                 .Include(x => x.ContatoEstabelecimentos)
                                                     .ThenInclude(x=>x.Contato)
                                                     .IgnoreAutoIncludes()
                                                 .Include(x => x.Rede)
-                                                .Include(x => x.ExtratoVendas)
-                                                .ToListAsync();
-            var estabelecimento = estabelecimentos.Find(x => x.Cnpj == cnpj);
-            return estabelecimento;
+                                                .Include(x => x.ExtratoVendas);                             
+            return await query.FirstAsync(x=> x.Cnpj == cnpj);  
         }
 
         public async Task<Estabelecimento?> FindEstabelecimentoPorCnpj(string cnpj)
         {
-            var estabelecimentos = await _context.Set<Estabelecimento>()
-                                 .Include(x => x.Rede)
-                                 .Include(x => x.ContatoEstabelecimentos)
-                                 .Include(x => x.ExtratoVendas)
-                                 .ToListAsync();
-            var estabelecimento = estabelecimentos.Find(x => x.Cnpj == cnpj);
-            return estabelecimento;
+            IQueryable<Estabelecimento> query = _context.Estabelecimentos
+                                                .Include(x => x.ContatoEstabelecimentos)
+                                                    .ThenInclude(x=>x.Contato)
+                                                    .IgnoreAutoIncludes()
+                                                .Include(x => x.Rede)
+                                                .Include(x => x.ExtratoVendas);                             
+            return await query.FirstAsync(x=> x.Cnpj == cnpj);  
         }
 
         public async Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia)
