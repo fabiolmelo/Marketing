@@ -34,8 +34,7 @@ namespace Marketing.Application.Servicos
             var arquivoImportado = await _servicoArquivos.UploadArquivo(formFile, contentRootPath);
             if (arquivoImportado == null)
                 return false;
-            await _servicoArquivos.AtualizarContatoViaPlanilhaEmailMarketing(arquivoImportado);
-            return true;
+            return await _servicoArquivos.AtualizarContatoViaPlanilhaEmailMarketing(arquivoImportado);
         }
 
         public async Task<bool> ImportarPlanilha(IFormFile formFile, string rede, string contentRootPath)
@@ -206,7 +205,6 @@ namespace Marketing.Application.Servicos
                 await _unitOfWork.CommitAsync();
             }
         }
-
         public string ImportarPlanilhaOriginal(IFormFile formFile, TemplateImportarTipo template, string contentRootPath)
         {
             throw new NotImplementedException();

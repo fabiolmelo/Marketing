@@ -27,7 +27,7 @@ switch (bancoDeDados)
         break;
     default:
         connectionString = builder.Configuration.GetConnectionString("MySql") ?? "";
-        var serverVersion = new MySqlServerVersion(new Version(10, 2));
+        var serverVersion = new MySqlServerVersion(new Version(11, 4));
 
         builder.Services.AddDbContext<DataContext>(
             dbContextOptions => dbContextOptions

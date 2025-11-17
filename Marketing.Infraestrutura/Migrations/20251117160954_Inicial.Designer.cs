@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketing.Infraestrutura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251107121341_Inicial")]
+    [Migration("20251117160954_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -137,11 +137,17 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<decimal>("IncidenciaReal")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<int?>("Linha")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Meta")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("PedidosComCocaCola")
                         .HasColumnType("int");
+
+                    b.Property<string>("Planilha")
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("PrecoUnitarioMedio")
                         .HasColumnType("decimal(65,30)");
@@ -386,6 +392,23 @@ namespace Marketing.Infraestrutura.Migrations
                     b.HasKey("Nome");
 
                     b.ToTable("Redes");
+                });
+
+            modelBuilder.Entity("Marketing.Domain.Entidades.TemplateImportarPlanilha", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Template")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemplateImportarPlanilhas");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.ContatoEstabelecimento", b =>

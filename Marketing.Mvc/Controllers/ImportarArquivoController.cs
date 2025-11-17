@@ -133,6 +133,7 @@ namespace Marketinf.Mvc.Controllers
                 var extensao = Path.GetExtension(arquivoEnviado.FileName);
                 if (extensao.ToLower() != ".xlsx") return RedirectToAction("Index", new { erro = "O arquivo selecionado não é uma planilha Excel!" });
                 var sucesso = await _servicoImportarPlanilha.ImportarContato(arquivoEnviado, _webHostEnviroment.ContentRootPath);
+                if (!sucesso) return RedirectToAction("ImportarContato", new { erro = "Erro importando arquivo! Contate o administrador do sistema para detalhes." });
                 return RedirectToAction("ImportarContato", new { sucesso = "Contatos atualizados com sucesso!" });
             }
             catch (Exception ex)

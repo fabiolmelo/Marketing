@@ -7,7 +7,7 @@ namespace Marketing.Domain.Interfaces.Repositorio
     public interface IRepositorioContato : IRepository<Contato>
     {
         Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj);
-        Task<List<Contato>> BuscarContatosComAceite();
+        Task<List<Contato>?> BuscarContatosComAceite();
         Task<Contato?> BuscarContatosIncludeEstabelecimento(string telefone);
         Task<PagedResponse<List<Contato>>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null, params Expression<Func<Contato, object>>[] includes);
         Task<bool> EstabelecimentoPossuiContatoQueAceitaMensagem(string cnpj);

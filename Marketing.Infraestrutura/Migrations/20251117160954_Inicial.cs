@@ -109,6 +109,21 @@ namespace Marketing.Infraestrutura.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "TemplateImportarPlanilhas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Template = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemplateImportarPlanilhas", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "DadosPlanilha",
                 columns: table => new
                 {
@@ -132,6 +147,9 @@ namespace Marketing.Infraestrutura.Migrations
                     Rede = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Fone = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Linha = table.Column<int>(type: "int", nullable: true),
+                    Planilha = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -354,6 +372,9 @@ namespace Marketing.Infraestrutura.Migrations
 
             migrationBuilder.DropTable(
                 name: "MensagemItems");
+
+            migrationBuilder.DropTable(
+                name: "TemplateImportarPlanilhas");
 
             migrationBuilder.DropTable(
                 name: "Contatos");

@@ -16,12 +16,21 @@ namespace Marketing.Infraestrutura.Repositorio
             _context = context;
         }
 
-        public async Task<List<Contato>> BuscarContatosComAceite()
+        public async Task<List<Contato>?> BuscarContatosComAceite()
         {
-            IQueryable<Contato> query = from C in _context.Contatos.Where(x => x.AceitaMensagem == true)
-                                        select C;
-            var contatos = await query.ToListAsync();               
-            return contatos;
+            try
+            {
+                var contatos = await  _context.Contatos
+                                                .AsNoTracking()
+                                                .Where(x => x.AceitaMensagem == true)
+                                                .ToListAsync();
+                return contatos;
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public async Task<Contato?> BuscarContatosIncludeEstabelecimento(string telefone)
