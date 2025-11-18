@@ -16,13 +16,13 @@ namespace Marketing.Infraestrutura.Repositorio
             _context = context;
         }
 
-        public async Task<List<Contato>?> BuscarContatosComAceite()
+        public async Task<List<Contato>> BuscarContatosComAceite()
         {
             try
             {
                 var contatos = await  _context.Contatos
                                                 .AsNoTracking()
-                                                .Where(x => x.AceitaMensagem == true)
+                                                .Where(x => x.AceitaMensagem == 1)
                                                 .ToListAsync();
                 return contatos;
             }
@@ -51,13 +51,13 @@ namespace Marketing.Infraestrutura.Repositorio
                                                     .ThenInclude(x=>x.Contato)
                                                 .AsSplitQuery()
                                                 .FirstOrDefaultAsync(x => x.Cnpj == cnpj);
-            var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem).Select(x=>x.Contato).ToList();
+            var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem == 1).Select(x=>x.Contato).ToList();
             return contatos ?? new List<Contato>();
         }
 
         public async Task<bool> EstabelecimentoPossuiContatoQueAceitaMensagem(string cnpj)
         {
-            IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.AceitaMensagem == true)
+            IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.AceitaMensagem == 1)
                                                 join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
                                                 join E in _context.Estabelecimentos.Where(x=>x.Cnpj == cnpj) on CE.EstabelecimentoCnpj equals E.Cnpj
                                                 select E;

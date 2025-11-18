@@ -4,9 +4,9 @@ namespace Marketing.Domain.Entidades
     {
         public string Telefone { get; set; } = null!;
         public string? Nome { get; set; } = null!;
-        public bool AceitaMensagem {get; set; } = false;
+        public int AceitaMensagem {get; set; } = 0;
         public DateTime? DataAceite { get; set; }
-        public bool RecusaMensagem {get; set; } = false;
+        public int RecusaMensagem {get; set; } = 0;
         public DateTime? DataRecusa { get; set; }
         public string Email { get; set; } = String.Empty;
         public Guid Token { get; set; } = Guid.NewGuid();

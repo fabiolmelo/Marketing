@@ -1,4 +1,5 @@
 ﻿using Marketing.Application.DTOs;
+using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
@@ -89,11 +90,9 @@ namespace Marketing.Mvc.Controllers
                 {
                     throw new Exception("Mensagem enviada ao contato não localizada!");
                 }
-                ;
-                var mensagem = await _unitOfWork.repositorioMensagem.FindByIdIncludeEventosAsync(mensagemEnvio.MensagemId);
-                if (mensagem == null) return BadRequest();
-                mensagem.AdicionarEvento(Domain.Entidades.MensagemStatus.ClicouLink);
-                _unitOfWork.repositorioMensagem.UpdateCommit(mensagem);
+                var mensagemItem = new MensagemItem(mensagemEnvio.MensagemId, DateTime.Now, MensagemStatus.ClicouLink);
+                await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
+                await _unitOfWork.CommitAsync();
                 var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "images", estabelecimento.UltimoPdfGerado);
                 byte[] fileBytes = System.IO.File.ReadAllBytes(pathRoot);
                 return File(fileBytes, "application/pdf", $"{estabelecimento.UltimoPdfGerado}");

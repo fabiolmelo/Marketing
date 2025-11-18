@@ -20,9 +20,9 @@ namespace Marketing.Mvc.Controllers
                     return Results.BadRequest();
                 }
                 contato.DataAceite = DateTime.Now;
-                contato.AceitaMensagem = true;
+                contato.AceitaMensagem = 1;
                 contato.DataRecusa = DateTime.MinValue;
-                contato.RecusaMensagem = false;
+                contato.RecusaMensagem = 0;
                 _servicoContato.Update(contato);
                 return Results.Ok();
             })
@@ -39,8 +39,8 @@ namespace Marketing.Mvc.Controllers
                     return Results.BadRequest("");
                 }
                 contato.DataRecusa = DateTime.Now;
-                contato.RecusaMensagem = true;
-                contato.AceitaMensagem = false;
+                contato.RecusaMensagem = 1;
+                contato.AceitaMensagem = 0;
                 contato.DataAceite = DateTime.MinValue;
                 _servicoContato.Update(contato);
                 return Results.Ok();

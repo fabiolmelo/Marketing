@@ -5,10 +5,9 @@ namespace Marketing.Domain.Entidades
         public MensagemItem()
         {
         }
-        public MensagemItem(string mensagemId, Mensagem mensagem, DateTime dataEvento, MensagemStatus mensagemStatus)
+        public MensagemItem(string mensagemId, DateTime dataEvento, MensagemStatus mensagemStatus)
         {
             MensagemId = mensagemId;
-            Mensagem = mensagem;
             DataEvento = dataEvento;
             MensagemStatus = mensagemStatus;
         }

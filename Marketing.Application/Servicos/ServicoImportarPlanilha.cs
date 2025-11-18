@@ -143,65 +143,33 @@ namespace Marketing.Application.Servicos
                 }
             }
         }
-        private async Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilha)
+        private async Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
         {
-            
-            foreach (var estabelecimentoPlanilha in dadosPlanilha.Select(x => new { x.Cnpj, x.Restaurante, x.Cidade, x.Uf, x.Rede }).Distinct())
+            foreach(var dadosPlanilha in dadosPlanilhas)
             {
-                var extratoVendasCadastrados = await  _unitOfWork.GetRepository<ExtratoVendas>()
-                                                                 .FindAllByPredicate(x => x.EstabelecimentoCnpj == estabelecimentoPlanilha.Cnpj);
-                var extratoVendasAdd = new List<ExtratoVendas>();
-                var extratoVendasUpdate = new List<ExtratoVendas>();
-                foreach (var extratoVendas in dadosPlanilha.Where(x=>x.Cnpj == estabelecimentoPlanilha.Cnpj)
-                                                           .Select(x => new
-                                                           {
-                                                               x.Cnpj, 
-                                                               x.AnoMes,
-                                                               x.TotalPedidos,
-                                                               x.PedidosComCocaCola,
-                                                               x.IncidenciaReal,
-                                                               x.Meta,
-                                                               x.PrecoUnitarioMedio,
-                                                               x.TotalPedidosNaoCapturados,
-                                                               x.ReceitaNaoCapturada
-                                                           }).Distinct())
-                {
-                    if (extratoVendasCadastrados.Any(x => x.Competencia == extratoVendas.AnoMes))
-                    {
-                        extratoVendasUpdate.Add(new ExtratoVendas(
-                                                                    extratoVendas.AnoMes.Year,
-                                                                    extratoVendas.AnoMes.Month,
-                                                                    extratoVendas.AnoMes,
-                                                                    extratoVendas.TotalPedidos,
-                                                                    extratoVendas.PedidosComCocaCola,
-                                                                    extratoVendas.IncidenciaReal,
-                                                                    extratoVendas.Meta,
-                                                                    extratoVendas.PrecoUnitarioMedio,
-                                                                    extratoVendas.TotalPedidosNaoCapturados,
-                                                                    extratoVendas.ReceitaNaoCapturada,
-                                                                    extratoVendas.Cnpj
-                                                ));
-                    }
-                    else
-                    {
-                        extratoVendasAdd.Add(new ExtratoVendas(
-                                                                    extratoVendas.AnoMes.Year,
-                                                                    extratoVendas.AnoMes.Month,
-                                                                    extratoVendas.AnoMes,
-                                                                    extratoVendas.TotalPedidos,
-                                                                    extratoVendas.PedidosComCocaCola,
-                                                                    extratoVendas.IncidenciaReal,
-                                                                    extratoVendas.Meta,
-                                                                    extratoVendas.PrecoUnitarioMedio,
-                                                                    extratoVendas.TotalPedidosNaoCapturados,
-                                                                    extratoVendas.ReceitaNaoCapturada,
-                                                                    extratoVendas.Cnpj
-                                                ));
-                    }
+                var cadastrado = await _unitOfWork.GetRepository<ExtratoVendas>().FindByPredicate(x => x.EstabelecimentoCnpj == dadosPlanilha.Cnpj &&
+                                                                                                 x.Competencia == dadosPlanilha.AnoMes);
+                var extratoVendas = new ExtratoVendas(
+                                    dadosPlanilha.AnoMes.Year,
+                                    dadosPlanilha.AnoMes.Month,
+                                    dadosPlanilha.AnoMes,
+                                    dadosPlanilha.TotalPedidos,
+                                    dadosPlanilha.PedidosComCocaCola,
+                                    dadosPlanilha.IncidenciaReal,
+                                    dadosPlanilha.Meta,
+                                    dadosPlanilha.PrecoUnitarioMedio,
+                                    dadosPlanilha.TotalPedidosNaoCapturados,
+                                    dadosPlanilha.ReceitaNaoCapturada,
+                                    dadosPlanilha.Cnpj
+                                );                                                               
+                if(cadastrado == null)
+                {                   
+                    await _unitOfWork.GetRepository<ExtratoVendas>().AddAsync(extratoVendas);
                 }
-                await _unitOfWork.GetRepository<ExtratoVendas>().AddRangeAsync(extratoVendasAdd);
-                await _unitOfWork.CommitAsync();
-                _unitOfWork.GetRepository<ExtratoVendas>().UpdateRange(extratoVendasAdd);
+                else
+                {
+                    _unitOfWork.GetRepository<ExtratoVendas>().Update(extratoVendas);           
+                }
                 await _unitOfWork.CommitAsync();
             }
         }
