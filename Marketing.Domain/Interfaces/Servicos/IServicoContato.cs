@@ -11,5 +11,6 @@ namespace Marketing.Domain.Interfaces.Servicos
         Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj);
         Task AtualizarAssociacaoContatoEstabelecimento(List<DadosPlanilha> dadosPlanilhas);
         Task<PagedResponse<List<Contato>>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<Contato, bool>>? filtros = null, params Expression<Func<Contato, object>>[] includes);
+        Task<List<Contato>> BuscarContatosComAceite();
     }
 }

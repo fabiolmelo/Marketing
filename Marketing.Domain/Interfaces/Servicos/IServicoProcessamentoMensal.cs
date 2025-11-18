@@ -1,11 +1,10 @@
-using System;
-using System.Threading.Tasks;
+using Marketing.Domain.Entidades;
 
 namespace Marketing.Domain.Interfaces.Servicos
 {
     public interface IServicoProcessamentoMensal
     {
         Task GerarProcessamentoMensal(DateTime competencia, String webHostEnvironment,
-                                    string caminhoApp);
+                                    string caminhoApp, List<Contato> contatos);
     }
 }

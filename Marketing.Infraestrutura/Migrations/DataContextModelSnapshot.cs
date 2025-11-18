@@ -52,37 +52,38 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("AceitaMensagem")
-                        .HasColumnType("INTEGER");
+                    b.Property<bool>("AceitaMensagem")
+                        .HasColumnType("TINYINT(1)");
 
                     b.Property<DateTime?>("DataAceite")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DATETIME");
 
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataRecusa")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DATETIME");
 
                     b.Property<string>("Email")
-                        .IsRequired()
+                        .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
+                        .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("OrigemContato")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RecusaMensagem")
-                        .HasColumnType("INTEGER");
+                    b.Property<bool>("RecusaMensagem")
+                        .HasColumnType("TINYINT(1)");
 
                     b.Property<Guid>("Token")
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UltimaCompetenciaEnviada")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DATETIME");
 
                     b.HasKey("Telefone");
 
@@ -258,48 +259,41 @@ namespace Marketing.Infraestrutura.Migrations
 
             modelBuilder.Entity("Marketing.Domain.Entidades.ExtratoVendas", b =>
                 {
-                    b.Property<int>("Ano")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Mes")
-                        .HasColumnType("INTEGER");
+                    b.Property<DateTime>("Competencia")
+                        .HasColumnType("DATETIME");
 
                     b.Property<string>("EstabelecimentoCnpj")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Competencia")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Ano")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("CorTransparenteGrafico")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("NUMERIC");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<decimal>("CorVerdeGrafico")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("NUMERIC");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<decimal>("CorVermelhaGrafico")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("NUMERIC");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<decimal>("IncidenciaReal")
-                        .HasPrecision(8, 4)
-                        .HasColumnType("NUMERIC");
+                        .HasColumnType("DECIMAL(18,2)");
+
+                    b.Property<int>("Mes")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Meta")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("NUMERIC");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<int>("PedidosComCocaCola")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("PrecoUnitarioMedio")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("NUMERIC");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<decimal>("ReceitaNaoCapturada")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("NUMERIC");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<int>("TotalPedidos")
                         .HasColumnType("INTEGER");
@@ -307,7 +301,7 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<int>("TotalPedidosNaoCapturados")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Ano", "Mes", "EstabelecimentoCnpj");
+                    b.HasKey("Competencia", "EstabelecimentoCnpj");
 
                     b.HasIndex("EstabelecimentoCnpj");
 

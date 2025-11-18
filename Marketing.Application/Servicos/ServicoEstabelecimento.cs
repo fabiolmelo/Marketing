@@ -153,5 +153,15 @@ namespace Marketing.Application.Servicos
             }
             return true;
         }
+
+        public async Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone)
+        {
+            return await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(telefone);
+        }
+
+        public async Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia)
+        {
+            return await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoPorCnpjParaPdf(cnpj, competencia);
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace Marketing.Domain.Entidades
         public int TotalPedidosNaoCapturados { get; set; }    
         public decimal ReceitaNaoCapturada { get; set; }
         public string EstabelecimentoCnpj { get; set; }
-        public Estabelecimento? Estabelecimento { get; set; } 
+        public virtual Estabelecimento? Estabelecimento { get; set; } 
         public decimal CorVerdeGrafico { get; set; }
         public decimal CorTransparenteGrafico { get; set;}
         public decimal CorVermelhaGrafico { get; set; }

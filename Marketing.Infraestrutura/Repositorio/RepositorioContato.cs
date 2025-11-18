@@ -20,13 +20,12 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             try
             {
-                var contatos = await  _context.Contatos
-                                                .AsNoTracking()
-                                                .Where(x => x.AceitaMensagem == 1)
-                                                .ToListAsync();
+                var contatos = await _context.Contatos
+                                                     .Where(x=>x.AceitaMensagem == true)
+                                                     .ToListAsync();
                 return contatos;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 throw;
@@ -51,13 +50,13 @@ namespace Marketing.Infraestrutura.Repositorio
                                                     .ThenInclude(x=>x.Contato)
                                                 .AsSplitQuery()
                                                 .FirstOrDefaultAsync(x => x.Cnpj == cnpj);
-            var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem == 1).Select(x=>x.Contato).ToList();
+            var contatos = estabelecimento?.ContatoEstabelecimentos.Where(x => x.Contato.AceitaMensagem == true).Select(x=>x.Contato).ToList();
             return contatos ?? new List<Contato>();
         }
 
         public async Task<bool> EstabelecimentoPossuiContatoQueAceitaMensagem(string cnpj)
         {
-            IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.AceitaMensagem == 1)
+            IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.AceitaMensagem == true)
                                                 join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
                                                 join E in _context.Estabelecimentos.Where(x=>x.Cnpj == cnpj) on CE.EstabelecimentoCnpj equals E.Cnpj
                                                 select E;

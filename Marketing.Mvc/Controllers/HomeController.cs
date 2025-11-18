@@ -40,7 +40,7 @@ public class HomeController : Controller
             var mensagens = new List<ResumoMensagem>();
             if (competencia != null)
             {
-                mensagens = _unitOfWork.repositorioMensagem.BuscaResumoMensagemPorCompetenciaV2(competencia);
+                mensagens = _unitOfWork.repositorioMensagem.BuscaResumoMensagemPorCompetencia(competencia);
                 var naoDisparados = await _unitOfWork.repositorioEnvioMensagemMensal.BuscarTodasMensagensNaoEnviadas(competencia);
                 ViewData["Falhas"] = mensagens.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.Falha)?.Qtd ?? 0;
                 ViewData["Pendentes"] = naoDisparados.Count();

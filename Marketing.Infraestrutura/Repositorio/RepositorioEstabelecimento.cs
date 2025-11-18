@@ -3,7 +3,6 @@ using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.PagedResponse;
 using Marketing.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Marketing.Infraestrutura.Repositorio
 {
@@ -13,6 +12,11 @@ namespace Marketing.Infraestrutura.Repositorio
         public RepositorioEstabelecimento(DataContext dataContext) : base(dataContext)
         {
             _context = dataContext;
+        }
+
+        public async Task CommitAsync()
+        {
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
@@ -59,16 +63,20 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone)
         {
-            var movimento = _context.Set<ExtratoVendas>().Any();
-            var competenciaVigente = movimento ?
-                                     await _context.Set<ExtratoVendas>().MaxAsync(x => x.Competencia) :
-                                     new DateTime(1900, 1, 1);
+            var competencias = await _context.Set<ExtratoVendas>().Select(x=>x.Competencia).Distinct().ToListAsync();
+            DateTime competenciaVigente;
+            if (competencias.Count == 0)
+            {
+                competenciaVigente = new DateTime(1900, 1, 1);
+            } else
+            {
+                competenciaVigente = competencias.Max();
+            }
             IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.Telefone == telefone)
                                                 join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
                                                 join E in _context.Estabelecimentos on CE.EstabelecimentoCnpj equals E.Cnpj
                                                 join EXV in _context.ExtratosVendas on E.Cnpj equals EXV.EstabelecimentoCnpj
                                                 where EXV.Competencia == competenciaVigente
-
                                                 select E;
             var estabelecimentos = await query.ToListAsync();
 

@@ -31,7 +31,7 @@ switch (bancoDeDados)
 
         builder.Services.AddDbContext<DataContext>(
             dbContextOptions => dbContextOptions
-                .UseMySql(connectionString, serverVersion)
+                .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors()

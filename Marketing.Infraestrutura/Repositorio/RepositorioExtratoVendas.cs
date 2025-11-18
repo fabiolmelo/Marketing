@@ -16,7 +16,11 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task<DateTime?> BuscarCompetenciaVigente()
         {
             if (_context.Set<ExtratoVendas>().Any() == false) return null;
-            return await _context.Set<ExtratoVendas>().MaxAsync(x => x.Competencia);
+            var competencias = await _context.Set<ExtratoVendas>()
+                                             .Select(x=>x.Competencia)
+                                             .Distinct()
+                                             .ToListAsync();
+            return competencias.Max();
         }
     }
 }

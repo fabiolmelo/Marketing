@@ -59,6 +59,11 @@ namespace Marketing.Application.Servicos
             }
         }
 
+        public async Task<List<Contato>> BuscarContatosComAceite()
+        {
+            return await _unitOfWork.repositorioContato.BuscarContatosComAceite();
+        }
+
         public async Task<List<Contato>> BuscarContatosPorEstabelecimentoComAceite(string cnpj)
         {
             return await _unitOfWork.repositorioContato.BuscarContatosPorEstabelecimentoComAceite(cnpj);

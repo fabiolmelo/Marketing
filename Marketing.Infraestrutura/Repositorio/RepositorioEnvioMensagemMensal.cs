@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.PagedResponse;
@@ -45,11 +44,21 @@ namespace Marketing.Infraestrutura.Repositorio
             return await query.ToListAsync();
         }
 
+        public async Task CommitAsync()
+        {
+            await _dataContext.SaveChangesAsync();
+        }
+
         public async Task<EnvioMensagemMensal?> GetByCompetenciaEstabelecimentoContato(DateTime? competencia, string cnpj, string telefone)
         {
-            return await _dataContext.Set<EnvioMensagemMensal>().FirstOrDefaultAsync(x => x.Competencia == competencia &&
-                                                                                          x.EstabelecimentoCnpj == cnpj &&
-                                                                                          x.ContatoTelefone == telefone);
+            return await _dataContext.Set<EnvioMensagemMensal>()
+                                     .Include(x=>x.Mensagem)
+                                        .ThenInclude(c=>c.MensagemItems)
+                                     .Where(y=>y.Mensagem.MensagemItems.Any(x=>x.MensagemStatus == MensagemStatus.Falha))
+                                     .OrderByDescending(x=>x.DataGeracao)
+                                     .FirstOrDefaultAsync(x => x.Competencia == competencia &&
+                                                               x.EstabelecimentoCnpj == cnpj &&
+                                                               x.ContatoTelefone == telefone);
         }
     }
 }

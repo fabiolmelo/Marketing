@@ -51,7 +51,7 @@ namespace Marketinf.Mvc.Controllers
                 var nomeArquivo = importarIncidenciaDto.arquivoEnviado.FileName.Replace(extensao, "").Split("_");
                 if (nomeArquivo[2] != importarIncidenciaDto.Rede) return RedirectToAction("ImportarPlanilhaTratada",
                         new { erro = $"O arquivo anexado contém dados da rede {nomeArquivo[2]}. É necessário selecionar a rede correspondente!" });
-                var sucesso = await _servicoImportarPlanilha.ImportarPlanilhaNovo(importarIncidenciaDto.arquivoEnviado,
+                var sucesso = await _servicoImportarPlanilha.ImportarPlanilha(importarIncidenciaDto.arquivoEnviado,
                                             importarIncidenciaDto.Rede, _webHostEnviroment.ContentRootPath);
                 return RedirectToAction("ImportarPlanilhaTratada", new { sucesso = "Arquivo importado com sucesso" });
             }

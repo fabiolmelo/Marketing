@@ -1,6 +1,6 @@
 ﻿using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
-using Marketing.Domain.Interfaces.IUnitOfWork;
+using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.Extensions.Logging;
 
@@ -8,32 +8,38 @@ namespace Marketing.Application.Servicos
 {
     public class ServicoProcessamentoMensal : IServicoProcessamentoMensal
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IServicoGraficoRevisado _servicoGraficoRevisado;
         private readonly ILogger<ServicoProcessamentoMensal> _logger;
+        private readonly IRepositorioEstabelecimento _repositorioEstabelecimento;
+        private readonly IRepositorioEnvioMensagemMensal _repositorioEnvioMensagemMensal;
+        private readonly IRepositorioRede _repositorioRede;
 
-        public ServicoProcessamentoMensal(IUnitOfWork unitOfWork, IServicoGraficoRevisado servicoGraficoRevisado, ILogger<ServicoProcessamentoMensal> logger)
+        public ServicoProcessamentoMensal(IServicoGraficoRevisado servicoGraficoRevisado,
+                                          ILogger<ServicoProcessamentoMensal> logger,
+                                          IRepositorioEstabelecimento repositorioEstabelecimento,
+                                          IRepositorioEnvioMensagemMensal repositorioEnvioMensagemMensal,
+                                          IRepositorioRede repositorioRede)
         {
-            _unitOfWork = unitOfWork;
             _servicoGraficoRevisado = servicoGraficoRevisado;
             _logger = logger;
+            _repositorioEstabelecimento = repositorioEstabelecimento;
+            _repositorioEnvioMensagemMensal = repositorioEnvioMensagemMensal;
+            _repositorioRede = repositorioRede;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
                                                    String contentRootPath,
-                                                   string caminhoApp)
+                                                   string caminhoApp, 
+                                                   List<Contato> contatos)
         {   
-            var contatos = await _unitOfWork.repositorioContato.BuscarContatosComAceite();
             string mes = competencia.ToString("MMMM yyyy").ToLower().PriMaiuscula();
             foreach (Contato contato in contatos)
             {
                 if (contato.Telefone == null || String.IsNullOrEmpty(contato.Telefone)) throw new Exception("TELEFONE NULO NO CADASTRO");
-                var estabelecimentos = await _unitOfWork.repositorioEstabelecimento
-                                                        .GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(contato.Telefone);
+                var estabelecimentos = await _repositorioEstabelecimento.GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(contato.Telefone);
                 foreach(Estabelecimento estabelecimento in estabelecimentos)
                 {
-                    var estabelecimentoPdf = await _unitOfWork.repositorioEstabelecimento
-                                                                .FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia);
+                    var estabelecimentoPdf = await _repositorioEstabelecimento.FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia);
                     if (estabelecimentoPdf == null) throw new Exception("ESTABELECIMENTO COM DADOS CORROMPIDOS");
                     await GerarProcessamentoPorEstabelecimento(estabelecimentoPdf, competencia,
                                                             contentRootPath, caminhoApp);
@@ -41,8 +47,8 @@ namespace Marketing.Application.Servicos
                     var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone,
                                                             estabelecimentoPdf?.RedeNome ?? "",
                                                             estabelecimentoPdf?.RazaoSocial ?? "");
-                    await _unitOfWork.GetRepository<EnvioMensagemMensal>().AddAsync(mensagem);
-                    await _unitOfWork.CommitAsync();
+                    await _repositorioEnvioMensagemMensal.AddAsync(mensagem);
+                    await _repositorioEnvioMensagemMensal.CommitAsync();
                 }
             }
         }
@@ -52,17 +58,17 @@ namespace Marketing.Application.Servicos
         {
             if (estabelecimento.ExtratoVendas.Count > 0)
             {
-                var posicaoNaRede = await _unitOfWork.repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
+                var posicaoNaRede = await _repositorioRede.BuscarRankingDoEstabelecimentoNaRede(competencia, estabelecimento);
                 var arquivoPdf = $"{estabelecimento.Cnpj}-{estabelecimento.RazaoSocial?.Replace(" ","_")}.pdf";
                 _servicoGraficoRevisado.GerarGrafico(estabelecimento, contentRootPath);
                 _servicoGraficoRevisado.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                     posicaoNaRede, contentRootPath, caminhoApp);
-                var estabelecimentoUpdate = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
+                var estabelecimentoUpdate = await _repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
                 if (estabelecimentoUpdate != null)
                 {
                     estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
-                    _unitOfWork.repositorioEstabelecimento.Update(estabelecimentoUpdate);
-                    await _unitOfWork.CommitAsync();
+                    _repositorioEstabelecimento.Update(estabelecimentoUpdate);
+                    await _repositorioEstabelecimento.CommitAsync();
                 }
             }     
         }

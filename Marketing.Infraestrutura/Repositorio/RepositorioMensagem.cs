@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography.X509Certificates;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Infraestrutura.Contexto;
@@ -82,47 +80,47 @@ namespace Marketing.Infraestrutura.Repositorio
             return resumo;
         }
 
-        public List<ResumoMensagem> BuscaResumoMensagemPorCompetenciaV2(DateTime? competencia)
-        {
-            var resumo = new List<ResumoMensagem>();
-            if (competencia != null)
-            {
-                var result = (from M in _context.Mensagens
-                              join MI in _context.MensagemItems on M.Id equals MI.Id
-                              join EM in _context.EnviosMensagemMensais on M.MensagemId equals EM.MensagemId 
-                              where M.Competencia == competencia
-                              into res 
-                              from MM in res.OrderByDescending(x=>x.DataEvento).Take(1)
-                              select new { MM.}
-                              )
+        // public List<ResumoMensagem> BuscaResumoMensagemPorCompetenciaV2(DateTime? competencia)
+        // {
+        //     var resumo = new List<ResumoMensagem>();
+        //     if (competencia != null)
+        //     {
+        //         var result = (from M in _context.Mensagens
+        //                       join MI in _context.MensagemItems on M.Id equals MI.Id
+        //                       join EM in _context.EnviosMensagemMensais on M.MensagemId equals EM.MensagemId 
+        //                       where M.Competencia == competencia
+        //                       into res 
+        //                       from MM in res.OrderByDescending(x=>x.DataEvento).Take(1)
+        //                       select new { MM.}
+        //                       )
                
-                                .Select(g => new
-                                {
-                                    Id = g.Key,
-                                    DataEvento = g.Max(v => v.DataEvento)
-                                });
+        //                         .Select(g => new
+        //                         {
+        //                             Id = g.Key,
+        //                             DataEvento = g.Max(v => v.DataEvento)
+        //                         });
                 
-                var soma = from MI in _context.MensagemItems 
-                           join T in trackList on MI.Id equals T.Id 
-                           where T.DataEvento == MI.DataEvento
-                           group MI by MI.MensagemStatus into newG
-                           select new
-                             {
-                                 MensagemStatus = newG.Key,
-                                 Total = newG.Count()
-                             }; 
-                foreach(var item in soma)
-                {
-                    resumo.Add(
-                        new ResumoMensagem()
-                        {
-                            MensagemStatus = item.MensagemStatus,
-                            Qtd = item.Total
-                        }
-                    );
-                }
-            }
-            return resumo;
-        }
+        //         var soma = from MI in _context.MensagemItems 
+        //                    join T in trackList on MI.Id equals T.Id 
+        //                    where T.DataEvento == MI.DataEvento
+        //                    group MI by MI.MensagemStatus into newG
+        //                    select new
+        //                      {
+        //                          MensagemStatus = newG.Key,
+        //                          Total = newG.Count()
+        //                      }; 
+        //         foreach(var item in soma)
+        //         {
+        //             resumo.Add(
+        //                 new ResumoMensagem()
+        //                 {
+        //                     MensagemStatus = item.MensagemStatus,
+        //                     Qtd = item.Total
+        //                 }
+        //             );
+        //         }
+        //     }
+        //     return resumo;
+        // }
     }
 }

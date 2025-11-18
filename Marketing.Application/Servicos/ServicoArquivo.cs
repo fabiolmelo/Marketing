@@ -579,9 +579,8 @@ namespace Marketing.Application.Servicos
                             if (!String.IsNullOrEmpty(fone) && fones.IndexOf(fone) == -1 && !contatosCadastrados.Any(x=>x.Telefone == fone))
                             {
                                 fones.Add(fone);
-                                contatosAdd.Add(new Contato()
+                                contatosAdd.Add(new Contato(fone)
                                     {
-                                        Telefone = fone,
                                         Nome = nome,
                                         DataCadastro = dataCadastro,
                                         OrigemContato = OrigemContato.EmailMarketing

@@ -12,5 +12,7 @@ namespace Marketing.Domain.Interfaces.Servicos
         Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj);
         Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas);
         Task<bool> AtualizarDadosCadastraisViaReceitaFederal(string cnpj, bool? forcarUpdate = false);
+        Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone);
+        Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia);
     }
 }

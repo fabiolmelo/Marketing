@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 
 namespace Marketing.Domain.Entidades
 {
