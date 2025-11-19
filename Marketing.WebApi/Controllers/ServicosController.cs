@@ -20,9 +20,9 @@ namespace Marketing.Mvc.Controllers
                     return Results.BadRequest();
                 }
                 contato.DataAceite = DateTime.Now;
-                contato.AceitaMensagem = 1;
+                contato.AceitaMensagem = true;
                 contato.DataRecusa = DateTime.MinValue;
-                contato.RecusaMensagem = 0;
+                contato.RecusaMensagem = false;
                 _servicoContato.Update(contato);
                 return Results.Ok();
             })
@@ -39,8 +39,8 @@ namespace Marketing.Mvc.Controllers
                     return Results.BadRequest("");
                 }
                 contato.DataRecusa = DateTime.Now;
-                contato.RecusaMensagem = 1;
-                contato.AceitaMensagem = 0;
+                contato.RecusaMensagem = true;
+                contato.AceitaMensagem = false;
                 contato.DataAceite = DateTime.MinValue;
                 _servicoContato.Update(contato);
                 return Results.Ok();
@@ -83,24 +83,30 @@ namespace Marketing.Mvc.Controllers
 
                                 if (statusId != null)
                                 {
-                                    var mensagem = await _unitOfWork.repositorioMensagem.FindByIdIncludeEventosAsync(statusId);
+                                    var mensagem = await _unitOfWork.repositorioMensagem.FindByPredicate(x=>x.MetaMensagemId == statusId);
                                     if (mensagem != null)
                                     {
+                                        MensagemItem mensagemItem;
                                         switch (statusStatus)
                                         {
                                             case "sent":
-                                                mensagem.AdicionarEvento(MensagemStatus.Enviado);
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.SENT);
                                                 break;
                                             case "delivered":
-                                                mensagem.AdicionarEvento(MensagemStatus.Entregue);
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.DELIVERED);
                                                 break;
                                             case "read":
-                                                mensagem.AdicionarEvento(MensagemStatus.Lida );
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.READ);
                                                 break;
                                             default:
-                                                mensagem.AdicionarEvento(MensagemStatus.Falha);
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.FAILED);
                                                 break;
                                         }    
+                                        if (mensagemItem != null)
+                                        {
+                                            await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
+                                            await _unitOfWork.CommitAsync();
+                                        }
                                     }
                                     
                                 }

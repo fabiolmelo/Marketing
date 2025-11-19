@@ -15,9 +15,9 @@ sudo dotnet publish -c Release -r linux-x64 ./Marketing.WebApi.csproj -o /var/in
 sudo chown -R ec2-user /var/incidenciaApi
 sudo chmod 770 /var/incidenciaApi/*
 
-sudo cp incidencia.service /etc/systemd/system/
-sudo cp incidenciaApi.service /etc/systemd/system/
-sudo cp nano.conf /etc/nginx
+sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
+sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
+sudo cp -f nano.conf /etc/nginx/nano.conf
 sudo systemctl start nginx
 sudo systemctl enable nginx
 sudo systemctl restart nginx
@@ -28,3 +28,4 @@ sudo systemctl start incidenciaApi.service
 sudo systemctl enable incidenciaApi.service
 sudo systemctl restart incidenciaApi.service
 
+cd /

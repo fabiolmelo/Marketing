@@ -12,6 +12,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AdicionarServicosAppIOC();
 RegistrarServicos.ConfigureHttpClient(builder.Services, builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 string connectionString;
 var bancoDeDados = builder.Configuration["BancoDeDados"] ?? "";
 
@@ -52,6 +63,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAll");
 app.AddApiServicosController();
 app.UseHttpsRedirection();
 app.Run();
