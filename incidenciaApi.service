@@ -1,0 +1,16 @@
+[Unit]
+Description=Incidencia API .NET
+[Service]
+WorkingDirectory=/var/incidenciaApi
+ExecStart=/usr/bin/dotnet /var/incidenciaApi/Marketing.WebApi.dll
+Restart=always
+# Reinicia após 3 segundos se a aplicação falhar
+RestartSec=3
+KillSignal=SIGINT
+SyslogIdentifier=incidenciaApi-service
+User=ec2-user
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target
