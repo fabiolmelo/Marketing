@@ -14,7 +14,7 @@ cd ../Marketing.WebApi
 sudo dotnet publish -c Release -r linux-x64 ./Marketing.WebApi.csproj -o /var/incidenciaApi/
 sudo chown -R ec2-user /var/incidenciaApi
 sudo chmod 770 /var/incidenciaApi/*
-
+cd ..
 sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
 sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
 sudo cp -f nano.conf /etc/nginx/nano.conf
