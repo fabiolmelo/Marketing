@@ -12,6 +12,14 @@ namespace Marketing.Domain.Entidades
             MensagemStatus = mensagemStatus;
         }
 
+         public MensagemItem(string mensagemId, DateTime dataEvento, MensagemStatus mensagemStatus, string observacao)
+        {
+            MensagemId = mensagemId;
+            DataEvento = dataEvento;
+            MensagemStatus = mensagemStatus;
+            Observacao = observacao;
+        }
+
         public Guid Id { get; } = Guid.NewGuid();
         public string MensagemId { get; set; } = null!;
         public virtual Mensagem Mensagem { get; set; } = null!;

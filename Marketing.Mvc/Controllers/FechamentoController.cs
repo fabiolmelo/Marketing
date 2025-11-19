@@ -1,5 +1,6 @@
 ﻿using Marketing.Application.DTOs;
 using Marketing.Domain.Entidades;
+using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace Marketing.Mvc.Controllers
         private readonly IServicoEnvioMensagemMensal _servicoEnvioMensagemMensal;
         private readonly ILogger<FechamentoController> _logger;
         private readonly IServico<MensagemItem> _servicoMensagemItem;
+        private readonly IUnitOfWork _unitOfWork;
 
         public FechamentoController(IServicoProcessamentoMensal servicoProcessamentoMensal,
                                                 IWebHostEnvironment webHostEnviroment,
@@ -25,7 +27,8 @@ namespace Marketing.Mvc.Controllers
                                                 IServicoExtratoVendas servicoExtratoVendas,
                                                 IServicoContato servicoContato,
                                                 IServicoEstabelecimento servicoEstabelecimento,
-                                                IServico<MensagemItem> servicoMensagemItem)
+                                                IServico<MensagemItem> servicoMensagemItem,
+                                                IUnitOfWork unitOfWork)
         {
             _servicoProcessamentoMensal = servicoProcessamentoMensal;
             _webHostEnviroment = webHostEnviroment;
@@ -36,6 +39,7 @@ namespace Marketing.Mvc.Controllers
             _servicoContato = servicoContato;
             _servicoEstabelecimento = servicoEstabelecimento;
             _servicoMensagemItem = servicoMensagemItem;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ActionResult> Index(string? erro = null, string? sucesso = null)
@@ -79,28 +83,19 @@ namespace Marketing.Mvc.Controllers
             }
         }
 
-        [HttpGet("Fechamento/Download/{cnpj}/{telefone}")]
-        public async Task<IActionResult> Download(string cnpj, string telefone)
+        [HttpGet("Fechamento/Download/{id}")]
+        public async Task<IActionResult> Download(string id)
         {
             try
             {
-                var contato = await _servicoContato.GetByIdStringAsync(telefone);
-                var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(cnpj);
-                var competenciaVigente = await _servicoExtratoVendas.BuscarCompetenciaVigente();
-                if (estabelecimento == null || estabelecimento.UltimoPdfGerado == null || contato == null)
-                {
-                    throw new Exception($"Estabelecimento{estabelecimento?.Cnpj}/Contato {contato?.Telefone}/Competencia não localizada!");
-                }
-                var mensagemEnvio = await _servicoEnvioMensagemMensal.GetByCompetenciaEstabelecimentoContato(competenciaVigente,
-                                            estabelecimento.Cnpj, contato.Telefone);
-                if (mensagemEnvio == null || mensagemEnvio.MensagemId == null)
-                {
-                    throw new Exception("Mensagem enviada ao contato não localizada!");
-                }
-                var mensagemItem = new MensagemItem(mensagemEnvio.MensagemId, DateTime.Now, MensagemStatus.ClicouLink);
-                await _servicoMensagemItem.AddAsync(mensagemItem);
-                await _servicoMensagemItem.CommitAsync();
-                var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "images", estabelecimento.UltimoPdfGerado);
+                var envio = await _servicoEnvioMensagemMensal.FindByPredicate(x=>x.MensagemId == id);
+                if (envio == null) throw new Exception("Mensagem enviada ao contato não localizada!");
+                var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
+                if (estabelecimento == null ) throw new Exception("Mensagem enviada ao contato não localizada!");
+                var mensagemItem = new MensagemItem(id, DateTime.Now, MensagemStatus.CLICKLINK);
+                await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
+                await _unitOfWork.CommitAsync();
+                var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "images", estabelecimento.UltimoPdfGerado ?? "");
                 byte[] fileBytes = System.IO.File.ReadAllBytes(pathRoot);
                 return File(fileBytes, "application/pdf", $"{estabelecimento.UltimoPdfGerado}");
             }

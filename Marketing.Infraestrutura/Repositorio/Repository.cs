@@ -71,8 +71,8 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public void Update(T entity)
         {
-            //_dataContext.Entry(entity).State = EntityState.Modified;
-            _dataContext.Update(entity);
+            _dataContext.Entry(entity).State = EntityState.Modified;
+            //_dataContext.Update(entity);
         }
 
         public void UpdateRange(List<T> entities)

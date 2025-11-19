@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Marketing.Domain.Entidades;
-using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
@@ -49,103 +48,55 @@ namespace Marketing.Mvc.Controllers
             var enviosPendentes = await _servicoEnvioMensagemMensal.BuscarTodasMensagensNaoEnviadas();
             foreach (var envioPendente in enviosPendentes)
             {
-                var envio = await _servicoEnvioMensagemMensal.GetByIdStringAsync(envioPendente.Id);
-                if (envio != null)
-                {
-                    var contato = await _servicoContato.GetByIdStringAsync(envio.ContatoTelefone);
-                    var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
-
-                    if (contato != null && estabelecimento != null)
-                    {
-                        ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
-                        if (response.IsSuccessStatusCode)
-                        {
-                            WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
-                            if (json != null && contato.Telefone != null)
-                            {
-                                foreach (Domain.Entidades.Message message in json.messages)
-                                {
-                                    var mensagemId = message.id;
-                                    if (mensagemId != null)
-                                    {
-                                        var mensagem = new Mensagem(mensagemId);
-                                        mensagem.AdicionarEvento(MensagemStatus.Disparado);
-                                        await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
-                                        await _servicoEnvioMensagemMensal.CommitAsync();
-                                        envio.MensagemId = mensagemId;
-                                        _servicoEnvioMensagemMensal.Update(envio);
-                                        await _servicoEnvioMensagemMensal.CommitAsync();
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            WhatsAppResponseError? erro = JsonSerializer.Deserialize<WhatsAppResponseError>(response.Response, JsonSerializerOptions.Default);
-                            var mensagem = new Mensagem(Guid.NewGuid().ToString());
-                            mensagem.AdicionarEvento(MensagemStatus.Falha, erro?.error?.MessageError  ?? "" );
-                            await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
-                            await _servicoEnvioMensagemMensal.CommitAsync();
-                            envio.MensagemId = mensagem.Id;
-                            _servicoEnvioMensagemMensal.Update(envio);
-                            await _servicoEnvioMensagemMensal.CommitAsync();
-                        }
-                    }
-                }
+                await EnviarUnico(envioPendente.Id);
             }
             return RedirectToAction("Index");
         }
         
         [HttpPost]
-        public async Task<ActionResult> Enviar(DateTime competencia, string estabelecimentoCnpj,
-                                               string contatoTelefone)
+        public async Task<ActionResult> EnviarUnico(string id)
+        {
+            await Enviar(id);
+            return RedirectToAction("Index");
+        }
+
+        private async Task Enviar(string id)
         {
             var caminhoApp = _configuration["Aplicacao:Url"];
             if (caminhoApp == null) throw new Exception("Arquivo de configuração inválido");
-            var envio = await _servicoEnvioMensagemMensal.GetByCompetenciaEstabelecimentoContato(competencia,
-                                                            contatoTelefone, estabelecimentoCnpj);
+            var envio = await _servicoEnvioMensagemMensal.GetByIdStringAsync(id);
             if (envio != null)
             {
-                var contato = await _servicoContato.GetByIdStringAsync(envio.ContatoTelefone);
-                var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
-
-                if (contato != null && estabelecimento != null)
+                ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtratoV2(id);
+                var mensagem = new Mensagem();
+                if (response.IsSuccessStatusCode)
                 {
-                    ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtrato(contato, estabelecimento, caminhoApp);
-                    if (response.IsSuccessStatusCode)
+                    WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
+                    if (json != null)
                     {
-                        WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
-                        if (json != null && contato.Telefone != null)
+                        foreach (Message message in json.messages)
                         {
-                            foreach (Domain.Entidades.Message message in json.messages)
+                            var mensagemId = message.id;
+                            if (mensagemId != null)
                             {
-                                var mensagemId = message.id;
-                                if (mensagemId != null)
-                                {
-                                    var mensagem = new Mensagem(mensagemId);
-                                    mensagem.AdicionarEvento(MensagemStatus.Disparado);
-                                    await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
-                                    await _servicoEnvioMensagemMensal.CommitAsync();
-                                    envio.MensagemId = mensagemId;
-                                    _servicoEnvioMensagemMensal.Update(envio);
-                                    await _servicoEnvioMensagemMensal.CommitAsync();
-                                }
+                                mensagem.SetMetaMensagemId(mensagemId);
+                                mensagem.AdicionarEvento(MensagemStatus.INQUEUE);
+                                await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                                await _unitOfWork.CommitAsync();
                             }
                         }
                     }
-                    else
-                    {
-                        var mensagem = new Mensagem(Guid.NewGuid().ToString());
-                        mensagem.AdicionarEvento(MensagemStatus.Falha);
-                        await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
-                        await _servicoEnvioMensagemMensal.CommitAsync();
-                        envio.MensagemId = mensagem.Id;
-                        _servicoEnvioMensagemMensal.Update(envio);
-                        await _servicoEnvioMensagemMensal.CommitAsync();
-                    }
                 }
+                else
+                {
+                    mensagem.AdicionarEvento(MensagemStatus.FAILED);
+                    await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
+                    await _servicoEnvioMensagemMensal.CommitAsync();
+                }
+                envio.MensagemId = mensagem.Id;
+                _servicoEnvioMensagemMensal.Update(envio);
+                await _servicoEnvioMensagemMensal.CommitAsync();
             }
-            return RedirectToAction("Index");
         }
     }
 }

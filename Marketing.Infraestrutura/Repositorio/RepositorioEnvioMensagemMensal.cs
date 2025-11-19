@@ -49,16 +49,16 @@ namespace Marketing.Infraestrutura.Repositorio
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task<EnvioMensagemMensal?> GetByCompetenciaEstabelecimentoContato(DateTime? competencia, string cnpj, string telefone)
-        {
-            return await _dataContext.Set<EnvioMensagemMensal>()
-                                     .Include(x=>x.Mensagem)
-                                        .ThenInclude(c=>c.MensagemItems)
-                                     .Where(y=>y.Mensagem.MensagemItems.Any(x=>x.MensagemStatus == MensagemStatus.Falha))
-                                     .OrderByDescending(x=>x.DataGeracao)
-                                     .FirstOrDefaultAsync(x => x.Competencia == competencia &&
-                                                               x.EstabelecimentoCnpj == cnpj &&
-                                                               x.ContatoTelefone == telefone);
-        }
+        // public async Task<EnvioMensagemMensal?> GetByCompetenciaEstabelecimentoContato(DateTime? competencia, string cnpj, string telefone)
+        // {
+        //     return await _dataContext.Set<EnvioMensagemMensal>()
+        //                              .Include(x=>x.Mensagem)
+        //                                 .ThenInclude(c=>c.MensagemItems)
+        //                              .Where(y=>y.Mensagem.MensagemItems.Any(x=>x.MensagemStatus == MensagemStatus.Falha))
+        //                              .OrderByDescending(x=>x.DataGeracao)
+        //                              .FirstOrDefaultAsync(x => x.Competencia == competencia &&
+        //                                                        x.EstabelecimentoCnpj == cnpj &&
+        //                                                        x.ContatoTelefone == telefone);
+        // }
     }
 }

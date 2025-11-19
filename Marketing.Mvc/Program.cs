@@ -1,7 +1,9 @@
+using System.Globalization;
 using System.Threading.RateLimiting;
 using Marketing.Infraestrutura.Contexto;
 using Marketing.Mvc.Extensoes;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using NLog.Extensions.Logging;
@@ -37,6 +39,16 @@ try
     builder.Services.AddControllersWithViews();
     builder.Services.AdicionarServicosAppIOC();
     RegistrarServicos.ConfigureHttpClient(builder.Services, builder.Configuration);
+
+    builder.Services.AddLocalization();
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        var supportedCultures = new[] { new CultureInfo("pt-BR") };
+        options.DefaultRequestCulture = new RequestCulture(culture: "pt-BR", uiCulture: "pt-BR");
+        options.SupportedCultures = supportedCultures;
+        options.SupportedUICultures = supportedCultures;
+    });
 
     string connectionString;
     var bancoDeDados = builder.Configuration["BancoDeDados"] ?? "";
@@ -83,6 +95,7 @@ try
         app.UseHsts();
     }
 
+    app.UseRequestLocalization();
     app.UseHttpsRedirection();
     app.UseStaticFiles();
     app.UseRouting();

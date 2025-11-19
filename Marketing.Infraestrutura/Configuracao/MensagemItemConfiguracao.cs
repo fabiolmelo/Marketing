@@ -9,6 +9,9 @@ namespace Marketing.Infraestrutura.Configuracao
         public void Configure(EntityTypeBuilder<MensagemItem> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.HasOne(x => x.Mensagem)
+                   .WithMany(x => x.MensagemItems)
+                   .HasPrincipalKey(x => x.Id);
         }
     }
 }

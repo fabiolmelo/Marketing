@@ -2,46 +2,29 @@ namespace Marketing.Domain.Entidades
 {
     public class Mensagem
     {
-        public Mensagem()
+      
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public virtual EnvioMensagemMensal EnvioMensagemMensal { get; set; } = null!;
+        public string? MetaMensagemId { get; private set; }
+        public virtual ICollection<MensagemItem> MensagemItems { get; private set; } = new List<MensagemItem>();
+
+        public void SetMetaMensagemId(string id)
         {
-            Id = Guid.NewGuid().ToString();
+            MetaMensagemId = id;
         }
-
-        public Mensagem(string id)
-        {
-            Id = id;
-        }
-
-        public string Id { get; set; } 
-        public virtual EnvioMensagemMensal? EnvioMensagemMensal { get; set; }
-        public ICollection<MensagemItem> MensagemItems { get; private set; } = null!;
-
         public void AdicionarEvento(MensagemItem evento)
         {
-            if (this.MensagemItems == null) this.MensagemItems = new List<MensagemItem>();
-            this.MensagemItems.Add(evento);
+            evento.MensagemId = this.Id;
+            MensagemItems.Add(evento);
         }
 
         public void AdicionarEvento(MensagemStatus mensagemStatus)
         {
-            if (this.MensagemItems == null) this.MensagemItems = new List<MensagemItem>();
-            var evento = new MensagemItem();
-            evento.MensagemId = this.Id;
-            evento.Mensagem = this;
-            evento.DataEvento = DateTime.Now;
-            evento.MensagemStatus = mensagemStatus;
-            this.MensagemItems.Add(evento);
+            MensagemItems.Add(new MensagemItem(this.Id, DateTime.Now, mensagemStatus));
         }
-          public void AdicionarEvento(MensagemStatus mensagemStatus, string observacao)
+        public void AdicionarEvento(MensagemStatus mensagemStatus, string observacao)
         {
-            if (this.MensagemItems == null) this.MensagemItems = new List<MensagemItem>();
-            var evento = new MensagemItem();
-            evento.MensagemId = this.Id;
-            evento.Mensagem = this;
-            evento.DataEvento = DateTime.Now;
-            evento.MensagemStatus = mensagemStatus;
-            evento.Observacao = observacao; 
-            this.MensagemItems.Add(evento);
+            MensagemItems.Add(new MensagemItem(this.Id, DateTime.Now, mensagemStatus, observacao));
         }
     }
 }

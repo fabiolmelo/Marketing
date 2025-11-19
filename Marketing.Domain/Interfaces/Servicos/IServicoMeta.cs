@@ -6,5 +6,6 @@ namespace Marketing.Domain.Interfaces.Servicos
     {
         Task<bool> EnviarSolitacaoAceiteContatoASync(Contato contato, string urlExtrato);
         Task<ServicoExtratoResponseDto> EnviarExtrato(Contato contato, Estabelecimento estabelecimento, string caminhoApp);
+        Task<ServicoExtratoResponseDto> EnviarExtratoV2(string idMensagem);
     }
 }

@@ -68,7 +68,8 @@ namespace Marketing.Infraestrutura.Migrations
                 name: "Mensagens",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    MetaMensagemId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -293,6 +294,11 @@ namespace Marketing.Infraestrutura.Migrations
                 name: "IX_MensagemItems_MensagemId",
                 table: "MensagemItems",
                 column: "MensagemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MENSAGEM_METAMENSAGEMID",
+                table: "Mensagens",
+                column: "MetaMensagemId");
         }
 
         /// <inheritdoc />

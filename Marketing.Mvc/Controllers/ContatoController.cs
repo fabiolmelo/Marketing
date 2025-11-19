@@ -68,7 +68,7 @@ namespace Marketing.Mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(string id,
-                    [Bind("Telefone,Nome,AceitaMensagem,DataAceite,RecusaMensagem,DataRecusa,Email,Token,UltimaCompetenciaEnviada")] Contato contato)
+                    [Bind("Telefone,Nome,AceitaMensagem,DataAceite,RecusaMensagem,DataRecusa,Email,Token,UltimaCompetenciaEnviada,OrigemCadastro")] Contato contato)
         {
             try
             {

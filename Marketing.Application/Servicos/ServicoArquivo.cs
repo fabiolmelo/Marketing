@@ -542,11 +542,11 @@ namespace Marketing.Application.Servicos
                     linha++;
                 }
 
-                planilha.Cell($"B{linha + 5}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.Entregue)?.Qtd ?? 0;
-                planilha.Cell($"B{linha + 6}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.Lida)?.Qtd ?? 0;
-                planilha.Cell($"B{linha + 7}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.ClicouLink)?.Qtd ?? 0;
-                planilha.Cell($"B{linha + 8}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.Disparado ||
-                                                                             x.MensagemStatus == MensagemStatus.Falha)?.Qtd ?? 0;
+                planilha.Cell($"B{linha + 5}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.DELIVERED)?.Qtd ?? 0;
+                planilha.Cell($"B{linha + 6}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.READ)?.Qtd ?? 0;
+                planilha.Cell($"B{linha + 7}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.CLICKLINK)?.Qtd ?? 0;
+                planilha.Cell($"B{linha + 8}").Value = resumo.FirstOrDefault(x => x.MensagemStatus == MensagemStatus.SENT ||
+                                                                             x.MensagemStatus == MensagemStatus.FAILED)?.Qtd ?? 0;
                 excel.SaveAs(pathArquivoBase);
             }
         }

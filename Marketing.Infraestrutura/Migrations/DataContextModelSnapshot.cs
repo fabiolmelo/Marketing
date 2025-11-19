@@ -330,7 +330,14 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MetaMensagemId")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("MetaMensagemId")
+                        .HasDatabaseName("IX_MENSAGEM_METAMENSAGEMID");
 
                     b.ToTable("Mensagens");
                 });
@@ -482,7 +489,8 @@ namespace Marketing.Infraestrutura.Migrations
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
                 {
-                    b.Navigation("EnvioMensagemMensal");
+                    b.Navigation("EnvioMensagemMensal")
+                        .IsRequired();
 
                     b.Navigation("MensagemItems");
                 });
