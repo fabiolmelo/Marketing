@@ -47,13 +47,13 @@ namespace Marketing.Application.Servicos
 
         public async Task<ServicoExtratoResponseDto> EnviarExtratoV2(string idMensagem)
         {
-            var urlExtrato = $"Fechamento/Download/{idMensagem}";
+            var urlExtrato = $"{idMensagem}";
             var envio = await _unitOfWork.repositorioEnvioMensagemMensal.GetByIdStringAsync(idMensagem);
             if (envio == null) throw new Exception("Erro enviando status!");
             var contato = await _unitOfWork.repositorioContato.GetByIdStringAsync(envio.ContatoTelefone);
             var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
             if (contato == null || estabelecimento == null) throw new Exception("Erro enviando status!");
-            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone, "extrato", "pt_BR");
+            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone, "extrato2", "pt_BR");
             var bodyComponent = new Component("body");
             bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.RazaoSocial });
             requestBody.template.components.Add(bodyComponent);
