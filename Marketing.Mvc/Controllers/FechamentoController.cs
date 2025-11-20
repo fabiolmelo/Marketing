@@ -88,11 +88,11 @@ namespace Marketing.Mvc.Controllers
         {
             try
             {
-                var envio = await _servicoEnvioMensagemMensal.FindByPredicate(x=>x.MensagemId == id);
-                if (envio == null) throw new Exception("Mensagem enviada ao contato não localizada!");
+                var envio = await _servicoEnvioMensagemMensal.GetByIdStringAsync(id);
+                if (envio == null || envio.MensagemId == null) throw new Exception("Mensagem enviada ao contato não localizada!");
                 var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
                 if (estabelecimento == null ) throw new Exception("Mensagem enviada ao contato não localizada!");
-                var mensagemItem = new MensagemItem(id, DateTime.Now, MensagemStatus.CLICKLINK);
+                var mensagemItem = new MensagemItem(envio.MensagemId, DateTime.Now, MensagemStatus.CLICKLINK);
                 await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
                 await _unitOfWork.CommitAsync();
                 var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "images", estabelecimento.UltimoPdfGerado ?? "");

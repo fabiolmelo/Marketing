@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Marketing.Domain.Entidades;
+using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +65,7 @@ namespace Marketing.Mvc.Controllers
         {
             var caminhoApp = _configuration["Aplicacao:Url"];
             if (caminhoApp == null) throw new Exception("Arquivo de configuração inválido");
-            var envio = await _servicoEnvioMensagemMensal.GetByIdStringAsync(id);
+            var envio = await _unitOfWork.GetRepository<EnvioMensagemMensal>().GetByIdStringAsync(id);
             if (envio != null)
             {
                 ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtratoV2(id);
@@ -74,7 +75,7 @@ namespace Marketing.Mvc.Controllers
                     WhatsAppResponseResult? json = JsonSerializer.Deserialize<WhatsAppResponseResult>(response.Response, JsonSerializerOptions.Default);
                     if (json != null)
                     {
-                        foreach (Message message in json.messages)
+                        foreach (Domain.Entidades.Message message in json.messages)
                         {
                             var mensagemId = message.id;
                             if (mensagemId != null)
@@ -89,13 +90,14 @@ namespace Marketing.Mvc.Controllers
                 }
                 else
                 {
-                    mensagem.AdicionarEvento(MensagemStatus.FAILED);
+                    WhatsAppResponseError? json = JsonSerializer.Deserialize<WhatsAppResponseError>(response.Response, JsonSerializerOptions.Default);
+                    mensagem.AdicionarEvento(MensagemStatus.FAILED, json?.error.MessageError ?? "");
                     await _unitOfWork.GetRepository<Mensagem>().AddAsync(mensagem);
                     await _servicoEnvioMensagemMensal.CommitAsync();
                 }
                 envio.MensagemId = mensagem.Id;
-                _servicoEnvioMensagemMensal.Update(envio);
-                await _servicoEnvioMensagemMensal.CommitAsync();
+                _unitOfWork.GetRepository<EnvioMensagemMensal>().Update(envio);
+                await _unitOfWork.CommitAsync();
             }
         }
     }
