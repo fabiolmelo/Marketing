@@ -17,7 +17,7 @@ sudo chmod 770 /var/incidenciaApi/*
 cd ..
 sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
 sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
-sudo cp -f nano.conf /etc/nginx/nano.conf
+sudo cp -f nginx.conf /etc/nginx/nginx.conf
 sudo systemctl start nginx
 sudo systemctl enable nginx
 sudo systemctl restart nginx
