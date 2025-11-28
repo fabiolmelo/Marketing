@@ -22,7 +22,7 @@ sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
 sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
 sudo mkdir /etc/nginx/sites-avaliable
 sudo cp -f nginx.conf /etc/nginx/sites-avaliable/nginx.conf
-sudo ln -s /etc/nginx/sites-available/programadeincidencia.com.br /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/programadeincidencias.com.br /etc/nginx/sites-enabled/
 sudo systemctl start nginx
 sudo systemctl enable nginx
 sudo systemctl restart nginx
