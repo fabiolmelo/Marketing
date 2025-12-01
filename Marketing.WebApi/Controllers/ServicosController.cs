@@ -130,7 +130,10 @@ namespace Marketing.Mvc.Controllers
         app.MapGet("api/HandleWebhook",
                 async([FromServices] IServicoMeta _servicoMeta,
                       [FromServices] IConfiguration _configuration,
-                      [FromQuery] string hubMode, string hubVerifyToken, string hubChallenge) =>
+                      [FromQuery(Name = "hub.mode")] string hubMode,
+                      [FromQuery(Name = "hub.challenge")] string hubChallenge,
+                      [FromQuery(Name = "hub.verify_token")] string hubVerifyToken
+                      ) =>
                 {
                     var tokenVerificar = _configuration["Meta:TokenVerificacaoApi"];
                     if (hubMode == "subscribe" && hubVerifyToken == tokenVerificar)
