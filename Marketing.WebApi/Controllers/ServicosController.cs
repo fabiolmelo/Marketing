@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
@@ -60,55 +61,62 @@ namespace Marketing.Mvc.Controllers
                     return Results.BadRequest();
                 }
                 // Processar o payload...
-                foreach (var entry in payload.Entry)
+                if (payload != null)
                 {
-                    foreach (var change in entry.Changes)
-                    {
-                        if (change.Field == "messages")
-                        {
-                            foreach (var message in change.Value.Messaging.Messages)
-                            {
-                                // Processar a mensagem...
-                                var texto = message.Text.Body;
-                                // ...
-                            }
-                        }
-                        else if (change.Field == "statuses")
-                        {
-                            foreach (var status in change.Value.Statuses.StatusesList)
-                            {
-                                // Processar o status...
-                                var statusId = status.Id;
-                                var statusStatus = status.StatusName;
+                    var jsonSerialize = JsonSerializer.Serialize(payload);
+                    var metaWebhookResponse = new MetaWebhookResponse(jsonSerialize);
+                    await _unitOfWork.GetRepository<MetaWebhookResponse>().AddAsync(metaWebhookResponse);
+                    await _unitOfWork.CommitAsync(); 
 
-                                if (statusId != null)
+                    foreach (var entry in payload.Entry)
+                    {
+                        foreach (var change in entry.Changes)
+                        {
+                            if (change.Field == "messages")
+                            {
+                                foreach (var message in change.Value.Messaging.Messages)
                                 {
-                                    var mensagem = await _unitOfWork.repositorioMensagem.FindByPredicate(x=>x.MetaMensagemId == statusId);
-                                    if (mensagem != null)
+                                    // Processar a mensagem...
+                                    var texto = message.Text.Body;
+                                    // ...
+                                }
+                            }
+                            else if (change.Field == "statuses")
+                            {
+                                foreach (var status in change.Value.Statuses.StatusesList)
+                                {
+                                    // Processar o status...
+                                    var statusId = status.Id;
+                                    var statusStatus = status.StatusName;
+
+                                    if (statusId != null)
                                     {
-                                        MensagemItem mensagemItem;
-                                        switch (statusStatus)
+                                        var mensagem = await _unitOfWork.repositorioMensagem.FindByPredicate(x=>x.MetaMensagemId == statusId);
+                                        if (mensagem != null)
                                         {
-                                            case "sent":
-                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.SENT);
-                                                break;
-                                            case "delivered":
-                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.DELIVERED);
-                                                break;
-                                            case "read":
-                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.READ);
-                                                break;
-                                            default:
-                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.FAILED);
-                                                break;
-                                        }    
-                                        if (mensagemItem != null)
-                                        {
-                                            await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
-                                            await _unitOfWork.CommitAsync();
+                                            MensagemItem mensagemItem;
+                                            switch (statusStatus)
+                                            {
+                                                case "sent":
+                                                    mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.SENT);
+                                                    break;
+                                                case "delivered":
+                                                    mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.DELIVERED);
+                                                    break;
+                                                case "read":
+                                                    mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.READ);
+                                                    break;
+                                                default:
+                                                    mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.FAILED);
+                                                    break;
+                                            }    
+                                            if (mensagemItem != null)
+                                            {
+                                                await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
+                                                await _unitOfWork.CommitAsync();
+                                            }
                                         }
                                     }
-                                    
                                 }
                             }
                         }

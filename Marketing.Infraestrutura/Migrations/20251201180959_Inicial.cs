@@ -77,6 +77,19 @@ namespace Marketing.Infraestrutura.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MetaWebhookResponses",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Response = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MetaWebhookResponses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Redes",
                 columns: table => new
                 {
@@ -321,6 +334,9 @@ namespace Marketing.Infraestrutura.Migrations
 
             migrationBuilder.DropTable(
                 name: "MensagemItems");
+
+            migrationBuilder.DropTable(
+                name: "MetaWebhookResponses");
 
             migrationBuilder.DropTable(
                 name: "TemplateImportarPlanilhas");

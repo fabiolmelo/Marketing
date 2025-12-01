@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketing.Infraestrutura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251119135900_Inicial")]
+    [Migration("20251201180959_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -369,6 +369,22 @@ namespace Marketing.Infraestrutura.Migrations
                     b.HasIndex("MensagemId");
 
                     b.ToTable("MensagemItems");
+                });
+
+            modelBuilder.Entity("Marketing.Domain.Entidades.MetaWebhookResponse", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Response")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MetaWebhookResponses");
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>

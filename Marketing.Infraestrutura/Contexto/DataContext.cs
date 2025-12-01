@@ -24,18 +24,12 @@ namespace Marketing.Infraestrutura.Contexto
         public DbSet<MensagemItem> MensagemItems { get; set; }
         public DbSet<ConfiguracaoApp> Configuracoes { get; set; }
         public DbSet<TemplateImportarPlanilha> TemplateImportarPlanilhas { get; set; }
+        public DbSet<MetaWebhookResponse> MetaWebhookResponses { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                // var connectionString = "Data Source=DadosApp\\BD\\LocalDatabase.db";
-                // var serverVersion = new MySqlServerVersion(new Version(10, 2));
-                // var connectionString = "Server=mysql.mediaonboard.com.br;Database=mediaonboard02;Uid=mediaonboard02;Pwd=Hh8bjdT2Mh82K8u;";
-                // optionsBuilder.UseMySql(connectionString, serverVersion)
-                //                         .LogTo(Console.WriteLine, LogLevel.Information)
-                //                         .EnableSensitiveDataLogging()
-                //                         .EnableDetailedErrors();
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

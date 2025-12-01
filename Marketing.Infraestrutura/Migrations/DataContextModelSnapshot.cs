@@ -368,6 +368,22 @@ namespace Marketing.Infraestrutura.Migrations
                     b.ToTable("MensagemItems");
                 });
 
+            modelBuilder.Entity("Marketing.Domain.Entidades.MetaWebhookResponse", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Response")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MetaWebhookResponses");
+                });
+
             modelBuilder.Entity("Marketing.Domain.Entidades.Rede", b =>
                 {
                     b.Property<string>("Nome")
