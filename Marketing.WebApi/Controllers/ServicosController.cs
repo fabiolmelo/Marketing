@@ -130,12 +130,12 @@ namespace Marketing.Mvc.Controllers
         app.MapGet("api/HandleWebhook",
                 async([FromServices] IServicoMeta _servicoMeta,
                       [FromServices] IConfiguration _configuration,
-                      [FromBody] WhatsAppVerify whatsAppVerify) =>
+                      [FromQuery] string hubMode, string hubVerifyToken, string hubChallenge) =>
                 {
                     var tokenVerificar = _configuration["Meta:TokenVerificacaoApi"];
-                    if (whatsAppVerify.hubMode == "subscribe" && whatsAppVerify.hubVerifyToken == tokenVerificar)
+                    if (hubMode == "subscribe" && hubVerifyToken == tokenVerificar)
                     {
-                        return Results.Ok(whatsAppVerify.hubChallenge);
+                        return Results.Ok(hubChallenge);
                     }
                     else
                     {
