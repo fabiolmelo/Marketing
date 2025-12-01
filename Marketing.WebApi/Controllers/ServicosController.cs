@@ -124,10 +124,10 @@ namespace Marketing.Mvc.Controllers
                 }
                 return Results.Ok();
             })
-            .WithName("api/HandleWebhook")
+            .WithName("HandleWebhook")
             .WithOpenApi();
 
-        app.MapPost("VerifyWebhook",
+        app.MapPost("api/VerifyWebhook",
                 async([FromServices] IServicoMeta _servicoMeta,
                       [FromServices] IConfiguration _configuration,
                       [FromBody] WhatsAppVerify whatsAppVerify) =>

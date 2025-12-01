@@ -51,9 +51,6 @@ switch (bancoDeDados)
         break;
 }
 
- builder.WebHost.ConfigureKestrel(options =>
-            options.ListenLocalhost(9000)); 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
