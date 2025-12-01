@@ -31,3 +31,6 @@ sudo systemctl enable incidenciaApi.service
 sudo systemctl restart incidenciaApi.service
 
 cd /
+
+chmod -R 700 /var/incidencia
+chmod -R 700 /var/incidenciaApi
