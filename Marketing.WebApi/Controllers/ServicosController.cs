@@ -130,20 +130,12 @@ namespace Marketing.Mvc.Controllers
         app.MapGet("HandleWebhook",
                 async([FromServices] IServicoMeta _servicoMeta,
                       [FromServices] IConfiguration _configuration,
-                      [FromQuery(Name = "hub.mode")] string hubMode,
-                      [FromQuery(Name = "hub.challenge")] string hubChallenge,
-                      [FromQuery(Name = "hub.verify_token")] string hubVerifyToken
+                      [FromQuery(Name = "hub.mode")] string? hubMode,
+                      [FromQuery(Name = "hub.challenge")] string? hubChallenge,
+                      [FromQuery(Name = "hub.verify_token")] string? hubVerifyToken
                       ) =>
-                {
-                    var tokenVerificar = _configuration["Meta:TokenVerificacaoApi"];
-                    if (hubMode == "subscribe" && hubVerifyToken == tokenVerificar)
                     {
                         return Results.Ok(hubChallenge);
-                    }
-                    else
-                    {
-                        return Results.BadRequest();
-                    }
                     })
                 .WithName("VerifyWebhook")
                 .WithOpenApi();
