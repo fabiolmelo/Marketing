@@ -20,6 +20,7 @@ sudo systemctl stop incidencia.service
 sudo systemctl stop incidenciaApi.service
 sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
 sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
+sudo cp -f nginx.conf /etc/nginx/nginx.conf
 sudo systemctl start nginx
 sudo systemctl enable nginx
 sudo systemctl restart nginx
