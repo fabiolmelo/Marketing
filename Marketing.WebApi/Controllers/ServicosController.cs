@@ -127,7 +127,7 @@ namespace Marketing.Mvc.Controllers
             .WithName("HandleWebhook")
             .WithOpenApi();
 
-        app.MapPost("api/VerifyWebhook",
+        app.MapGet("api/HandleWebhook",
                 async([FromServices] IServicoMeta _servicoMeta,
                       [FromServices] IConfiguration _configuration,
                       [FromBody] WhatsAppVerify whatsAppVerify) =>
