@@ -40,4 +40,3 @@ sudo systemctl restart incidenciaApi.service
 chmod -R 700 /var/incidencia
 chmod -R 700 /var/incidenciaApi
 cd /
-sudo certbot --nginx -d programadeincidencia.com.br -d www.programadeincidencia.com.br -d api.programadeincidencia.com.br
