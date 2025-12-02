@@ -4,7 +4,6 @@ using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
-using Npgsql.Replication;
 
 namespace Marketing.Mvc.Controllers
 {
@@ -123,7 +122,7 @@ namespace Marketing.Mvc.Controllers
                 }
                 return Results.Ok();
             })
-            .WithName("HandleWebhook")
+            .WithName("webhooksPost")
             .WithOpenApi();
 
             app.MapGet("webhooks",
@@ -136,7 +135,7 @@ namespace Marketing.Mvc.Controllers
                     {
                         return Results.Ok(hubChallenge);
                     })
-                .WithName("VerifyWebhook")
+                .WithName("webhooksGet")
                 .WithOpenApi();
 
             app.MapGet("Teste",
