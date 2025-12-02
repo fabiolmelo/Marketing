@@ -50,7 +50,7 @@ namespace Marketing.Mvc.Controllers
             .WithName("RecusaContato")
             .WithOpenApi();      
             
-            app.MapPost("HandleWebhook",
+            app.MapPost("webhooks",
                 async ([FromServices] IServicoMeta _servicoMeta,
                        [FromServices] IUnitOfWork _unitOfWork,
                        [FromBody] WhatsAppWebhookPayload payload) =>
@@ -126,7 +126,7 @@ namespace Marketing.Mvc.Controllers
             .WithName("HandleWebhook")
             .WithOpenApi();
 
-            app.MapGet("HandleWebhook",
+            app.MapGet("webhooks",
                 async([FromServices] IServicoMeta _servicoMeta,
                       [FromServices] IConfiguration _configuration,
                       [FromQuery(Name = "hub.mode")] string? hubMode,
