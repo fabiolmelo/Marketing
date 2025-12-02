@@ -18,6 +18,10 @@ cd ..
 sudo systemctl stop nginx
 sudo systemctl stop incidencia.service
 sudo systemctl stop incidenciaApi.service
+sudo mkdir /etc/nginx/sites-avaliable
+sudo mkdir /etc/nginx/sites-enabled
+sudo chown -R ec2-user /etc/nginx
+sudo chmod 770 /etc/nginx/*
 sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
 sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
 sudo cp -f nginx.conf /etc/nginx/nginx.conf
@@ -37,3 +41,4 @@ sudo systemctl restart incidenciaApi.service
 chmod -R 700 /var/incidencia
 chmod -R 700 /var/incidenciaApi
 cd /
+sudo certbot --nginx -d programadeincidencia.com.br -d www.programadeincidencia.com.br -d api.programadeincidencia.com.br
