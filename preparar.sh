@@ -24,7 +24,6 @@ sudo chown -R ec2-user /etc/nginx
 sudo chmod 770 /etc/nginx/*
 sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
 sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
-sudo cp -f nginx.conf /etc/nginx/nginx.conf
 sudo cp -f programadeincidencia.com.br /etc/nginx/sites-available/programadeincidencia.com.br
 sudo cp -f api.programadeincidencia.com.br /etc/nginx/sites-available/api.programadeincidencia.com.br
 sudo ln -s /etc/nginx/sites-available/programadeincidencia.com.br /etc/nginx/sites-enabled/

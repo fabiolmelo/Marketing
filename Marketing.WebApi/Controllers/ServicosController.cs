@@ -4,6 +4,7 @@ using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
+using Npgsql.Replication;
 
 namespace Marketing.Mvc.Controllers
 {
@@ -47,9 +48,7 @@ namespace Marketing.Mvc.Controllers
                 return Results.Ok();
             })
             .WithName("RecusaContato")
-            .WithOpenApi();
-
-            
+            .WithOpenApi();      
             
             app.MapPost("HandleWebhook",
                 async ([FromServices] IServicoMeta _servicoMeta,
@@ -127,7 +126,7 @@ namespace Marketing.Mvc.Controllers
             .WithName("HandleWebhook")
             .WithOpenApi();
 
-        app.MapGet("HandleWebhook",
+            app.MapGet("HandleWebhook",
                 async([FromServices] IServicoMeta _servicoMeta,
                       [FromServices] IConfiguration _configuration,
                       [FromQuery(Name = "hub.mode")] string? hubMode,
@@ -138,6 +137,14 @@ namespace Marketing.Mvc.Controllers
                         return Results.Ok(hubChallenge);
                     })
                 .WithName("VerifyWebhook")
+                .WithOpenApi();
+
+            app.MapGet("Teste",
+                async() =>
+                    {
+                        return Results.Ok(new {Teste = "Teste"});
+                    })
+                .WithName("Teste")
                 .WithOpenApi();
         }
     }
