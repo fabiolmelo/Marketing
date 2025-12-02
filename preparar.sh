@@ -21,6 +21,10 @@ sudo systemctl stop incidenciaApi.service
 sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
 sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
 sudo cp -f nginx.conf /etc/nginx/nginx.conf
+sudo cp -f programadeincidencia.com.br /etc/nginx/sites-available/programadeincidencia.com.br
+sudo cp -f api.programadeincidencia.com.br /etc/nginx/sites-available/api.programadeincidencia.com.br
+sudo ln -s /etc/nginx/sites-available/programadeincidencia.com.br /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/api.programadeincidencia.com.br /etc/nginx/sites-enabled/
 sudo systemctl start nginx
 sudo systemctl enable nginx
 sudo systemctl restart nginx
@@ -30,8 +34,6 @@ sudo systemctl restart incidencia.service
 sudo systemctl start incidenciaApi.service
 sudo systemctl enable incidenciaApi.service
 sudo systemctl restart incidenciaApi.service
-
-cd /
-
 chmod -R 700 /var/incidencia
 chmod -R 700 /var/incidenciaApi
+cd /

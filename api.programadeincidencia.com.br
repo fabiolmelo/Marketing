@@ -1,0 +1,24 @@
+server {
+    listen 80;
+    server_name api.programadeincidencia.com.br;
+
+    # Redireciona HTTP para HTTPS (será configurado após obter certificados)
+    # return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name api.seusite.com;
+
+    # Configurações SSL (atualize para o subdomínio, se necessário)
+    ssl_certificate /etc/letsencrypt/live/api.programadeincidencia.com.br;
+    ssl_certificate_key /etc/letsencrypt/live/api.programadeincidencia.com.br;
+
+    location / {
+        proxy_pass http://localhost:9990; # Porta do Kestrel para a API
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
