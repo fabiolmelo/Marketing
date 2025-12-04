@@ -60,7 +60,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowAll");
+//app.UseCors("AllowAll");
 app.AddApiServicosController();
 app.UseHttpsRedirection();
 app.Run();
