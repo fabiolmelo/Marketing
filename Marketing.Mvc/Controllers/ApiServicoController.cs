@@ -11,11 +11,20 @@ namespace Marketing.Mvc.Controllers
     [Route("api/")]
     public class ApiServicoController : ControllerBase 
     {
+        private readonly IServicoMeta _servicoMeta;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
+
+        public ApiServicoController(IServicoMeta servicoMeta, IUnitOfWork unitOfWork, IConfiguration configuration)
+        {
+            _servicoMeta = servicoMeta;
+            _unitOfWork = unitOfWork;
+            _configuration = configuration;
+        }
+        
         [HttpGet]
         [Route("webhooks")]
-        public async Task<IActionResult> WebHook([FromServices] IServicoMeta _servicoMeta,
-                                                 [FromServices] IUnitOfWork _unitOfWork,
-                                                 [FromBody] WhatsAppWebhookPayload payload)
+        public async Task<IActionResult> WebHook([FromBody] WhatsAppWebhookPayload payload)
         {
             if (payload == null)
             {
@@ -89,9 +98,7 @@ namespace Marketing.Mvc.Controllers
         
         [HttpPost]
         [Route("webhooks")]
-        public async Task<IActionResult> Index([FromServices] IServicoMeta _servicoMeta,
-                                               [FromServices] IConfiguration _configuration,
-                                               [FromQuery(Name = "hub.mode")] string? hubMode,
+        public async Task<IActionResult> Webhook([FromQuery(Name = "hub.mode")] string? hubMode,
                                                [FromQuery(Name = "hub.challenge")] string? hubChallenge,
                                                [FromQuery(Name = "hub.verify_token")] string? hubVerifyToken)
         {
