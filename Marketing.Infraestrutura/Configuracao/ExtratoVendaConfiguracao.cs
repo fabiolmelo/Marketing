@@ -11,7 +11,7 @@ namespace Marketing.Infraestrutura.Configuracao
             //builder.HasKey(x => new { x.Ano, x.Mes, x.EstabelecimentoCnpj });
             builder.HasKey(x => new { x.Competencia, x.EstabelecimentoCnpj });
             builder.HasOne(x=>x.Estabelecimento).WithMany(x=>x.ExtratoVendas).HasForeignKey(x=>x.EstabelecimentoCnpj);
-            builder.Property(x => x.Competencia).HasColumnType("DATETIME");
+            builder.Property(x => x.Competencia).HasColumnType("DATETIME(6)");
             builder.Property(x => x.IncidenciaReal).HasColumnType("DECIMAL(18,2)");
             builder.Property(x => x.Meta).HasColumnType("DECIMAL(18,2)");
             builder.Property(x => x.PrecoUnitarioMedio).HasColumnType("DECIMAL(18,2)");

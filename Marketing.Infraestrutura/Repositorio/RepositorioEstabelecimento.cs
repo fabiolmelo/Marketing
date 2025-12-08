@@ -63,14 +63,15 @@ namespace Marketing.Infraestrutura.Repositorio
 
         public async Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone)
         {
-            var competencias = await _context.Set<ExtratoVendas>().Select(x=>x.Competencia).Distinct().ToListAsync();
             DateTime competenciaVigente;
-            if (competencias.Count == 0)
+            var existeRegistro = _context.Set<ExtratoVendas>().Any();
+            
+            if (!existeRegistro)
             {
                 competenciaVigente = new DateTime(1900, 1, 1);
             } else
             {
-                competenciaVigente = competencias.Max();
+                competenciaVigente = _context.Set<ExtratoVendas>().Max(x=>x.Competencia);
             }
             IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.Telefone == telefone)
                                                 join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
@@ -78,21 +79,7 @@ namespace Marketing.Infraestrutura.Repositorio
                                                 join EXV in _context.ExtratosVendas on E.Cnpj equals EXV.EstabelecimentoCnpj
                                                 where EXV.Competencia == competenciaVigente
                                                 select E;
-            var estabelecimentos = await query.ToListAsync();
-
-            // var estabelecimentos = await _context.Set<Estabelecimento>().AsQueryable()
-            //                                      .Include(x => x.ExtratoVendas)
-            //                                      .Include(x => x.ContatoEstabelecimentos)
-            //                                      .Where(x => x.ExtratoVendas.Any(x => x.Competencia == competenciaVigente))
-            //                                      .Where(x=> x.ContatoEstabelecimentos.Any(x=>x.Contato.Telefone == telefone))
-            //                                      .ToListAsync();
-
-            // //REMOVE OS ESTABELECIMENTOS QUE NÃO TEM FECHAMENTO NO MES CORRENTE E NAO GERA PDF
-            // estabelecimentos.RemoveAll(x => !x.ExtratoVendas.Any(x => x.Competencia == competenciaVigente));
-            // foreach (var estabelecimento in estabelecimentos)
-            // {
-            //     estabelecimento.ExtratoVendas.ToList().RemoveAll(x => x.Competencia <= competenciaVigente.AddYears(-12));
-            // }
+            var estabelecimentos = query.ToList();
             return estabelecimentos;
         }
 

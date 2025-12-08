@@ -10,10 +10,6 @@ cd Marketing.Mvc
 sudo dotnet publish -c Release -r linux-x64 ./Marketing.Mvc.csproj -o /var/incidencia/
 sudo chown -R ec2-user /var/incidencia
 sudo chmod 770 /var/incidencia/*
-cd ../Marketing.WebApi
-sudo dotnet publish -c Release -r linux-x64 ./Marketing.WebApi.csproj -o /var/incidenciaApi/
-sudo chown -R ec2-user /var/incidenciaApi
-sudo chmod 770 /var/incidenciaApi/*
 cd ..
 sudo systemctl stop nginx
 sudo systemctl stop incidencia.service
@@ -23,20 +19,11 @@ sudo mkdir /etc/nginx/sites-enabled
 sudo chown -R ec2-user /etc/nginx
 sudo chmod 770 /etc/nginx/*
 sudo cp -f incidencia.service /etc/systemd/system/incidencia.service
-sudo cp -f incidenciaApi.service /etc/systemd/system/incidenciaApi.service
-sudo cp -f programadeincidencia.com.br /etc/nginx/sites-available/programadeincidencia.com.br
-sudo cp -f api.programadeincidencia.com.br /etc/nginx/sites-available/api.programadeincidencia.com.br
-sudo ln -s /etc/nginx/sites-available/programadeincidencia.com.br /etc/nginx/sites-enabled/
-sudo ln -s /etc/nginx/sites-available/api.programadeincidencia.com.br /etc/nginx/sites-enabled/
 sudo systemctl start nginx
 sudo systemctl enable nginx
 sudo systemctl restart nginx
 sudo systemctl start incidencia.service
 sudo systemctl enable incidencia.service
 sudo systemctl restart incidencia.service
-sudo systemctl start incidenciaApi.service
-sudo systemctl enable incidenciaApi.service
-sudo systemctl restart incidenciaApi.service
 chmod -R 700 /var/incidencia
-chmod -R 700 /var/incidenciaApi
 cd /

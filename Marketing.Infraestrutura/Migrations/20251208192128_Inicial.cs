@@ -305,7 +305,7 @@ namespace Marketing.Infraestrutura.Migrations
                 name: "ExtratosVendas",
                 columns: table => new
                 {
-                    Competencia = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    Competencia = table.Column<DateTime>(type: "DATETIME(6)", nullable: false),
                     EstabelecimentoCnpj = table.Column<string>(type: "varchar(14)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Ano = table.Column<int>(type: "int", nullable: false),
