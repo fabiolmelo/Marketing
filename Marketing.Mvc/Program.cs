@@ -18,7 +18,7 @@ try
     builder.Services.AddLogging(logging =>
     {
         logging.ClearProviders();
-        logging.SetMinimumLevel(LogLevel.Trace);
+        logging.SetMinimumLevel(LogLevel.Warning);
     });
     builder.Services.AddSingleton<ILoggerProvider, NLogLoggerProvider>();
 
