@@ -24,6 +24,7 @@ namespace Marketing.Mvc.Controllers
         
         [HttpGet]
         [Route("webhooks")]
+        [Consumes("application/json")]
         public async Task<IActionResult> WebHook([FromBody] WhatsAppWebhookPayload payload)
         {
             if (payload == null)
@@ -98,6 +99,7 @@ namespace Marketing.Mvc.Controllers
         
         [HttpPost]
         [Route("webhooks")]
+        [Consumes("application/json")]
         public async Task<IActionResult> Webhook([FromQuery(Name = "hub.mode")] string? hubMode,
                                                [FromQuery(Name = "hub.challenge")] string? hubChallenge,
                                                [FromQuery(Name = "hub.verify_token")] string? hubVerifyToken)
