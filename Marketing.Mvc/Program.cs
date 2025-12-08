@@ -70,8 +70,8 @@ try
             builder.Services.AddDbContext<DataContext>(
                 dbContextOptions => dbContextOptions
                     .UseMySql(connectionString, serverVersion)
-                    .LogTo(Console.WriteLine, LogLevel.Information)
-                    .EnableSensitiveDataLogging()
+                    .LogTo(Console.WriteLine, LogLevel.Warning)
+                    //.EnableSensitiveDataLogging()
                     .EnableDetailedErrors()
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
             );
