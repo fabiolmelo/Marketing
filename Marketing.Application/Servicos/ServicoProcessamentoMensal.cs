@@ -47,8 +47,8 @@ namespace Marketing.Application.Servicos
                     var mensagem = new EnvioMensagemMensal(competencia, estabelecimentoPdf.Cnpj, telefone,
                                                             estabelecimentoPdf?.RedeNome ?? "",
                                                             estabelecimentoPdf?.RazaoSocial ?? "");
-                    await _repositorioEnvioMensagemMensal.AddAsync(mensagem);
-                    await _repositorioEnvioMensagemMensal.CommitAsync();
+                    _repositorioEnvioMensagemMensal.Add(mensagem);
+                    _repositorioEnvioMensagemMensal.Commit();
                 }
             }
         }
@@ -63,12 +63,12 @@ namespace Marketing.Application.Servicos
                 _servicoGraficoRevisado.GerarGrafico(estabelecimento, contentRootPath);
                 _servicoGraficoRevisado.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                     posicaoNaRede, contentRootPath, caminhoApp);
-                var estabelecimentoUpdate = await _repositorioEstabelecimento.GetByIdStringAsync(estabelecimento.Cnpj);
+                var estabelecimentoUpdate = _repositorioEstabelecimento.GetByIdString(estabelecimento.Cnpj);
                 if (estabelecimentoUpdate != null)
                 {
                     estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
                     _repositorioEstabelecimento.Update(estabelecimentoUpdate);
-                    await _repositorioEstabelecimento.CommitAsync();
+                    _repositorioEstabelecimento.Commit();
                 }
             }     
         }

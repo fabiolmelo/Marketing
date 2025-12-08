@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketing.Infraestrutura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251208192128_Inicial")]
+    [Migration("20251208194401_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -270,7 +270,7 @@ namespace Marketing.Infraestrutura.Migrations
             modelBuilder.Entity("Marketing.Domain.Entidades.ExtratoVendas", b =>
                 {
                     b.Property<DateTime>("Competencia")
-                        .HasColumnType("DATETIME(6)");
+                        .HasColumnType("DATE");
 
                     b.Property<string>("EstabelecimentoCnpj")
                         .HasColumnType("varchar(14)");

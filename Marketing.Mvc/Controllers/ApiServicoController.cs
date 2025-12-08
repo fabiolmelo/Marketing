@@ -24,11 +24,20 @@ namespace Marketing.Mvc.Controllers
 
         [HttpGet]
         [Route("webhooks")]
-        public async Task<IActionResult> Webhook([FromQuery(Name = "hub.mode")] string? hubMode,
-                                               [FromQuery(Name = "hub.challenge")] string? hubChallenge,
-                                               [FromQuery(Name = "hub.verify_token")] string? hubVerifyToken)
+        public async Task<IActionResult> Webhook([FromServices] IConfiguration _configuration,
+                                                 [FromQuery(Name = "hub.mode")] string hubMode,
+                                                 [FromQuery(Name = "hub.challenge")] string hubChallenge,
+                                                 [FromQuery(Name = "hub.verify_token")] string hubVerifyToken)
         {
-            return Ok(hubChallenge);
+            var tokenVerify = _configuration["Meta:TokemVerify"];
+            if (hubMode == "subcribe" && tokenVerify == hubVerifyToken)
+            {
+                return Ok(hubChallenge);
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
         
         [HttpPost]

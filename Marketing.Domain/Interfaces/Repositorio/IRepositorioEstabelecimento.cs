@@ -12,5 +12,6 @@ namespace Marketing.Domain.Interfaces.Repositorio
         Task<List<Estabelecimento>> GetAllEstabelecimentoPorContato(string telefone);
         Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone);
         Task CommitAsync();
+        void Commit();
     }
 }

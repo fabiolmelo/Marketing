@@ -19,6 +19,11 @@ namespace Marketing.Infraestrutura.Repositorio
             await _dataContext.Set<T>().AddAsync(entity);
         }
 
+        public void Add(T entity)
+        {
+            _dataContext.Set<T>().Add(entity);
+        }
+
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
             await _dataContext.AddRangeAsync(entities);
@@ -91,6 +96,9 @@ namespace Marketing.Infraestrutura.Repositorio
             return await _dataContext.Set<T>().ToListAsync();
         }
 
-        
+        public T? GetByIdString(string id)
+        {
+            return _dataContext.Set<T>().Find(id);
+        }
     }
 }

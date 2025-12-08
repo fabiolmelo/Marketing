@@ -65,11 +65,9 @@ try
             break;
         default:
             connectionString = builder.Configuration.GetConnectionString("MySql") ?? "";
-            var serverVersion = new MySqlServerVersion(new Version(11, 4));
-
             builder.Services.AddDbContext<DataContext>(
                 dbContextOptions => dbContextOptions
-                    .UseMySql(connectionString, serverVersion)
+                    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                     .LogTo(Console.WriteLine, LogLevel.Warning)
                     //.EnableSensitiveDataLogging()
                     .EnableDetailedErrors()

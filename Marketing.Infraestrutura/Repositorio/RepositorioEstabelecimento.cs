@@ -14,6 +14,11 @@ namespace Marketing.Infraestrutura.Repositorio
             _context = dataContext;
         }
 
+        public void Commit()
+        {
+            _context.SaveChanges();
+        }
+
         public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
@@ -44,11 +49,11 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia)
         {
             var dozeMeses = competencia.AddMonths(-12);
-            var estabelecimento = await _context.Set<Estabelecimento>()
+            var estabelecimento = _context.Set<Estabelecimento>()
                                  .Include(x => x.Rede)
                                  .Include(x => x.ContatoEstabelecimentos)
                                  .Include(x => x.ExtratoVendas.Where(x=>x.Competencia > dozeMeses))
-                                 .FirstOrDefaultAsync(x => x.Cnpj == cnpj);
+                                 .FirstOrDefault(x => x.Cnpj == cnpj);
             return estabelecimento;
         }
 

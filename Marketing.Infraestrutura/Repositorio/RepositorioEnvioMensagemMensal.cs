@@ -18,7 +18,10 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var query = _dataContext.Set<EnvioMensagemMensal>()
                                     .Include(x=>x.Mensagem)
-                                    .Where(x => x.MensagemId == null);                  
+                                    .AsSplitQuery()
+                                    .Where(x => x.MensagemId == null)
+                                    .OrderBy(x=>x.Id)
+                                    .AsQueryable();                  
             
             var totalRecords = await query.CountAsync();
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
@@ -28,7 +31,9 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task<PagedResponse<List<EnvioMensagemMensal>>> BuscarTodasMensagens(int pageNumber, int pageSize) 
         {
             var query = _dataContext.Set<EnvioMensagemMensal>()
-                                    .Include(x => x.Mensagem).AsQueryable();
+                                    .Include(x => x.Mensagem)
+                                    .OrderBy(x=>x.Id)
+                                    .AsQueryable();                  
             var totalRecords = await query.CountAsync();
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
             return new PagedResponse<List<EnvioMensagemMensal>>(await query.ToListAsync(), pageNumber, pageSize, totalRecords);
@@ -44,21 +49,15 @@ namespace Marketing.Infraestrutura.Repositorio
             return await query.ToListAsync();
         }
 
+        public void Commit()
+        {
+            _dataContext.SaveChanges();
+        }
+
         public async Task CommitAsync()
         {
             await _dataContext.SaveChangesAsync();
         }
 
-        // public async Task<EnvioMensagemMensal?> GetByCompetenciaEstabelecimentoContato(DateTime? competencia, string cnpj, string telefone)
-        // {
-        //     return await _dataContext.Set<EnvioMensagemMensal>()
-        //                              .Include(x=>x.Mensagem)
-        //                                 .ThenInclude(c=>c.MensagemItems)
-        //                              .Where(y=>y.Mensagem.MensagemItems.Any(x=>x.MensagemStatus == MensagemStatus.Falha))
-        //                              .OrderByDescending(x=>x.DataGeracao)
-        //                              .FirstOrDefaultAsync(x => x.Competencia == competencia &&
-        //                                                        x.EstabelecimentoCnpj == cnpj &&
-        //                                                        x.ContatoTelefone == telefone);
-        // }
     }
 }

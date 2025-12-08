@@ -10,5 +10,6 @@ namespace Marketing.Domain.Interfaces.Repositorio
         Task<List<EnvioMensagemMensal>> BuscarTodasMensagensNaoEnviadas(DateTime? competencia = null);
         // Task<EnvioMensagemMensal?> GetByCompetenciaEstabelecimentoContato(DateTime? competencia, string cnpj, string telefone);
         Task CommitAsync();
+        void Commit();
     }
 }

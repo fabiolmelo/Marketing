@@ -20,12 +20,12 @@ namespace Marketing.Infraestrutura.Repositorio
         {
             var ano = competencia.Year;
             var mes = competencia.Month;
-            var rede = await _context.Set<Rede>().
+            var rede = _context.Set<Rede>().
                 Include(es => es.Estabelecimentos).
                     ThenInclude(es => es.ExtratoVendas.
                                     Where(ex => ex.Competencia > DateTime.Now.AddMonths(-12))).
                 Where(r => r.Nome == estabelecimento.RedeNome).
-                FirstOrDefaultAsync();
+                FirstOrDefault();
 
             if (rede == null) return 1;
             var estabelecimentoSort = rede.Estabelecimentos.
