@@ -21,8 +21,17 @@ namespace Marketing.Mvc.Controllers
             _unitOfWork = unitOfWork;
             _configuration = configuration;
         }
-        
+
         [HttpGet]
+        [Route("webhooks")]
+        public async Task<IActionResult> Webhook([FromQuery(Name = "hub.mode")] string? hubMode,
+                                               [FromQuery(Name = "hub.challenge")] string? hubChallenge,
+                                               [FromQuery(Name = "hub.verify_token")] string? hubVerifyToken)
+        {
+            return Ok(hubChallenge);
+        }
+        
+        [HttpPost]
         [Route("webhooks")]
         [Consumes("application/json")]
         public async Task<IActionResult> WebHook([FromBody] WhatsAppWebhookPayload payload)
@@ -95,17 +104,5 @@ namespace Marketing.Mvc.Controllers
             }
             return Ok();
         }
-
-        
-        [HttpPost]
-        [Route("webhooks")]
-        [Consumes("application/json")]
-        public async Task<IActionResult> Webhook([FromQuery(Name = "hub.mode")] string? hubMode,
-                                               [FromQuery(Name = "hub.challenge")] string? hubChallenge,
-                                               [FromQuery(Name = "hub.verify_token")] string? hubVerifyToken)
-        {
-            return Ok(hubChallenge);
-        }
-        
     }
 }
