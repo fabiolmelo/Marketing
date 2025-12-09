@@ -45,34 +45,29 @@ namespace Marketing.Infraestrutura.Repositorio
         public List<ResumoMensagem> BuscaResumoMensagemPorCompetencia(DateTime? competencia)
         {
             var resumo = new List<ResumoMensagem>();
+            var itens = new List<MensagemItem>();
+
             if (competencia != null)
             {
-                var trackList = _context.MensagemItems.Include(x => x.Mensagem)
-                                                      .Where(x => x.Mensagem.EnvioMensagemMensal != null &&
-                                                                  x.Mensagem.EnvioMensagemMensal.Competencia == competencia)
-                                .GroupBy(v => v.Id)
-                                .Select(g => new
-                                {
-                                    Id = g.Key,
-                                    DataEvento = g.Max(v => v.DataEvento)
-                                });
-                
-                var soma = from MI in _context.MensagemItems 
-                           join T in trackList on MI.Id equals T.Id 
-                           where T.DataEvento == MI.DataEvento
-                           group MI by MI.MensagemStatus into newG
-                           select new
-                             {
-                                 MensagemStatus = newG.Key,
-                                 Total = newG.Count()
-                             }; 
-                foreach(var item in soma)
+                var mensagens = _context.Mensagens
+                                        .Include(x => x.EnvioMensagemMensal)
+                                        .AsSplitQuery()
+                                        .Where(x => x.EnvioMensagemMensal.Competencia == competencia).AsQueryable();
+                foreach(var mensagem in mensagens)
                 {
+                    var mensagemItem = _context.MensagemItems
+                                               .Where(x=>x.MensagemId == mensagem.Id)
+                                               .OrderByDescending(x=> x.DataEvento).FirstOrDefault();
+                    if (mensagemItem != null) itens.Add(mensagemItem);
+                }
+
+                var itemsGroup = itens.GroupBy(x=>x.MensagemStatus).Select(x=> new { Status = x.Key, Qtde = x.Count()});
+                foreach( var itemGroup in itemsGroup){
                     resumo.Add(
                         new ResumoMensagem()
                         {
-                            MensagemStatus = item.MensagemStatus,
-                            Qtd = item.Total
+                            MensagemStatus = itemGroup.Status,
+                            Qtd = itemGroup.Qtde
                         }
                     );
                 }
