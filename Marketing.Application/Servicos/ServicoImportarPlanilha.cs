@@ -91,7 +91,7 @@ namespace Marketing.Application.Servicos
                 if (!contatosCadastrados.Any(x=>x.Telefone == telefone))
                 {
                     var contato = new Contato(telefone);
-                    contato.OrigemContato = OrigemContato.PlanilhaIncidencia;
+                    contato.OrigemCadastro = OrigemContato.PlanilhaIncidencia;
                     contato.DataCadastro = DateTime.UtcNow;
                     await _unitOfWork.repositorioContato.AddAsync(contato);
                     await _unitOfWork.CommitAsync();

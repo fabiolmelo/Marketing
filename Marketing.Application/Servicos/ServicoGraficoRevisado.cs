@@ -54,7 +54,7 @@ namespace Marketing.Application.Servicos
 
                     // FONTES
                     var fontes = FontFactory.RegisteredFonts;
-                    Font fontDadosEstabelecimento = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 6, Font.NORMAL, BaseColor.WHITE);
+                    Font fontDadosEstabelecimento = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.WHITE);
                     Font fontPosicaoRede = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
                     Font fontMesReferencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 11, Font.NORMAL, BaseColor.BLACK);
 
@@ -63,9 +63,9 @@ namespace Marketing.Application.Servicos
                     Font fontVendasReceitaMes = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, ((estabelecimento.ExtratoMesCompetencia.ReceitaNaoCapturada * -1) < 0) ? BaseColor.RED : new BaseColor(13, 163, 13));
                     Font fontVendasReceitaTotal = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, ((estabelecimento.ExtratoVendas.Sum(x => x.ReceitaNaoCapturada) * -1)) < 0 ? BaseColor.RED : new BaseColor(13, 163, 13));
                     Font fontMes = FontFactory.GetFont("tcccunity-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.BLACK);
-                    Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.BLACK);
-                    Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.RED);
-                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, new BaseColor(13, 163, 13));
+                    Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.BLACK);
+                    Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.RED);
+                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, new BaseColor(13, 163, 13));
                     Font fontCorMeta = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, new BaseColor(0, 176, 76));
                     Font fontCorIncidencia = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, new BaseColor(146, 39, 143));
                     
@@ -150,7 +150,7 @@ namespace Marketing.Application.Servicos
                     textoMesReferencia += $"{(int)(estabelecimento.ExtratoMesCompetencia.Meta * 100)}%)";
                     ColumnText mesReferencia = new ColumnText(directContent);
                     var mesReferenciaPhrase = new Phrase(new Chunk(textoMesReferencia, fontMesReferencia));
-                    mesReferencia.SetSimpleColumn(mesReferenciaPhrase, 600, 550, 50, 635, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
+                    mesReferencia.SetSimpleColumn(mesReferenciaPhrase, 600, 550, 25, 635, 25, Element.ALIGN_LEFT | Element.ALIGN_LEFT);
                     mesReferencia.Go();
 
 

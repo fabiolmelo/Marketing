@@ -583,7 +583,7 @@ namespace Marketing.Application.Servicos
                                     {
                                         Nome = nome,
                                         DataCadastro = dataCadastro,
-                                        OrigemContato = OrigemContato.EmailMarketing
+                                        OrigemCadastro = OrigemContato.EmailMarketing
                                     });
                             }
                         }

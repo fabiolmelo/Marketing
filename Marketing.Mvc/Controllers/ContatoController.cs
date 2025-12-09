@@ -1,9 +1,11 @@
 ﻿using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.InkML;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Marketing.Mvc.Controllers
 {
@@ -67,8 +69,8 @@ namespace Marketing.Mvc.Controllers
         // POST: ContatoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(string id,
-                    [Bind("Telefone,Nome,AceitaMensagem,DataAceite,RecusaMensagem,DataRecusa,Email,Token,UltimaCompetenciaEnviada,OrigemCadastro")] Contato contato)
+        public async Task<ActionResult> Edit(string id, Contato contato)
+        //[Bind("Telefone,Nome,AceitaMensagem,DataAceite,RecusaMensagem,DataRecusa,Email,Token,UltimaCompetenciaEnviada,OrigemCadastro")] Contato contato)
         {
             try
             {

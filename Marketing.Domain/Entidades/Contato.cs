@@ -13,7 +13,7 @@ namespace Marketing.Domain.Entidades
         public DateTime? UltimaCompetenciaEnviada { get; set; }
         public virtual ICollection<ContatoEstabelecimento> ContatoEstabelecimentos { get; set; } = null!;
         public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
-        public OrigemContato? OrigemContato { get; set; }
+        public OrigemContato? OrigemCadastro { get; set; }
         
         public Contato()
         {
