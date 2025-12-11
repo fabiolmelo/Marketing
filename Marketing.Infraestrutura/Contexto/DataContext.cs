@@ -1,10 +1,12 @@
 using Marketing.Domain.Entidades;
 using Marketing.Infraestrutura.Configuracao;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Marketing.Infraestrutura.Contexto
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<IdentityUser>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
