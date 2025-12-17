@@ -112,7 +112,7 @@ app.UseRateLimiter();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}").RequireRateLimiting("fixed");
+    pattern: "{controller=Home}/{action=Index}/{id?}").RequireRateLimiting("fixed");
     
 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 

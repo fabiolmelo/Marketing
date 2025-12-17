@@ -1,11 +1,7 @@
 ﻿using System.Linq.Expressions;
-using System.Threading.Tasks;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.InkML;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Marketing.Mvc.Controllers
 {
