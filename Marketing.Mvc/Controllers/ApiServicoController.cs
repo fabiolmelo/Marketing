@@ -29,15 +29,16 @@ namespace Marketing.Mvc.Controllers
                                                  [FromQuery(Name = "hub.challenge")] string hubChallenge,
                                                  [FromQuery(Name = "hub.verify_token")] string hubVerifyToken)
         {
-            var tokenVerify = _configuration["Meta:TokemVerify"];
-            if (hubMode == "subcribe" && tokenVerify == hubVerifyToken)
-            {
-                return Ok(hubChallenge);
-            }
-            else
-            {
-                return Unauthorized();
-            }
+            return Ok(hubChallenge);
+            // var tokenVerify = _configuration["Meta:TokemVerify"];
+            // if (hubMode == "subcribe" && tokenVerify == hubVerifyToken)
+            // {
+            //     return Ok(hubChallenge);
+            // }
+            // else
+            // {
+            //     return Unauthorized();
+            // }
         }
         
         [HttpPost]
