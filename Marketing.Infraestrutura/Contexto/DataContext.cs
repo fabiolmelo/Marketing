@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Marketing.Infraestrutura.Contexto
 {
-    public class DataContext : IdentityDbContext<IdentityUser>
+    public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
