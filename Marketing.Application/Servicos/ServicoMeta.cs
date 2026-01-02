@@ -53,7 +53,7 @@ namespace Marketing.Application.Servicos
             var contato = await _unitOfWork.repositorioContato.GetByIdStringAsync(envio.ContatoTelefone);
             var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
             if (contato == null || estabelecimento == null) throw new Exception("Erro enviando status!");
-            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone, "extrato2", "pt_BR");
+            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone, "extrato_V2", "pt_BR");
             var bodyComponent = new Component("body");
             bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.RazaoSocial });
             requestBody.template.components.Add(bodyComponent);
