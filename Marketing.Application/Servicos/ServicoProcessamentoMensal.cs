@@ -2,6 +2,7 @@
 using Marketing.Domain.Extensoes;
 using Marketing.Domain.Interfaces.Repositorio;
 using Marketing.Domain.Interfaces.Servicos;
+using Marketing.Infraestrutura.Contexto;
 using Microsoft.Extensions.Logging;
 
 namespace Marketing.Application.Servicos
@@ -13,18 +14,21 @@ namespace Marketing.Application.Servicos
         private readonly IRepositorioEstabelecimento _repositorioEstabelecimento;
         private readonly IRepositorioEnvioMensagemMensal _repositorioEnvioMensagemMensal;
         private readonly IRepositorioRede _repositorioRede;
+        private readonly DataContextMySql _dataContextMySql;
 
         public ServicoProcessamentoMensal(IServicoGraficoRevisado servicoGraficoRevisado,
                                           ILogger<ServicoProcessamentoMensal> logger,
                                           IRepositorioEstabelecimento repositorioEstabelecimento,
                                           IRepositorioEnvioMensagemMensal repositorioEnvioMensagemMensal,
-                                          IRepositorioRede repositorioRede)
+                                          IRepositorioRede repositorioRede,
+                                          DataContextMySql dataContextMySql)
         {
             _servicoGraficoRevisado = servicoGraficoRevisado;
             _logger = logger;
             _repositorioEstabelecimento = repositorioEstabelecimento;
             _repositorioEnvioMensagemMensal = repositorioEnvioMensagemMensal;
             _repositorioRede = repositorioRede;
+            _dataContextMySql = dataContextMySql;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,
@@ -48,7 +52,9 @@ namespace Marketing.Application.Servicos
                                                             estabelecimentoPdf?.RedeNome ?? "",
                                                             estabelecimentoPdf?.RazaoSocial ?? "");
                     _repositorioEnvioMensagemMensal.Add(mensagem);
+                    await _dataContextMySql.EnviosMensagemMensais.AddAsync(mensagem);
                     _repositorioEnvioMensagemMensal.Commit();
+                    await _dataContextMySql.SaveChangesAsync();
                 }
             }
         }
