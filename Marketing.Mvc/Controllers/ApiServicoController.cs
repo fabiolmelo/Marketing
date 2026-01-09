@@ -95,6 +95,10 @@ namespace Marketing.Mvc.Controllers
                                             case "read":
                                                 mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.READ);
                                                 break;
+                                            case "failed":
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, 
+                                                                        MensagemStatus.FAILED, status.ErrorToString());
+                                                break;
                                             default:
                                                 mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.FAILED);
                                                 break;

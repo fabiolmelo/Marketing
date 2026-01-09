@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Marketing.Domain.Entidades.Meta
@@ -60,6 +61,19 @@ namespace Marketing.Domain.Entidades.Meta
 
         [JsonPropertyName("errors")]
         public List<StatusError>? Errors { get; set; }
+
+        public string ErrorToString()
+        {
+            var errorMessage = new StringBuilder();
+            if (Errors != null)
+            {
+                foreach(var erro in Errors)
+                {
+                    errorMessage.Append($"{erro.Message} | ");
+                }
+            }
+            return errorMessage.ToString();
+        }
     }
 
     public class Conversation
