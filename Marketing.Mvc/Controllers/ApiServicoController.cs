@@ -16,13 +16,15 @@ namespace Marketing.Mvc.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
         private readonly DataContextMySql _dataContextMySql;
+        private readonly ILogger<ApiServicoController> _logger;
 
-        public ApiServicoController(IServicoMeta servicoMeta, IUnitOfWork unitOfWork, IConfiguration configuration, DataContextMySql dataContextMySql)
+        public ApiServicoController(IServicoMeta servicoMeta, IUnitOfWork unitOfWork, IConfiguration configuration, DataContextMySql dataContextMySql, ILogger<ApiServicoController> logger)
         {
             _servicoMeta = servicoMeta;
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _dataContextMySql = dataContextMySql;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -49,61 +51,70 @@ namespace Marketing.Mvc.Controllers
         [Consumes("application/json")]
         public async Task<IActionResult> WebHook([FromBody] WhatsAppWebhookPayload payload)
         {
-            if (payload == null)
+            try
             {
-                return BadRequest();
-            }
-                // Processar o payload...
-            if (payload != null)
-            {
-                var jsonSerialize = JsonSerializer.Serialize(payload);
-                var metaWebhookResponse = new MetaWebhookResponse(jsonSerialize);
-                await _unitOfWork.GetRepository<MetaWebhookResponse>().AddAsync(metaWebhookResponse);
-                await _unitOfWork.CommitAsync(); 
-                await _dataContextMySql.MetaWebhookResponses.AddAsync(metaWebhookResponse);
-                await _dataContextMySql.SaveChangesAsync();
-
-                foreach (var entry in payload.Entry)
+                if (payload == null)
                 {
-                    foreach (var change in entry.Changes)
-                    {
-                        foreach (var status in change.Value.Statuses)
-                        {
-                            // Processar o status...
-                            var statusId = status.Id;
-                            var statusStatus = status.StatusName;
+                    return BadRequest();
+                }
+                // Processar o payload...
+                if (payload != null)
+                {
+                    var jsonSerialize = JsonSerializer.Serialize(payload);
+                    _logger.LogWarning(jsonSerialize);
+                    var metaWebhookResponse = new MetaWebhookResponse(jsonSerialize);
+                    await _unitOfWork.GetRepository<MetaWebhookResponse>().AddAsync(metaWebhookResponse);
+                    await _unitOfWork.CommitAsync(); 
+                    await _dataContextMySql.MetaWebhookResponses.AddAsync(metaWebhookResponse);
+                    await _dataContextMySql.SaveChangesAsync();
 
-                            if (statusId != null)
+                    foreach (var entry in payload.Entry)
+                    {
+                        foreach (var change in entry.Changes)
+                        {
+                            foreach (var status in change.Value.Statuses)
                             {
-                                var mensagem = await _unitOfWork.repositorioMensagem.FindByPredicate(x=>x.MetaMensagemId == statusId);
-                                if (mensagem != null)
+                                // Processar o status...
+                                var statusId = status.Id;
+                                var statusStatus = status.Status;
+
+                                if (statusId != null)
                                 {
-                                    MensagemItem mensagemItem;
-                                    switch (statusStatus)
+                                    var mensagem = await _unitOfWork.repositorioMensagem.FindByPredicate(x=>x.MetaMensagemId == statusId);
+                                    if (mensagem != null)
                                     {
-                                        case "sent":
-                                            mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.SENT);
-                                            break;
-                                        case "delivered":
-                                            mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.DELIVERED);
-                                            break;
-                                        case "read":
-                                            mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.READ);
-                                            break;
-                                        default:
-                                            mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.FAILED);
-                                            break;
-                                    }    
-                                    if (mensagemItem != null)
-                                    {
-                                        await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
-                                        await _unitOfWork.CommitAsync();
+                                        MensagemItem mensagemItem;
+                                        switch (statusStatus)
+                                        {
+                                            case "sent":
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.SENT);
+                                                break;
+                                            case "delivered":
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.DELIVERED);
+                                                break;
+                                            case "read":
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.READ);
+                                                break;
+                                            default:
+                                                mensagemItem = new MensagemItem(mensagem.Id, DateTime.Now, MensagemStatus.FAILED);
+                                                break;
+                                        }    
+                                        if (mensagemItem != null)
+                                        {
+                                            await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
+                                            await _unitOfWork.CommitAsync();
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                _logger.LogCritical(JsonSerializer.Serialize(payload));
             }
             return Ok();
         }

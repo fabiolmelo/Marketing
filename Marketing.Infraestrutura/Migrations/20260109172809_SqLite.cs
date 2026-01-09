@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Marketing.Infraestrutura.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class SqLite : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
