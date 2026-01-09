@@ -52,9 +52,9 @@ namespace Marketing.Application.Servicos
                                                             estabelecimentoPdf?.RedeNome ?? "",
                                                             estabelecimentoPdf?.RazaoSocial ?? "");
                     _repositorioEnvioMensagemMensal.Add(mensagem);
-                    await _dataContextMySql.EnviosMensagemMensais.AddAsync(mensagem);
                     _repositorioEnvioMensagemMensal.Commit();
-                    await _dataContextMySql.SaveChangesAsync();
+                    // await _dataContextMySql.EnviosMensagemMensais.AddAsync(mensagem);
+                    // await _dataContextMySql.SaveChangesAsync();
                 }
             }
         }

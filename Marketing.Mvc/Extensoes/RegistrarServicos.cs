@@ -40,6 +40,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IRepositorioRede, RepositorioRede>();
             servicos.AddScoped<IRepositorioMensagem, RepositorioMensagem>();
             servicos.AddSingleton<IHttpClientsFactoryPerson, HttpClientsFactoryPerson>();
+            servicos.AddHostedService<ServicoBackup>();
         }
 
         public static void ConfigureHttpClient(IServiceCollection services,

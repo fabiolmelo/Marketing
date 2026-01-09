@@ -59,5 +59,13 @@ namespace Marketing.Domain.Entidades
                 return $"{mesDe} A {mesAte}";
             }
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (this == obj) return true;
+            var other = (Estabelecimento)obj;
+            return this.Cnpj == other.Cnpj;
+        }
     }
 }
