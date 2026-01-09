@@ -5,7 +5,7 @@ namespace Marketing.Domain.Entidades.Meta
     public class WhatsAppWebhookPayload
     {
         [JsonPropertyName("object")]
-        public string? Object { get; set; } = String.Empty; 
+        public string? Object { get; set; }
 
         [JsonPropertyName("entry")]
         public List<Entry> Entry { get; set; } = new List<Entry>();
@@ -14,7 +14,7 @@ namespace Marketing.Domain.Entidades.Meta
     public class Entry
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; } = String.Empty;
+        public string? Id { get; set; }
 
         [JsonPropertyName("changes")]
         public List<Change> Changes { get; set; } = new List<Change>();
@@ -22,67 +22,79 @@ namespace Marketing.Domain.Entidades.Meta
 
     public class Change
     {
-        [JsonPropertyName("field")]
-        public string? Field { get; set; } = String.Empty;
-
         [JsonPropertyName("value")]
-        public Value Value { get; set; } = new Value();
+        public ChangeValue Value { get; set; } = new ChangeValue();
+
+        [JsonPropertyName("field")]
+        public string? Field { get; set; }
     }
 
-    public class Value
+    public class ChangeValue
     {
-        [JsonPropertyName("messaging")]
-        public Messaging Messaging { get; set; } = new Messaging();
+        [JsonPropertyName("messaging_product")]
+        public string? MessagingProduct { get; set; }
 
         [JsonPropertyName("statuses")]
-        public Statuses Statuses { get; set; } = new Statuses();
+        public List<MessageStatus> Statuses { get; set; } = new List<MessageStatus>();
     }
 
-    public class Messaging
-    {
-        [JsonPropertyName("messages")]
-        public List<Message> Messages { get; set; } = new List<Message>();
-    }
-
-    public class Message
-    {
-        [JsonPropertyName("from")]
-        public string? From { get; set; } = String.Empty;
-
-        [JsonPropertyName("id")]
-        public string? Id { get; set; } = String.Empty;
-
-        [JsonPropertyName("timestamp")]
-        public string? Timestamp { get; set; } = String.Empty;
-
-        [JsonPropertyName("text")]
-        public Text Text { get; set; } = new Text();
-    }
-
-    public class Text
-    {
-        [JsonPropertyName("body")]
-        public string? Body { get; set; } = String.Empty;
-    }
-
-    public class Statuses
-    {
-        [JsonPropertyName("statuses")]
-        public List<Status> StatusesList { get; set; } = new List<Status>();
-    }
-
-    public class Status
+    public class MessageStatus
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; } = String.Empty;
+        public string? Id { get; set; }
 
         [JsonPropertyName("status")]
-        public string? StatusName { get; set; } = String.Empty;
+        public string? Status { get; set; }
 
         [JsonPropertyName("timestamp")]
-        public string? Timestamp { get; set; } = String.Empty;
+        public string? Timestamp { get; set; }
 
         [JsonPropertyName("recipient_id")]
-        public string? RecipientId { get; set; } = String.Empty;
+        public string? RecipientId { get; set; }
+
+        [JsonPropertyName("conversation")]
+        public Conversation? Conversation { get; set; }
+
+        [JsonPropertyName("pricing")]
+        public Pricing? Pricing { get; set; }
+
+        [JsonPropertyName("errors")]
+        public List<StatusError>? Errors { get; set; }
+    }
+
+    public class Conversation
+    {
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
+
+        [JsonPropertyName("origin")]
+        public ConversationOrigin? Origin { get; set; }
+    }
+
+    public class ConversationOrigin
+    {
+        [JsonPropertyName("type")]
+        public string? Type { get; set; }
+    }
+
+    public class Pricing
+    {
+        [JsonPropertyName("pricing_model")]
+        public string? PricingModel { get; set; }
+
+        [JsonPropertyName("category")]
+        public string? Category { get; set; }
+    }
+
+    public class StatusError
+    {
+        [JsonPropertyName("code")]
+        public int? Code { get; set; }
+
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+
+        [JsonPropertyName("message")]
+        public string? Message { get; set; }
     }
 }
