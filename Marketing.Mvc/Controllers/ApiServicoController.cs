@@ -3,6 +3,7 @@ using Marketing.Domain.Entidades;
 using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
+using Marketing.Infraestrutura.Contexto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketing.Mvc.Controllers
@@ -14,12 +15,14 @@ namespace Marketing.Mvc.Controllers
         private readonly IServicoMeta _servicoMeta;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
+        private readonly DataContextMySql _dataContextMySql;
 
-        public ApiServicoController(IServicoMeta servicoMeta, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public ApiServicoController(IServicoMeta servicoMeta, IUnitOfWork unitOfWork, IConfiguration configuration, DataContextMySql dataContextMySql)
         {
             _servicoMeta = servicoMeta;
             _unitOfWork = unitOfWork;
             _configuration = configuration;
+            _dataContextMySql = dataContextMySql;
         }
 
         [HttpGet]
@@ -57,6 +60,8 @@ namespace Marketing.Mvc.Controllers
                 var metaWebhookResponse = new MetaWebhookResponse(jsonSerialize);
                 await _unitOfWork.GetRepository<MetaWebhookResponse>().AddAsync(metaWebhookResponse);
                 await _unitOfWork.CommitAsync(); 
+                await _dataContextMySql.MetaWebhookResponses.AddAsync(metaWebhookResponse);
+                await _dataContextMySql.SaveChangesAsync();
 
                 foreach (var entry in payload.Entry)
                 {

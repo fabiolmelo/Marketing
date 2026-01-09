@@ -50,31 +50,21 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedUICultures = supportedCultures;
 });
 
-string connectionString;
-var bancoDeDados = builder.Configuration["BancoDeDados"] ?? "";
-
-switch (bancoDeDados)
-{
-    case "SqLite":
-        connectionString = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase") ?? "";
-        builder.Services.AddDbContext<DataContext>(
-            dbContextOptions => dbContextOptions
-                .UseSqlite(connectionString)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-            );
-        break;
-    default:
-        connectionString = builder.Configuration.GetConnectionString("MySql") ?? "";
-        builder.Services.AddDbContext<DataContext>(
-            dbContextOptions => dbContextOptions
-                .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                .LogTo(Console.WriteLine, LogLevel.Warning)
-                //.EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-        );
-        break;
-}
+var connectionStringSqLite = builder.Configuration.GetConnectionString("WebApiSqlLiteDatabase") ?? "";
+builder.Services.AddDbContext<DataContext>(
+    dbContextOptions => dbContextOptions
+        .UseSqlite(connectionStringSqLite)
+        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+    );
+    
+var connectionStringMySql = builder.Configuration.GetConnectionString("MySql") ?? "";
+builder.Services.AddDbContext<DataContextMySql>(
+    dbContextOptions => dbContextOptions
+        .UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql))
+        .LogTo(Console.WriteLine, LogLevel.Warning)
+        .EnableDetailedErrors()
+        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+);
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => 
 {
