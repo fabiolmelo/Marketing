@@ -6,7 +6,7 @@ namespace Marketing.Infraestrutura.Contexto
 {
     public class DataContextMySql : DbContext
     {
-        public DataContextMySql(DbContextOptions<DataContext> options) : base(options)
+        public DataContextMySql(DbContextOptions<DataContextMySql> options) : base(options)
         {
         }
         public DbSet<ExtratoVendas> ExtratosVendas { get; set; }
