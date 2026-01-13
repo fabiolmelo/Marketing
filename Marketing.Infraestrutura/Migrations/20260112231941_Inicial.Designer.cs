@@ -3,50 +3,46 @@ using System;
 using Marketing.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
+namespace Marketing.Infraestrutura.Migrations
 {
-    [DbContext(typeof(DataContextMySql))]
-    partial class DataContextMySqlModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DataContext))]
+    [Migration("20260112231941_Inicial")]
+    partial class Inicial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.16")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.16");
 
             modelBuilder.Entity("Marketing.Domain.Entidades.ConfiguracaoApp", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("AppUrl")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FoneFrom")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("IntervaloEntreDisparos")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("LoteProcessamento")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("MetaApiUrl")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MetaToken")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -57,7 +53,7 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                 {
                     b.Property<string>("Telefone")
                         .HasMaxLength(15)
-                        .HasColumnType("varchar(15)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("AceitaMensagem")
                         .HasColumnType("TINYINT(1)");
@@ -66,28 +62,28 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                         .HasColumnType("DATETIME");
 
                     b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataRecusa")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Email")
                         .HasMaxLength(120)
-                        .HasColumnType("varchar(120)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
                         .HasMaxLength(120)
-                        .HasColumnType("varchar(120)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("OrigemCadastro")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("RecusaMensagem")
                         .HasColumnType("TINYINT(1)");
 
                     b.Property<Guid>("Token")
                         .HasMaxLength(80)
-                        .HasColumnType("char(80)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UltimaCompetenciaEnviada")
                         .HasColumnType("DATETIME");
@@ -103,10 +99,10 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
             modelBuilder.Entity("Marketing.Domain.Entidades.ContatoEstabelecimento", b =>
                 {
                     b.Property<string>("ContatoTelefone")
-                        .HasColumnType("varchar(15)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EstabelecimentoCnpj")
-                        .HasColumnType("varchar(14)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ContatoTelefone", "EstabelecimentoCnpj");
 
@@ -118,60 +114,60 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
             modelBuilder.Entity("Marketing.Domain.Entidades.DadosPlanilha", b =>
                 {
                     b.Property<int>("ImportacaoEfetuadaId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Cnpj")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("AnoMes")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Cidade")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Fone")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("IncidenciaReal")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("Linha")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Meta")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("PedidosComCocaCola")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Planilha")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("PrecoUnitarioMedio")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("ReceitaNaoCapturada")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Rede")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Restaurante")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TotalPedidos")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TotalPedidosNaoCapturados")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Uf")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ImportacaoEfetuadaId", "Cnpj", "AnoMes");
 
@@ -181,32 +177,32 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
             modelBuilder.Entity("Marketing.Domain.Entidades.EnvioMensagemMensal", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Competencia")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ContatoTelefone")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataGeracao")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EstabelecimentoCnpj")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MensagemId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NomeFranquia")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RedeNome")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -222,40 +218,40 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                 {
                     b.Property<string>("Cnpj")
                         .HasMaxLength(14)
-                        .HasColumnType("varchar(14)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Bairro")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Cep")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Cidade")
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Complemento")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Endereco")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Numero")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RazaoSocial")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RedeNome")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Uf")
                         .HasMaxLength(2)
-                        .HasColumnType("varchar(2)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UltimoPdfGerado")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Cnpj");
 
@@ -270,10 +266,10 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                         .HasColumnType("DATE");
 
                     b.Property<string>("EstabelecimentoCnpj")
-                        .HasColumnType("varchar(14)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Ano")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("CorTransparenteGrafico")
                         .HasColumnType("DECIMAL(18,2)");
@@ -288,13 +284,13 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                         .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<int>("Mes")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Meta")
                         .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<int>("PedidosComCocaCola")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("PrecoUnitarioMedio")
                         .HasColumnType("DECIMAL(18,2)");
@@ -303,10 +299,10 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                         .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<int>("TotalPedidos")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TotalPedidosNaoCapturados")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Competencia", "EstabelecimentoCnpj");
 
@@ -319,9 +315,7 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DataImportacao")
                         .HasColumnType("DATETIME");
@@ -337,11 +331,11 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
             modelBuilder.Entity("Marketing.Domain.Entidades.Mensagem", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MetaMensagemId")
                         .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -355,20 +349,20 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataEvento")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MensagemId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MensagemStatus")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Observacao")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -380,13 +374,13 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
             modelBuilder.Entity("Marketing.Domain.Entidades.MetaWebhookResponse", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Response")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -397,13 +391,13 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                 {
                     b.Property<string>("Nome")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Logo")
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Nome");
 
@@ -414,17 +408,193 @@ namespace Marketing.Infraestrutura.Migrations.DataContextMySqlMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Template")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("TemplateImportarPlanilhas");
+                });
+
+            modelBuilder.Entity("Marketing.Infraestrutura.Contexto.Usuario", b =>
+                {
+                    b.Property<string>("Email")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Email");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("IX_Usuarios_Email");
+
+                    b.ToTable("Usuarios", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Funcoes_NormalizedName");
+
+                    b.ToTable("Funcoes", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FuncoesClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UsuariosClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.ToTable("UsuariosLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.ToTable("UsuariosFuncoes", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("UsuariosTokens", (string)null);
                 });
 
             modelBuilder.Entity("Marketing.Domain.Entidades.ContatoEstabelecimento", b =>

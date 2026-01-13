@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using Marketing.Infraestrutura.Contexto
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<Usuario> UserManager
+
+@{
+    Layout = null;
+    var usuario = await UserManager.FindByEmailAsync(User?.Identity?.Name ?? "");
+}
+
+<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="utf-8" />
@@ -38,8 +47,11 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-
-            <!-- Heading -->
+            
+            @if(User == null) return;
+            @if (User.IsInRole("Root") || User.IsInRole( "Admin"))
+            {
+                <!-- Heading -->
             <div class="sidebar-heading">
                 Manutenção
             </div>
@@ -104,14 +116,17 @@
                     </div>
                 </div>
             </li>
+            }
             
-            <!-- Nav Item - Configurações -->
-             <li class="nav-item">
-                <a class="nav-link" asp-controller="Configuracoes" asp-action="Index">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Configurações</span></a>
-            </li>
-
+            @if (User.IsInRole( "Root"))
+            {
+                <!-- Nav Item - Configurações -->
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Configuracoes" asp-action="Index">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Configurações</span></a>
+                </li>
+            }
         </ul>
         <!-- End of Sidebar -->
 
@@ -170,16 +185,18 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrador</span>
-                                <div class="img-profile rounded-circle">A</div>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@(usuario?.Nome ?? "")</span>
+                                <img class="img-profile rounded-circle" src="/img/user.png">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logoff
-                                </a>
+                                <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Sair
+                                    </button>
+                                </form>
                             </div>
                         </li>
                     </ul>

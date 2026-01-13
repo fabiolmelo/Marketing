@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Marketing.Infraestrutura.Migrations
 {
     /// <inheritdoc />
-    public partial class SqLite : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,35 @@ namespace Marketing.Infraestrutura.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contatos", x => x.Telefone);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Funcoes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 150, nullable: true),
+                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 150, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Funcoes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FuncoesClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RoleId = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FuncoesClaims", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -113,6 +142,87 @@ namespace Marketing.Infraestrutura.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TemplateImportarPlanilhas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Usuarios",
+                columns: table => new
+                {
+                    Email = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", nullable: true),
+                    Id = table.Column<string>(type: "TEXT", nullable: true),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 150, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 150, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuarios", x => x.Email);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsuariosClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsuariosClaims", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsuariosFuncoes",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsuariosFuncoes", x => new { x.UserId, x.RoleId });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsuariosLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsuariosLogins", x => new { x.LoginProvider, x.ProviderKey });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsuariosTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsuariosTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                 });
 
             migrationBuilder.CreateTable(
@@ -304,6 +414,12 @@ namespace Marketing.Infraestrutura.Migrations
                 column: "EstabelecimentoCnpj");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Funcoes_NormalizedName",
+                table: "Funcoes",
+                column: "NormalizedName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MensagemItems_MensagemId",
                 table: "MensagemItems",
                 column: "MensagemId");
@@ -312,6 +428,11 @@ namespace Marketing.Infraestrutura.Migrations
                 name: "IX_MENSAGEM_METAMENSAGEMID",
                 table: "Mensagens",
                 column: "MetaMensagemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_Email",
+                table: "Usuarios",
+                column: "NormalizedEmail");
         }
 
         /// <inheritdoc />
@@ -333,6 +454,12 @@ namespace Marketing.Infraestrutura.Migrations
                 name: "ExtratosVendas");
 
             migrationBuilder.DropTable(
+                name: "Funcoes");
+
+            migrationBuilder.DropTable(
+                name: "FuncoesClaims");
+
+            migrationBuilder.DropTable(
                 name: "MensagemItems");
 
             migrationBuilder.DropTable(
@@ -340,6 +467,21 @@ namespace Marketing.Infraestrutura.Migrations
 
             migrationBuilder.DropTable(
                 name: "TemplateImportarPlanilhas");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "UsuariosClaims");
+
+            migrationBuilder.DropTable(
+                name: "UsuariosFuncoes");
+
+            migrationBuilder.DropTable(
+                name: "UsuariosLogins");
+
+            migrationBuilder.DropTable(
+                name: "UsuariosTokens");
 
             migrationBuilder.DropTable(
                 name: "Contatos");

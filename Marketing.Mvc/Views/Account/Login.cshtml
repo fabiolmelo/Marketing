@@ -1,0 +1,98 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Login - Programa de Incidências";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>@ViewData["Title"]</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- CSS da aplicação -->
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+<body class="bg-light">
+
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+
+        <div class="card shadow-lg p-4" style="max-width: 520px; width: 100%;">
+
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-primary">Programa de Incidências</h2>
+                <p class="text-muted">Acesse o painel administrativo</p>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+
+            <form asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+
+                @if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                }
+
+                <div class="mb-3">
+                    <label for="email" class="form-label fw-semibold">E-mail</label>
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           class="form-control"
+                           required
+                           autocomplete="username"
+                           placeholder="seuemail@exemplo.com" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-semibold">Senha</label>
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           class="form-control"
+                           required
+                           autocomplete="current-password"
+                           placeholder="Informe sua senha" />
+                </div>
+
+                <div class="form-check mb-3">
+                    <input type="checkbox"
+                           class="form-check-input"
+                           id="rememberMe"
+                           name="rememberMe" />
+                    <label class="form-check-label" for="rememberMe">Lembrar-me</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                    Entrar
+                </button>
+
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        © @DateTime.Now.Year - MOB Eventos
+                    </small>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

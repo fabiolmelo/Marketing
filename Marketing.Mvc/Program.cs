@@ -66,14 +66,24 @@ builder.Services.AddDbContext<DataContextMySql>(
         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 );
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => 
+builder.Services.AddIdentity<Usuario, IdentityRole>(options =>
 {
-    // Opcional: Personalize as regras de senha/lockout aqui
-    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 6;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 8;
 })
-.AddEntityFrameworkStores<DataContext>();       
+.AddEntityFrameworkStores<DataContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";          // para não autenticados
+    // options.AccessDeniedPath = "/Account/Denied";  // para sem permissão
+    options.AccessDeniedPath = "/Account/Login";  // para sem permissão
+});
+
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -85,6 +95,89 @@ builder.WebHost.ConfigureKestrel(options =>
             options.ListenLocalhost(8000));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Usuario>>();
+
+    string[] roles = new[] { "Root", "Admin", "DashBoard" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+    // Criar usuário root
+    var rootEmail = "fabiolmelo30@gmail.com";
+    var rootUser = await userManager.FindByEmailAsync(rootEmail);
+
+    if (rootUser == null)
+    {
+        rootUser = new Usuario
+        {
+            UserName = rootEmail,
+            Nome = "Fabio Melo",
+            Email = rootEmail,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(rootUser, "Mkk182627@");
+
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(rootUser, "Root");
+        }
+    }
+
+    // Criar usuário root
+    rootEmail = "dash@dash.com";
+    rootUser = await userManager.FindByEmailAsync(rootEmail);
+
+    if (rootUser == null)
+    {
+        rootUser = new Usuario
+        {
+            UserName = rootEmail,
+            Nome = "DashBoard",
+            Email = rootEmail,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(rootUser, "Mkk182627@");
+
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(rootUser, "DashBoard");
+        }
+    }
+
+    // Criar usuário root
+    rootEmail = "admin@admin.com";
+    rootUser = await userManager.FindByEmailAsync(rootEmail);
+
+    if (rootUser == null)
+    {
+        rootUser = new Usuario
+        {
+            UserName = rootEmail,
+            Nome = "Administrador",
+            Email = rootEmail,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(rootUser, "Mkk182627@");
+
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(rootUser, "Admin");
+        }
+    }
+
+}
+
+
 
 if (!app.Environment.IsDevelopment())
 {
@@ -102,7 +195,7 @@ app.UseRateLimiter();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}").RequireRateLimiting("fixed");
+    pattern: "{controller=Account}/{action=Login}/{id?}").RequireRateLimiting("fixed");
     
 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 

@@ -6,11 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Marketing.Infraestrutura.Contexto
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<UsuarioEntity>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            
         }
 
         public DbSet<ExtratoVendas> ExtratosVendas { get; set; }
@@ -46,6 +45,20 @@ namespace Marketing.Infraestrutura.Contexto
             modelBuilder.ApplyConfiguration(new ContatoEstabelecimentoConfiguracao());
             modelBuilder.ApplyConfiguration(new MensagemConfiguracao());
             modelBuilder.ApplyConfiguration(new MensagemItemConfiguracao());
+
+            modelBuilder.ApplyConfiguration(new IdentityUserConfiguration());
+            modelBuilder.ApplyConfiguration(new IdentityRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new IdentityUserRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new IdentityUserClaimConfiguration());
+            modelBuilder.ApplyConfiguration(new IdentityRoleClaimConfiguration());
+            modelBuilder.ApplyConfiguration(new IdentityUserLoginConfiguration());
+            modelBuilder.ApplyConfiguration(new IdentityUserTokenConfiguration());
+
         }
+    }
+
+    public class UsuarioEntity : IdentityUser
+    {
+        public string? Nome { get; set; }
     }
 }
