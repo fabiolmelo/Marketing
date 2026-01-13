@@ -66,7 +66,7 @@ builder.Services.AddDbContext<DataContextMySql>(
         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 );
 
-builder.Services.AddIdentity<Usuario, IdentityRole>(options =>
+builder.Services.AddIdentity<UsuarioEntity, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequireUppercase = true;
@@ -99,7 +99,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Usuario>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UsuarioEntity>>();
 
     string[] roles = new[] { "Root", "Admin", "DashBoard" };
 
@@ -115,7 +115,7 @@ using (var scope = app.Services.CreateScope())
 
     if (rootUser == null)
     {
-        rootUser = new Usuario
+        rootUser = new UsuarioEntity
         {
             UserName = rootEmail,
             Nome = "Fabio Melo",
@@ -137,7 +137,7 @@ using (var scope = app.Services.CreateScope())
 
     if (rootUser == null)
     {
-        rootUser = new Usuario
+        rootUser = new UsuarioEntity
         {
             UserName = rootEmail,
             Nome = "DashBoard",
@@ -159,7 +159,7 @@ using (var scope = app.Services.CreateScope())
 
     if (rootUser == null)
     {
-        rootUser = new Usuario
+        rootUser = new UsuarioEntity
         {
             UserName = rootEmail,
             Nome = "Administrador",

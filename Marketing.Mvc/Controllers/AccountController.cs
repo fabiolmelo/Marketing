@@ -8,12 +8,12 @@ namespace ProgramaDeIncidencias.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly SignInManager<Usuario> _signInManager;
-        private readonly UserManager<Usuario> _userManager;
+        private readonly SignInManager<UsuarioEntity> _signInManager;
+        private readonly UserManager<UsuarioEntity> _userManager;
 
         public AccountController(
-            SignInManager<Usuario> signInManager,
-            UserManager<Usuario> userManager)
+            SignInManager<UsuarioEntity> signInManager,
+            UserManager<UsuarioEntity> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
