@@ -43,7 +43,7 @@ namespace Marketing.Application.Servicos
                     new("DOMINOS"),
                     new("SPOLETO"),
                     new("KONI"),
-                    new("CIB"),
+                    new("CHINA IN BOX"),
                     new("GENDAI"),
                     new("LEBONTON"),
                     new("GURUME"),

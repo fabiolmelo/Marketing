@@ -100,28 +100,42 @@ namespace Marketing.Application.Servicos
         }
         private async Task AtualizarEstabelecimentoViaPlanilha(List<DadosPlanilha> dadosPlanilha)
         {
-            var estabelecimentosCadastrados = await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentos(1, 999999, "");
-            foreach (var estabelecimentoPlanilha in dadosPlanilha.Select(x => new { x.Cnpj, x.Restaurante, x.Cidade, x.Uf, x.Rede }).Distinct())
+            int index = 0;
+            try
             {
-                var estabelecimento = new Estabelecimento()
+                var estabelecimentosCadastrados = await _unitOfWork.repositorioEstabelecimento.GetAll();
+                var dadosAgrupados = dadosPlanilha
+                                    .Select(x => new { x.Cnpj, x.Restaurante, x.Cidade, x.Uf, x.Rede })
+                                    .DistinctBy(x => new { x.Cnpj, x.Restaurante, x.Cidade, x.Uf, x.Rede }).ToList();
+                foreach (var estabelecimentoPlanilha in dadosAgrupados)
                 {
-                    Cnpj = estabelecimentoPlanilha.Cnpj,
-                    RazaoSocial = estabelecimentoPlanilha.Restaurante,
-                    Cidade = estabelecimentoPlanilha.Cidade,
-                    Uf = estabelecimentoPlanilha.Uf,
-                    RedeNome = estabelecimentoPlanilha.Rede
-                };
-                if (!estabelecimentosCadastrados.Dados.Any(x => x.Cnpj == estabelecimentoPlanilha.Cnpj))
-                {
-                    await _unitOfWork.repositorioEstabelecimento.AddAsync(estabelecimento);
-                    await _unitOfWork.CommitAsync();
-                }
-                else
-                {
-                    _unitOfWork.repositorioEstabelecimento.Update(estabelecimento);
-                    await _unitOfWork.CommitAsync();
+                    if (index == 546)
+                    {
+                        
+                    }
+                    var exists = estabelecimentosCadastrados.FindIndex(x=>x.Cnpj == estabelecimentoPlanilha.Cnpj);
+                    if (exists  == -1)
+                    {
+                        var estabelecimento = new Estabelecimento()
+                        {
+                            Cnpj = estabelecimentoPlanilha.Cnpj,
+                            RazaoSocial = estabelecimentoPlanilha.Restaurante,
+                            Cidade = estabelecimentoPlanilha.Cidade,
+                            Uf = estabelecimentoPlanilha.Uf,
+                            RedeNome = estabelecimentoPlanilha.Rede
+                        };
+                        await _unitOfWork.GetRepository<Estabelecimento>().AddAsync(estabelecimento);
+                        await _unitOfWork.CommitAsync();
+                    }
+                    index++;
                 }
             }
+            catch (System.Exception ex)
+            {
+                throw new System.Exception($"Erro ao importar estabelecimento na linha {index + 1}: {ex.Message}");
+            }
+            
+        
         }
         private async Task AtualizarAssociacaoContatoEstabelecimento(List<DadosPlanilha> dadosPlanilha)
         {
@@ -130,6 +144,7 @@ namespace Marketing.Application.Servicos
                                                         .Where(x=>x.Fone != String.Empty)
                                                         .Select(x => new { x.Cnpj, x.Fone }).Distinct())
             {
+                
                 if (!contatoEstabelecimentoCadastrado.Any(x => x.EstabelecimentoCnpj == contatoEstabelecimentoPlanilha.Cnpj &&
                                                      x.ContatoTelefone == contatoEstabelecimentoPlanilha.Fone))
                 {

@@ -7,6 +7,7 @@ using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Marketinf.Mvc.Controllers
 {
@@ -108,6 +109,11 @@ namespace Marketinf.Mvc.Controllers
                     byte[] byteArray = Encoding.UTF8.GetBytes(responseValidationCelulas.ToString());
                     return File(byteArray, "text/plain", "erros.txt");
                 }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogCritical(dbEx.InnerException?.Message);
+                return RedirectToAction("ImportarPlanilhaCoca", new { erro = $"Erro {dbEx.InnerException?.Message}! Contate o administrador do sistema para detalhes." });
             }
             catch (Exception ex)
             {
