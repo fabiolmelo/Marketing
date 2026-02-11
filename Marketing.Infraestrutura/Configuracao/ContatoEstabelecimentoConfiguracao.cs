@@ -8,14 +8,14 @@ namespace Marketing.Infraestrutura.Configuracao
     {
         public void Configure(EntityTypeBuilder<ContatoEstabelecimento> builder)
         {
-            builder.HasKey(x => new { x.ContatoTelefone, x.EstabelecimentoCnpj });
+            builder.HasKey(x => new { x.ContatoTelefone, x.EstabelecimentoCnpj, x.EstabelecimentoRedeNome });
 
             builder.HasOne(x => x.Contato)
                    .WithMany(x => x.ContatoEstabelecimentos)
                    .HasForeignKey(x => x.ContatoTelefone); 
             builder.HasOne(x => x.Estabelecimento)
                    .WithMany(x => x.ContatoEstabelecimentos)
-                   .HasForeignKey(x => x.EstabelecimentoCnpj);
+                   .HasForeignKey(x => new {x.EstabelecimentoCnpj, x.EstabelecimentoRedeNome });
         }
     }
 }

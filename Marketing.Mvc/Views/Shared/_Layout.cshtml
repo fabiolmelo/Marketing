@@ -94,7 +94,6 @@
                 <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Importações:</h6>
-                        <a class="collapse-item" asp-controller="ImportarArquivo" asp-action="ImportarPlanilhaTratada">Importar Tratada</a>
                         <a class="collapse-item" asp-controller="ImportarArquivo" asp-action="ImportarPlanilhaCoca">Importar Original</a>
                         <a class="collapse-item" asp-controller="ImportarArquivo" asp-action="ImportarContato">ImportarContatos</a>
                     </div>
@@ -120,11 +119,20 @@
             
             @if (User.IsInRole( "Root"))
             {
-                <!-- Nav Item - Configurações -->
+                <!-- Nav Item - Pages Collapse Menu -->
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Configuracoes" asp-action="Index">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
+                        aria-expanded="true" aria-controls="collapseFour">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
-                        <span>Configurações</span></a>
+                        <span>Configurações</span>
+                    </a>
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Configurações:</h6>
+                            <a class="collapse-item" asp-controller="Configuracoes" asp-action="Index">Configurações Gerais</a>
+                            <a class="collapse-item" asp-controller="ImportarArquivo" asp-action="ImportarPlanilhaTratada">Importar Tratada</a>
+                        </div>
+                    </div>
                 </li>
             }
         </ul>

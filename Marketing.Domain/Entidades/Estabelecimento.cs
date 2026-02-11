@@ -2,8 +2,8 @@ namespace Marketing.Domain.Entidades
 {
     public class Estabelecimento
     {
-        public string Cnpj { get; set; } = null!;
-        public string? RedeNome { get; set; }
+        public string Cnpj { get; set; } 
+        public string RedeNome { get; set; }
         public virtual Rede? Rede { get; set; }
         public string RazaoSocial { get; set; } = null!;
         
@@ -19,18 +19,20 @@ namespace Marketing.Domain.Entidades
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);
         public string? UltimoPdfGerado { get; set; }
-        // public ICollection<EnvioMensagemMensal> MensagensMensais { get; set; } = new List<EnvioMensagemMensal>();
+        
         public decimal IncidenciaMedia
         {
-            //get { return this.ExtratoVendas.Count == 0 ? 0 : (decimal)this.ExtratoVendas.Average(x => x.IncidenciaReal); }
             get
             {
                 return this.ExtratoVendas.Count == 0 ? 0 :
                 (decimal)this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0).IncidenciaReal;
             }
         }
-        public Estabelecimento()
+
+        public Estabelecimento(string cnpj, string redeNome)
         {
+            Cnpj = cnpj;
+            RedeNome = redeNome;
         }
 
         public void AdicionarExtrato(ExtratoVendas extratoVenda)
@@ -66,6 +68,12 @@ namespace Marketing.Domain.Entidades
             if (this == obj) return true;
             var other = (Estabelecimento)obj;
             return this.Cnpj == other.Cnpj;
+        }
+
+        public override int GetHashCode()
+        {
+            return Cnpj?.GetHashCode(StringComparison.Ordinal) ?? 0;
+
         }
     }
 }

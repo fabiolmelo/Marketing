@@ -8,14 +8,14 @@ namespace Marketing.Application.Validation
         private ResponseValidation responseValidation = new ResponseValidation();
         public override ResponseValidation Validate(List<DadosPlanilha> dadosPlanilhas)
         {
-            ValidateDuplicateCnpj(dadosPlanilhas);
+            //ValidateDuplicateCnpj(dadosPlanilhas);
             ValidateDuplicateExtrato(dadosPlanilhas);
             return responseValidation;
         }
 
         private void ValidateDuplicateCnpj(List<DadosPlanilha> dadosPlanilhas)
         {
-            var grupo = dadosPlanilhas.GroupBy(g=> new {g.Cnpj, g.Restaurante, g.Cidade, g.Uf, g.Rede});
+            var grupo = dadosPlanilhas.GroupBy(g=> new {g.Cnpj, g.Restaurante, g.Cidade, g.Uf});
             var duplicado = grupo.GroupBy(g=> g.Key.Cnpj)
                                  .Select(group => new { Cnpj = group.Key, Qtde = group.Count()})
                                  .Where(x=>x.Qtde > 1);
@@ -25,10 +25,11 @@ namespace Marketing.Application.Validation
                     var linha = dadosPlanilhas.FirstOrDefault(x=>x.Cnpj == local.Key.Cnpj && 
                                                                  x.Restaurante.ToUpper() == local.Key.Restaurante.ToUpper() &&
                                                                  x.Cidade.ToUpper() == local.Key.Cidade.ToUpper() &&
-                                                                 x.Uf.ToUpper() == local.Key.Uf.ToUpper() &&
-                                                                 x.Rede.ToUpper() == local.Key.Rede.ToUpper())?.Linha ?? 0;
-                    responseValidation.AdicionarErro(local.Key.Rede, linha, "Cadastro duplicado",
-                                    $"Restaurante CNPJ: {cnpj.Cnpj} duplicados com dados diferentes. Rede: {local.Key.Rede}, Restaurante: {local.Key.Restaurante}, Cidade: {local.Key.Cidade}, UF: {local.Key.Uf}");  
+                                                                 x.Uf.ToUpper() == local.Key.Uf.ToUpper() 
+                                                                 //&& x.Rede.ToUpper() == local.Key.Rede.ToUpper()
+                                                            )?.Linha ?? 0;
+                    responseValidation.AdicionarErro("local.Key.Rede", linha, "Cadastro duplicado",
+                                    $"Restaurante CNPJ: {cnpj.Cnpj} duplicados com dados diferentes. Rede: local.Key.Rede, Restaurante: {local.Key.Restaurante}, Cidade: {local.Key.Cidade}, UF: {local.Key.Uf}");  
                 }
             }
         }

@@ -9,7 +9,7 @@ namespace Marketing.Infraestrutura.Configuracao
         public void Configure(EntityTypeBuilder<ExtratoVendas> builder)
         {
             //builder.HasKey(x => new { x.Ano, x.Mes, x.EstabelecimentoCnpj });
-            builder.HasKey(x => new { x.Competencia, x.EstabelecimentoCnpj });
+            builder.HasKey(x => new { x.Competencia, x.EstabelecimentoCnpj, x.EstabelecimentoRedeNome});
             builder.HasOne(x=>x.Estabelecimento).WithMany(x=>x.ExtratoVendas).HasForeignKey(x=>x.EstabelecimentoCnpj);
             builder.Property(x => x.Competencia).HasColumnType("DATE");
             builder.Property(x => x.IncidenciaReal).HasColumnType("DECIMAL(18,2)");

@@ -43,7 +43,7 @@ namespace Marketing.Application.Servicos
                 var estabelecimentos = await _repositorioEstabelecimento.GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(contato.Telefone);
                 foreach(Estabelecimento estabelecimento in estabelecimentos)
                 {
-                    var estabelecimentoPdf = await _repositorioEstabelecimento.FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia);
+                    var estabelecimentoPdf = await _repositorioEstabelecimento.FindEstabelecimentoPorCnpjParaPdf(estabelecimento.Cnpj, competencia, estabelecimento.RedeNome);
                     if (estabelecimentoPdf == null) throw new Exception("ESTABELECIMENTO COM DADOS CORROMPIDOS");
                     await GerarProcessamentoPorEstabelecimento(estabelecimentoPdf, competencia,
                                                             contentRootPath, caminhoApp);

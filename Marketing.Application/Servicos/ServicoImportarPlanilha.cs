@@ -50,7 +50,6 @@ namespace Marketing.Application.Servicos
             await _servicoRede.AtualizarRedesViaPlanilha(dadosPlanilha);
             await _servicoContato.AtualizarContatosViaPlanilha(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarEstabelecimentoViaPlanilha(dadosPlanilha);
-            //await _servicoEstabelecimento.AtualizarAssociacaoEstabelecimentoContato(dadosPlanilha);
             await _servicoContato.AtualizarAssociacaoContatoEstabelecimento(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarAssociacaoEstabelecimentoRede(dadosPlanilha);
             await _servicoEstabelecimento.AtualizarExtratosViaPlanilha(dadosPlanilha);
@@ -109,20 +108,15 @@ namespace Marketing.Application.Servicos
                                     .DistinctBy(x => new { x.Cnpj, x.Restaurante, x.Cidade, x.Uf, x.Rede }).ToList();
                 foreach (var estabelecimentoPlanilha in dadosAgrupados)
                 {
-                    if (index == 546)
-                    {
-                        
-                    }
-                    var exists = estabelecimentosCadastrados.FindIndex(x=>x.Cnpj == estabelecimentoPlanilha.Cnpj);
+                    var exists = estabelecimentosCadastrados.FindIndex(x=>x.Cnpj == estabelecimentoPlanilha.Cnpj &&
+                                                                          x.RedeNome == estabelecimentoPlanilha.Rede);
                     if (exists  == -1)
                     {
-                        var estabelecimento = new Estabelecimento()
+                        var estabelecimento = new Estabelecimento(estabelecimentoPlanilha.Cnpj, estabelecimentoPlanilha.Rede)
                         {
-                            Cnpj = estabelecimentoPlanilha.Cnpj,
                             RazaoSocial = estabelecimentoPlanilha.Restaurante,
                             Cidade = estabelecimentoPlanilha.Cidade,
                             Uf = estabelecimentoPlanilha.Uf,
-                            RedeNome = estabelecimentoPlanilha.Rede
                         };
                         await _unitOfWork.GetRepository<Estabelecimento>().AddAsync(estabelecimento);
                         await _unitOfWork.CommitAsync();
@@ -142,16 +136,19 @@ namespace Marketing.Application.Servicos
             var contatoEstabelecimentoCadastrado = await _unitOfWork.GetRepository<ContatoEstabelecimento>().GetAll();
             foreach (var contatoEstabelecimentoPlanilha in dadosPlanilha
                                                         .Where(x=>x.Fone != String.Empty)
-                                                        .Select(x => new { x.Cnpj, x.Fone }).Distinct())
+                                                        .Select(x => new { x.Cnpj, x.Fone, x.Rede })
+                                                        .DistinctBy(x => new { x.Cnpj, x.Fone, x.Rede }))
             {
                 
                 if (!contatoEstabelecimentoCadastrado.Any(x => x.EstabelecimentoCnpj == contatoEstabelecimentoPlanilha.Cnpj &&
-                                                     x.ContatoTelefone == contatoEstabelecimentoPlanilha.Fone))
+                                                     x.ContatoTelefone == contatoEstabelecimentoPlanilha.Fone &&
+                                                     x.EstabelecimentoRedeNome == contatoEstabelecimentoPlanilha.Rede))
                 {
                     var contatoEstabelecimento = new ContatoEstabelecimento()
                     {
                         EstabelecimentoCnpj = contatoEstabelecimentoPlanilha.Cnpj,
-                        ContatoTelefone = contatoEstabelecimentoPlanilha.Fone
+                        ContatoTelefone = contatoEstabelecimentoPlanilha.Fone,
+                        EstabelecimentoRedeNome = contatoEstabelecimentoPlanilha.Rede 
                     };
                     await _unitOfWork.GetRepository<ContatoEstabelecimento>().AddAsync(contatoEstabelecimento);
                     await _unitOfWork.CommitAsync();
@@ -163,7 +160,8 @@ namespace Marketing.Application.Servicos
             foreach(var dadosPlanilha in dadosPlanilhas)
             {
                 var cadastrado = await _unitOfWork.GetRepository<ExtratoVendas>().FindByPredicate(x => x.EstabelecimentoCnpj == dadosPlanilha.Cnpj &&
-                                                                                                 x.Competencia == dadosPlanilha.AnoMes);
+                                                                                                 x.Competencia == dadosPlanilha.AnoMes &&
+                                                                                                 x.EstabelecimentoRedeNome == dadosPlanilha.Rede);
                 var extratoVendas = new ExtratoVendas(
                                     dadosPlanilha.AnoMes.Year,
                                     dadosPlanilha.AnoMes.Month,
@@ -175,7 +173,8 @@ namespace Marketing.Application.Servicos
                                     dadosPlanilha.PrecoUnitarioMedio,
                                     dadosPlanilha.TotalPedidosNaoCapturados,
                                     dadosPlanilha.ReceitaNaoCapturada,
-                                    dadosPlanilha.Cnpj
+                                    dadosPlanilha.Cnpj,
+                                    dadosPlanilha.Rede 
                                 );                                                               
                 if(cadastrado == null)
                 {                   

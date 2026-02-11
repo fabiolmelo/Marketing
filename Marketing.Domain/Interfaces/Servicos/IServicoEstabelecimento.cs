@@ -7,12 +7,11 @@ namespace Marketing.Domain.Interfaces.Servicos
     {
         Task<PagedResponse<List<Estabelecimento>>> GetAllEstabelecimentos(int? pageNumber, int? pageSize, string? filtro);
         Task AtualizarEstabelecimentoViaPlanilha(List<DadosPlanilha> dadosPlanilhas);
-        //Task AtualizarAssociacaoEstabelecimentoContato(List<DadosPlanilha> dadosPlanilhas);
         Task AtualizarAssociacaoEstabelecimentoRede(List<DadosPlanilha> dadosPlanilhas);
-        Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj);
+        Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj, string nomeRede);
         Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas);
         Task<bool> AtualizarDadosCadastraisViaReceitaFederal(string cnpj, bool? forcarUpdate = false);
         Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone);
-        Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia);
+        Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia, string nomeRede);
     }
 }

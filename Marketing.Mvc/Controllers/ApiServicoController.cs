@@ -4,10 +4,12 @@ using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Marketing.Infraestrutura.Contexto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketing.Mvc.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/")]
     public class ApiServicoController : ControllerBase 
@@ -27,9 +29,10 @@ namespace Marketing.Mvc.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("webhooks")]
-        public async Task<IActionResult> Webhook([FromServices] IConfiguration _configuration,
+        public IActionResult Webhook([FromServices] IConfiguration _configuration,
                                                  [FromQuery(Name = "hub.mode")] string hubMode,
                                                  [FromQuery(Name = "hub.challenge")] string hubChallenge,
                                                  [FromQuery(Name = "hub.verify_token")] string hubVerifyToken)
@@ -46,6 +49,7 @@ namespace Marketing.Mvc.Controllers
             // }
         }
         
+        [AllowAnonymous]
         [HttpPost]
         [Route("webhooks")]
         [Consumes("application/json")]

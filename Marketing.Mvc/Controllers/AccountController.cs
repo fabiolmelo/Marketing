@@ -2,10 +2,12 @@ using Marketing.Infraestrutura.Contexto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace ProgramaDeIncidencias.Controllers
 {
     [AllowAnonymous]
+    [EnableRateLimiting("mvc") ]
     public class AccountController : Controller
     {
         private readonly SignInManager<UsuarioEntity> _signInManager;

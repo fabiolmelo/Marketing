@@ -24,7 +24,8 @@ namespace Marketing.Infraestrutura.Repositorio
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
+        public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj, 
+                                                                                  string nomeRede)
         {
             IQueryable<Estabelecimento> query = _context.Estabelecimentos
                                                 .Include(x => x.ContatoEstabelecimentos)
@@ -32,10 +33,10 @@ namespace Marketing.Infraestrutura.Repositorio
                                                     .IgnoreAutoIncludes()
                                                 .Include(x => x.Rede)
                                                 .Include(x => x.ExtratoVendas);                             
-            return await query.FirstAsync(x=> x.Cnpj == cnpj);  
+            return await query.FirstAsync(x=> x.Cnpj == cnpj && x.RedeNome == nomeRede);  
         }
 
-        public async Task<Estabelecimento?> FindEstabelecimentoPorCnpj(string cnpj)
+        public async Task<Estabelecimento?> FindEstabelecimentoPorCnpj(string cnpj, string nomeRede)
         {
             IQueryable<Estabelecimento> query = _context.Estabelecimentos
                                                 .Include(x => x.ContatoEstabelecimentos)
@@ -43,17 +44,18 @@ namespace Marketing.Infraestrutura.Repositorio
                                                     .IgnoreAutoIncludes()
                                                 .Include(x => x.Rede)
                                                 .Include(x => x.ExtratoVendas);                             
-            return await query.FirstAsync(x=> x.Cnpj == cnpj);  
+            return await query.FirstAsync(x=> x.Cnpj == cnpj && x.RedeNome == nomeRede);  
         }
 
-        public async Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia)
+        public async Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, 
+        DateTime competencia, string nomeRede)
         {
             var dozeMeses = competencia.AddMonths(-12);
             var estabelecimento = _context.Set<Estabelecimento>()
                                  .Include(x => x.Rede)
                                  .Include(x => x.ContatoEstabelecimentos)
                                  .Include(x => x.ExtratoVendas.Where(x=>x.Competencia > dozeMeses))
-                                 .FirstOrDefault(x => x.Cnpj == cnpj);
+                                 .FirstOrDefault(x => x.Cnpj == cnpj && x.RedeNome == nomeRede);
             return estabelecimento;
         }
 

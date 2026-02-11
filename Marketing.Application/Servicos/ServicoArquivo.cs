@@ -606,14 +606,18 @@ namespace Marketing.Application.Servicos
                             {
                                 var cnpj = "0000000000" + linha.Cell(index).Value.ToString();
                                 cnpj = cnpj.Right(14);
-                                var isCnpjCadastro = await _unitOfWork.GetRepository<Estabelecimento>().Any(x => x.Cnpj == cnpj);
-                                var isContatoCnpjRelacionado = await _unitOfWork.GetRepository<ContatoEstabelecimento>().Any(x => x.ContatoTelefone == fone2 &&
-                                                                                x.EstabelecimentoCnpj == cnpj);
-                                if (isCnpjCadastro)
+
+                                var contatosEstabelecimentos = await _unitOfWork.GetRepository<Estabelecimento>()
+                                                                                .FindAllByPredicate(x=>x.Cnpj == cnpj);
+                                var selecao = contatosEstabelecimentos.Select(x=> new {x.Cnpj, x.RedeNome, Fone = fone2 }).ToList(); 
+                                
+                                foreach(var contato in selecao)
                                 {
-                                    if (!isContatoCnpjRelacionado)
+                                    if (!await _unitOfWork.GetRepository<ContatoEstabelecimento>().Any(x=> x.ContatoTelefone == contato.Fone &&
+                                                                                                           x.EstabelecimentoCnpj == contato.Cnpj &&
+                                                                                                           x.EstabelecimentoRedeNome == contato.RedeNome))
                                     {
-                                        var contatoEstabelecimento = new ContatoEstabelecimento(fone2, cnpj);
+                                        var contatoEstabelecimento = new ContatoEstabelecimento(fone2, cnpj, contato.RedeNome);
                                         await _unitOfWork.GetRepository<ContatoEstabelecimento>().AddAsync(contatoEstabelecimento);
                                         await _unitOfWork.CommitAsync();
                                     }

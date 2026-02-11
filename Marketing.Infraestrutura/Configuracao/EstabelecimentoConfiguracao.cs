@@ -8,7 +8,7 @@ namespace Marketing.Infraestrutura.Configuracao
     {
         public void Configure(EntityTypeBuilder<Estabelecimento> builder)
         {
-            builder.HasKey(x => x.Cnpj);
+            builder.HasKey(x => new {x.Cnpj, x.RedeNome});
             builder.Property(x => x.Cnpj).HasMaxLength(14);
             builder.Property(x => x.Uf).HasMaxLength(2);
             builder.Property(x => x.Cidade).HasMaxLength(100);
@@ -17,7 +17,7 @@ namespace Marketing.Infraestrutura.Configuracao
                     HasPrincipalKey(x => x.Nome);
             builder.HasMany(b => b.ExtratoVendas)
                    .WithOne(p => p.Estabelecimento)
-                   .HasForeignKey(p => p.EstabelecimentoCnpj);
+                   .HasForeignKey(p => new {p.EstabelecimentoCnpj, p.EstabelecimentoRedeNome });
 
             builder.HasMany(x => x.ContatoEstabelecimentos)
                    .WithOne(x => x.Estabelecimento)

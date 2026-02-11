@@ -1,11 +1,15 @@
 ﻿using Marketing.Application.DTOs;
 using Marketing.Application.Mappers;
 using Marketing.Domain.Interfaces.Servicos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Marketing.Mvc.Controllers
 {
+    [Authorize(Roles = "Root,Admin")]
+    [EnableRateLimiting("mvc") ]
     public class EstabelecimentoController : Controller
     {
         private readonly IServicoEstabelecimento _servicoEstabelecimento;
@@ -77,11 +81,11 @@ namespace Marketing.Mvc.Controllers
             }
         }
 
-        public async Task<ActionResult> Contatos(string id, string? erro = null, string? sucesso = null)
+        public async Task<ActionResult> Contatos(string id, string redeNome, string? erro = null, string? sucesso = null)
         {
             ViewData["Erro"] = erro;
             ViewData["OK"] = sucesso;
-            var estabelecimento = await _servicoEstabelecimento.FindEstabelecimentoIncludeContatoRede(id);
+            var estabelecimento = await _servicoEstabelecimento.FindEstabelecimentoIncludeContatoRede(id, redeNome);
             if (estabelecimento == null) return BadRequest();        
             return View(estabelecimento);
         }

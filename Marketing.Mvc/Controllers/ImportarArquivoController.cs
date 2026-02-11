@@ -5,12 +5,16 @@ using Marketing.Application.Validation;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Marketinf.Mvc.Controllers
 {
+    [Authorize(Roles = "Root,Admin")]
+    [EnableRateLimiting("mvc") ]
     public class ImportarArquivoController : Controller
     {
         private readonly IServicoImportarPlanilha _servicoImportarPlanilha;
@@ -30,6 +34,7 @@ namespace Marketinf.Mvc.Controllers
             _servicoArquivos = servicoArquivos;
         }
 
+        [Authorize(Roles = "Root")]
         public async Task<IActionResult> ImportarPlanilhaTratada(string? erro = null, string? sucesso = null)
         {
             var redes = await _unitOfWork.GetRepository<Rede>().GetAll();;
@@ -40,6 +45,7 @@ namespace Marketinf.Mvc.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Root")]
         [HttpPost]
         public async Task<IActionResult> ImportarPlanilhaTratada(ImportarIncidenciaDto importarIncidenciaDto)
         {

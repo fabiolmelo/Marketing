@@ -1,10 +1,13 @@
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.IUnitOfWork;
-using Marketing.Infraestrutura.Repositorio.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Marketing.Mvc.Controllers
 {
+    [Authorize(Roles = "Root")]
+    [EnableRateLimiting("mvc") ]
     public class ConfiguracoesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

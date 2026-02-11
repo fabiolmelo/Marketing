@@ -19,21 +19,24 @@ namespace Marketing.Application.Servicos
         public async Task AtualizarAssociacaoContatoEstabelecimento(List<DadosPlanilha> dadosPlanilhas)
         {
             var group = dadosPlanilhas.Where(x => !x.Fone.IsNullOrEmpty())
-                                      .GroupBy(item => new { item.Cnpj, item.Fone})
+                                      .GroupBy(item => new { item.Cnpj, item.Fone, item.Rede })
                                       .Select(g => new
                                       {
                                         Cnpj = g.Key.Cnpj,
-                                        Fone = g.Key.Fone
+                                        Fone = g.Key.Fone,
+                                        Rede = g.Key.Rede
                                       });
 
                     
             foreach (var item in group)
             {
                 var contatoEstabelecimento = await _unitOfWork.GetRepository<ContatoEstabelecimento>()
-                                                              .GetByIdChaveComposta(item.Fone, item.Cnpj);
+                                                              .FindByPredicate( x=> x.ContatoTelefone == item.Fone && 
+                                                                                    x.EstabelecimentoCnpj == item.Cnpj &&
+                                                                                    x.EstabelecimentoRedeNome == item.Rede);
                 if (contatoEstabelecimento == null)
                 {
-                    contatoEstabelecimento = new ContatoEstabelecimento(item.Fone, item.Cnpj);
+                    contatoEstabelecimento = new ContatoEstabelecimento(item.Fone, item.Cnpj, item.Rede);
                     await _unitOfWork.GetRepository<ContatoEstabelecimento>().AddAsync(contatoEstabelecimento);
                     await _unitOfWork.CommitAsync();
                 }

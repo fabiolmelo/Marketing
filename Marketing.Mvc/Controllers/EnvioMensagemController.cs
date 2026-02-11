@@ -3,10 +3,14 @@ using Marketing.Domain.Entidades;
 using Marketing.Domain.Entidades.Meta;
 using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Marketing.Mvc.Controllers
 {
+    [Authorize(Roles = "Root,Admin")]
+    [EnableRateLimiting("mvc") ]
     public class EnvioMensagemController : Controller
     {
         private readonly IServicoExtratoVendas _servicoExtratoVendas;

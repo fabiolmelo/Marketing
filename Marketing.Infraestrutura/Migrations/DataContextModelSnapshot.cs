@@ -101,9 +101,12 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<string>("EstabelecimentoCnpj")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ContatoTelefone", "EstabelecimentoCnpj");
+                    b.Property<string>("EstabelecimentoRedeNome")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("EstabelecimentoCnpj");
+                    b.HasKey("ContatoTelefone", "EstabelecimentoCnpj", "EstabelecimentoRedeNome");
+
+                    b.HasIndex("EstabelecimentoCnpj", "EstabelecimentoRedeNome");
 
                     b.ToTable("ContatoEstabelecimento");
                 });
@@ -217,6 +220,9 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasMaxLength(14)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("RedeNome")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Bairro")
                         .HasColumnType("TEXT");
 
@@ -240,9 +246,6 @@ namespace Marketing.Infraestrutura.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("RedeNome")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Uf")
                         .HasMaxLength(2)
                         .HasColumnType("TEXT");
@@ -250,7 +253,7 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<string>("UltimoPdfGerado")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Cnpj");
+                    b.HasKey("Cnpj", "RedeNome");
 
                     b.HasIndex("RedeNome");
 
@@ -263,6 +266,9 @@ namespace Marketing.Infraestrutura.Migrations
                         .HasColumnType("DATE");
 
                     b.Property<string>("EstabelecimentoCnpj")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EstabelecimentoRedeNome")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Ano")
@@ -301,9 +307,9 @@ namespace Marketing.Infraestrutura.Migrations
                     b.Property<int>("TotalPedidosNaoCapturados")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Competencia", "EstabelecimentoCnpj");
+                    b.HasKey("Competencia", "EstabelecimentoCnpj", "EstabelecimentoRedeNome");
 
-                    b.HasIndex("EstabelecimentoCnpj");
+                    b.HasIndex("EstabelecimentoCnpj", "EstabelecimentoRedeNome");
 
                     b.ToTable("ExtratosVendas");
                 });
@@ -416,7 +422,7 @@ namespace Marketing.Infraestrutura.Migrations
                     b.ToTable("TemplateImportarPlanilhas");
                 });
 
-            modelBuilder.Entity("Marketing.Infraestrutura.Contexto.Usuario", b =>
+            modelBuilder.Entity("Marketing.Infraestrutura.Contexto.UsuarioEntity", b =>
                 {
                     b.Property<string>("Email")
                         .HasMaxLength(200)
@@ -604,7 +610,7 @@ namespace Marketing.Infraestrutura.Migrations
 
                     b.HasOne("Marketing.Domain.Entidades.Estabelecimento", "Estabelecimento")
                         .WithMany("ContatoEstabelecimentos")
-                        .HasForeignKey("EstabelecimentoCnpj")
+                        .HasForeignKey("EstabelecimentoCnpj", "EstabelecimentoRedeNome")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -637,7 +643,9 @@ namespace Marketing.Infraestrutura.Migrations
                 {
                     b.HasOne("Marketing.Domain.Entidades.Rede", "Rede")
                         .WithMany("Estabelecimentos")
-                        .HasForeignKey("RedeNome");
+                        .HasForeignKey("RedeNome")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Rede");
                 });
@@ -646,7 +654,7 @@ namespace Marketing.Infraestrutura.Migrations
                 {
                     b.HasOne("Marketing.Domain.Entidades.Estabelecimento", "Estabelecimento")
                         .WithMany("ExtratoVendas")
-                        .HasForeignKey("EstabelecimentoCnpj")
+                        .HasForeignKey("EstabelecimentoCnpj", "EstabelecimentoRedeNome")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

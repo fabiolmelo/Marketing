@@ -33,18 +33,15 @@ namespace Marketing.Application.Servicos
             {
                 if (grupo.Cnpj != null)
                 {
-                    var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(grupo.Cnpj);
+                    var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdChaveComposta(grupo.Cnpj, grupo.NomeRede);
                     var rede = await _unitOfWork.repositorioRede.GetByIdStringAsync(grupo.NomeRede);
                     if (estabelecimento == null && rede != null)
                     {
-                        estabelecimento = new Estabelecimento()
+                        estabelecimento = new Estabelecimento(grupo.Cnpj, grupo.NomeRede)
                         {
-                            Cnpj = grupo.Cnpj,
                             RazaoSocial = grupo.Restaurante ?? "",
                             Cidade = grupo.Cidade ?? "",
                             Uf = grupo.Uf ?? ""
-                            //,Rede = rede
-                            //,RedeNome = rede.Nome
                         };
                         await _unitOfWork.repositorioEstabelecimento.AddAsync(estabelecimento);
                         await _unitOfWork.CommitAsync();
@@ -59,7 +56,7 @@ namespace Marketing.Application.Servicos
             {
                 if (linhaPlanilha.Rede != String.Empty && linhaPlanilha.Rede != null)
                 {
-                    var estabelecimento = await FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj);
+                    var estabelecimento = await FindEstabelecimentoIncludeContatoRede(linhaPlanilha.Cnpj, linhaPlanilha.Rede);
                     var rede = await _unitOfWork.repositorioRede.GetByIdStringAsync(linhaPlanilha.Rede);
 
                     if (estabelecimento != null && rede != null)
@@ -81,16 +78,16 @@ namespace Marketing.Application.Servicos
             return await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentos(pageNumber, pageSize, filtro);
         }
 
-        public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj)
+        public async Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj, string nomeRede)
         {
-            return await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoIncludeContatoRede(cnpj);
+            return await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoIncludeContatoRede(cnpj, nomeRede);
         }
 
         public async Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas)
         {
             foreach (DadosPlanilha linha in dadosPlanilhas)
             {
-                var estabelecimento = await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoIncludeContatoRede(linha.Cnpj);
+                var estabelecimento = await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoIncludeContatoRede(linha.Cnpj, linha.Rede);
                 if (estabelecimento != null)
                 {
                     var extrato = estabelecimento.ExtratoVendas.Any(x => x.Ano == linha.AnoMes.Year &&
@@ -125,7 +122,8 @@ namespace Marketing.Application.Servicos
                                                     linha.PrecoUnitarioMedio,
                                                     linha.TotalPedidosNaoCapturados,
                                                     linha.ReceitaNaoCapturada,
-                                                    linha.Cnpj);
+                                                    linha.Cnpj, 
+                                                    linha.Rede );
                         await _unitOfWork.GetRepository<ExtratoVendas>().AddAsync(extratoNew);
                         await _unitOfWork.CommitAsync();
                     }
@@ -159,9 +157,9 @@ namespace Marketing.Application.Servicos
             return await _unitOfWork.repositorioEstabelecimento.GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(telefone);
         }
 
-        public async Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia)
+        public async Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia, string nomeRede)
         {
-            return await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoPorCnpjParaPdf(cnpj, competencia);
+            return await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoPorCnpjParaPdf(cnpj, competencia, nomeRede);
         }
     }
 }

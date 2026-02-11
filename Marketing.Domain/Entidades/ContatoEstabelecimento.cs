@@ -7,20 +7,16 @@ namespace Marketing.Domain.Entidades
 
         }
 
-        public ContatoEstabelecimento(Contato contato, Estabelecimento estabelecimento)
-        {
-            Contato = contato;
-            Estabelecimento = estabelecimento;
-        }
-
-        public ContatoEstabelecimento(string contatoTelefone, string estabelecimentoCnpj)
+        public ContatoEstabelecimento(string contatoTelefone, string estabelecimentoCnpj, string estabelecimentoRedeNome)
         {
             ContatoTelefone = contatoTelefone;
             EstabelecimentoCnpj = estabelecimentoCnpj;
+            EstabelecimentoRedeNome = estabelecimentoRedeNome;
         }
 
         public string ContatoTelefone { get; set; } = null!;
         public string EstabelecimentoCnpj { get; set; } = null!;
+        public string EstabelecimentoRedeNome { get; set; } = null!;
         public virtual Contato Contato { get; set; } = null!;
         public virtual Estabelecimento Estabelecimento { get; set; } = null!;
     }

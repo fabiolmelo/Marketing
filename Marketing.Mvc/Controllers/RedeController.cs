@@ -2,11 +2,15 @@
 using Marketing.Application.DTOs;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Interfaces.Servicos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Marketing.Mvc.Controllers
 {
+    [Authorize(Roles = "Root,Admin")]
+    [EnableRateLimiting("mvc") ]
     public class RedeController : Controller
     {
         private readonly IServicoRede _servicoRede;
