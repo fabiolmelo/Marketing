@@ -13,6 +13,7 @@ namespace Marketing.Infraestrutura.Repositorio.UnitOfWork
         private IRepositorioProcessamentoMensal _repositorioProcessamentoMensal;
         private IRepositorioRede _repositorioRede;
         private IRepositorioMensagem _repositorioMensagem;
+        private IRepositorioExportacao _repositorioExportacao;
         private readonly DataContext _context;
         private Dictionary<Type, object> _repositories;
 
@@ -23,6 +24,7 @@ namespace Marketing.Infraestrutura.Repositorio.UnitOfWork
         public IRepositorioProcessamentoMensal repositorioProcessamentoMensal => _repositorioProcessamentoMensal;
         public IRepositorioRede repositorioRede => _repositorioRede;
         public IRepositorioMensagem repositorioMensagem => _repositorioMensagem;
+        public IRepositorioExportacao repositorioExportacao => _repositorioExportacao;
 
         public UnitOfWork(DataContext context)
         {
@@ -35,6 +37,7 @@ namespace Marketing.Infraestrutura.Repositorio.UnitOfWork
             _repositorioProcessamentoMensal = new RepositorioFechamentoMensal(context);
             _repositorioRede = new RepositorioRede(context);
             _repositorioMensagem = new RepositorioMensagem(context);
+            _repositorioExportacao = new RepositorioExportacao(context);
         }
 
         public void Dispose()

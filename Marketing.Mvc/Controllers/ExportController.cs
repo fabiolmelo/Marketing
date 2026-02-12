@@ -13,20 +13,19 @@ namespace Marketing.Mvc.Controllers
     {
         private readonly IServicoExport _servicoExport;
         private readonly IUnitOfWork _unitOfWork;
-        public ExportController(IServicoExport servicoExport, IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnviroment;
+
+        public ExportController(IServicoExport servicoExport, IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnviroment)
         {
             _servicoExport = servicoExport;
             _unitOfWork = unitOfWork;
+            _webHostEnviroment = webHostEnviroment;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var fechamentos = new List<FechamentoV1>();
-            var redes = await _unitOfWork.GetRepository<Rede>().GetAll();
-            foreach(var rede in redes)
-            {
-                fechamentos.Add(await _servicoExport.GetFechamentoV1PorRede(rede.Nome));
-            }
+            var pathRoot = Path.Combine(_webHostEnviroment.ContentRootPath, "DadosApp", "Relatorio", "BaseV1.xlsx");
+            var fechamentos = await _servicoExport.GerarFechamentoV1(pathRoot);
             var fileBytes = _servicoExport.ExportarFechamentoV1(fechamentos);
             return File(fileBytes, "application/zip", $"IncidenciaV1.zip");
         }

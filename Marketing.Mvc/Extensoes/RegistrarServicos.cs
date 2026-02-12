@@ -30,6 +30,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IServicoExtratoVendas, ServicoExtratoVenda>();
             servicos.AddScoped<IServicoEnvioMensagemMensal, ServicoEnvioMensagemMensal>();
             servicos.AddScoped<IServicoReceitaFederal, ServicoReceitaFederal>();
+            servicos.AddScoped<IServicoExport, ServicoExport>();
             servicos.AddScoped<IServicoSeed, ServicoSeed>();
 
             servicos.AddScoped<IRepositorioContato, RepositorioContato>();
@@ -39,6 +40,7 @@ namespace Marketing.Mvc.Extensoes
             servicos.AddScoped<IRepositorioEnvioMensagemMensal, RepositorioEnvioMensagemMensal>();
             servicos.AddScoped<IRepositorioRede, RepositorioRede>();
             servicos.AddScoped<IRepositorioMensagem, RepositorioMensagem>();
+            servicos.AddScoped<IRepositorioExportacao, RepositorioExportacao>();
             servicos.AddSingleton<IHttpClientsFactoryPerson, HttpClientsFactoryPerson>();
             servicos.AddHostedService<ServicoBackup>();
         }
