@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Marketinf.Mvc.Controllers
 {
     [Authorize(Roles = "Root,Admin")]
-    [EnableRateLimiting("mvc") ]
+
     public class ImportarArquivoController : Controller
     {
         private readonly IServicoImportarPlanilha _servicoImportarPlanilha;

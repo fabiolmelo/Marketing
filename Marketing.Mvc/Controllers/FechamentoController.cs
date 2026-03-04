@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Marketing.Mvc.Controllers
 {
     [Authorize(Roles = "Root,Admin")]
-    [EnableRateLimiting("mvc") ]
+
     public class FechamentoController : Controller
     {
         private readonly IServicoProcessamentoMensal _servicoProcessamentoMensal;
