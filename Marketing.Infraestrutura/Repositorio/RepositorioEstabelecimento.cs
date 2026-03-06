@@ -112,5 +112,11 @@ namespace Marketing.Infraestrutura.Repositorio
                          .AsSplitQuery();
             return new PagedResponse<List<Estabelecimento>>(await query.ToListAsync(), page, size, totalRecords);
         }
+
+        public async Task<Estabelecimento?> GetEstabelecimentoPorIdComposto(string Cnpj, string nomeRede)
+        {
+            var query = _context.Set<Estabelecimento>().AsQueryable();
+            return await query.FirstOrDefaultAsync(x => x.Cnpj == Cnpj && x.RedeNome == nomeRede);
+        }
     }
 }

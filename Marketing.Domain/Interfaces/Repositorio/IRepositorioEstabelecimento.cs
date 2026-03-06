@@ -11,6 +11,7 @@ namespace Marketing.Domain.Interfaces.Repositorio
         Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj, string nomeRede);
         Task<List<Estabelecimento>> GetAllEstabelecimentoPorContato(string telefone);
         Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone);
+        Task<Estabelecimento?> GetEstabelecimentoPorIdComposto(string Cnpj, string nomeRede);
         Task CommitAsync();
         void Commit();
     }

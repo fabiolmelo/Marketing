@@ -131,9 +131,9 @@ namespace Marketing.Application.Servicos
             }
         }
 
-        async Task<bool> IServicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(string cnpj, bool? forcarUpdate)
+        async Task<bool> IServicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(string cnpj, string nomeRede, bool? forcarUpdate)
         {
-            var estabelecimento = await _unitOfWork.GetRepository<Estabelecimento>().GetByIdStringAsync(cnpj);
+            var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetEstabelecimentoPorIdComposto(cnpj, nomeRede);
             if(forcarUpdate == false) await Task.Delay(20000); 
             var receita = await _servicoReceitaFederal.ConsultarDadosReceitaFederal(cnpj);
             if (estabelecimento == null || receita == null) return false;
@@ -160,6 +160,11 @@ namespace Marketing.Application.Servicos
         public async Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia, string nomeRede)
         {
             return await _unitOfWork.repositorioEstabelecimento.FindEstabelecimentoPorCnpjParaPdf(cnpj, competencia, nomeRede);
+        }
+
+        public async Task<Estabelecimento?> GetEstabelecimentoPorIdComposto(string Cnpj, string nomeRede)
+        {
+            return await _unitOfWork.repositorioEstabelecimento.GetByIdChaveComposta(Cnpj, nomeRede);
         }
     }
 }

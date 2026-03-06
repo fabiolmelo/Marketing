@@ -10,8 +10,9 @@ namespace Marketing.Domain.Interfaces.Servicos
         Task AtualizarAssociacaoEstabelecimentoRede(List<DadosPlanilha> dadosPlanilhas);
         Task<Estabelecimento?> FindEstabelecimentoIncludeContatoRede(string cnpj, string nomeRede);
         Task AtualizarExtratosViaPlanilha(List<DadosPlanilha> dadosPlanilhas);
-        Task<bool> AtualizarDadosCadastraisViaReceitaFederal(string cnpj, bool? forcarUpdate = false);
+        Task<bool> AtualizarDadosCadastraisViaReceitaFederal(string cnpj, string nomeRede, bool? forcarUpdate = false);
         Task<List<Estabelecimento>> GetAllEstabelecimentoPorContatoQuePossuiCompetenciaVigente(string telefone);
         Task<Estabelecimento?> FindEstabelecimentoPorCnpjParaPdf(string cnpj, DateTime competencia, string nomeRede);
+        Task<Estabelecimento?> GetEstabelecimentoPorIdComposto(string Cnpj, string nomeRede);
     }
 }

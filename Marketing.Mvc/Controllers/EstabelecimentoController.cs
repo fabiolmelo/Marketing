@@ -37,11 +37,11 @@ namespace Marketing.Mvc.Controllers
         }
 
      
-        public async Task<ActionResult> Edit(string id, string? erro = null, string? sucesso = null)
+        public async Task<ActionResult> Edit(string id, string nome, string? erro = null, string? sucesso = null)
         {
             ViewData["Erro"] = erro;
             ViewData["OK"] = sucesso;
-            var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(id);
+            var estabelecimento = await _servicoEstabelecimento.GetEstabelecimentoPorIdComposto(id, nome);
             var redes = await _servicoRede.GetAllRedesAsync(1, 999999);
             var selectList = new SelectList(redes.Dados, "Nome", "Nome", estabelecimento?.RedeNome);
             ViewBag.Redes = selectList;
@@ -51,17 +51,17 @@ namespace Marketing.Mvc.Controllers
         }
 
 
-        public async Task<ActionResult> AtualizarDadosCadastraisViaReceitaFederal(string id)
+        public async Task<ActionResult> AtualizarDadosCadastraisViaReceitaFederal(string id, string nome)
         {
-            if (await _servicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(id, true))
+            if (await _servicoEstabelecimento.AtualizarDadosCadastraisViaReceitaFederal(id, nome, true))
             {
                 return RedirectToAction("Edit",
-                    new { sucesso = "Dados atualizados via Receita Federal.", id = id });
+                    new { sucesso = "Dados atualizados via Receita Federal.", id = id, nome  });
             }
             else
             {
                 return RedirectToAction("Edit",
-                    new { erro = "Erro. Processamento não efetuado!", id = id });
+                    new { erro = "Erro. Processamento não efetuado!", id = id, nome });
             }
         }
 

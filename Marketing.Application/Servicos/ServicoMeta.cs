@@ -51,7 +51,9 @@ namespace Marketing.Application.Servicos
             var envio = await _unitOfWork.repositorioEnvioMensagemMensal.GetByIdStringAsync(idMensagem);
             if (envio == null) throw new Exception("Erro enviando status!");
             var contato = await _unitOfWork.repositorioContato.GetByIdStringAsync(envio.ContatoTelefone);
-            var estabelecimento = await _unitOfWork.repositorioEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
+            var estabelecimento = await _unitOfWork.repositorioEstabelecimento
+                                                   .GetEstabelecimentoPorIdComposto(envio.EstabelecimentoCnpj, 
+                                                                                    envio.RedeNome);
             if (contato == null || estabelecimento == null) throw new Exception("Erro enviando status!");
             WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone, "extrato_v2", "pt_BR");
             var bodyComponent = new Component("body");
