@@ -70,15 +70,25 @@
                 </tbody>
             </table>
         </div>
-         <div class="row">
-            @if (Model.TotalPages > 1){
-                <div class="col col-12">
-                    <input class="btn btn-sm btn-primary" type="button" value="<<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Rede", new { pageNumber = 1, filtro = @ViewData["FiltroAtual"] ?? "" })'" />|
-                    <input class="btn btn-sm btn-primary" type="button" value="<" @(Model.PageNumber == 1 ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Rede", new { pageNumber = Model.PageNumber - 1, filtro = @ViewData["FiltroAtual"] ?? "" })'" />|
-                    <input class="btn btn-sm btn-primary" type="button" value=">" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Rede", new { pageNumber = Model.PageNumber + 1, filtro = @ViewData["FiltroAtual"] ?? "" })'" />|
-                    <input class="btn btn-sm btn-primary" type="button" value=">>" @(Model.PageNumber == Model.TotalPages ? "disabled" : "") onclick="location.href='@Url.Action("Index", "Rede", new { pageNumber = Model.TotalPages, filtro = @ViewData["FiltroAtual"] ?? "" })'" />|
-                </div>
-            }
+        <div class="row">
+            <div class="col col-12">
+                <a class="btn btn-sm btn-primary @(Model.PageNumber == 1 ? "disabled" : "")"
+                    href="@(Model.PageNumber == 1 
+                            ? "#" 
+                            : Url.Action("Index", "Rede", new { pageNumber = 1, filtro = ViewData["FiltroAtual"] ?? "" }))"><<</a>
+                <a class="btn btn-sm btn-primary @(Model.PageNumber == 1 ? "disabled" : "")"
+                    href="@(Model.PageNumber == 1 
+                            ? "#" 
+                            : Url.Action("Index", "Rede", new { pageNumber = Model.PageNumber - 1, filtro = ViewData["FiltroAtual"] ?? "" }))"><</a>
+                <a class="btn btn-sm btn-primary @(Model.PageNumber == Model.TotalPages ? "disabled" : "")"
+                    href="@(Model.PageNumber == Model.TotalPages  
+                            ? "#" 
+                            : Url.Action("Index", "Rede", new { pageNumber = Model.PageNumber + 1, filtro = ViewData["FiltroAtual"] ?? "" }))">></a>
+                <a class="btn btn-sm btn-primary @(Model.PageNumber == Model.TotalPages ? "disabled" : "")"
+                    href="@(Model.PageNumber == Model.TotalPages 
+                            ? "#" 
+                            : Url.Action("Index", "Rede", new { pageNumber = Model.TotalPages, filtro = ViewData["FiltroAtual"] ?? "" }))">>></a>
+            </div>
             <div class="col col-12">
                 <h6>´Página: @Model.PageNumber de @Model.TotalPages" </h6>
             </div>

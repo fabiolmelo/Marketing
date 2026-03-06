@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Marketing.Mvc.Controllers
 {
     [Authorize(Roles = "Root")]
-    [EnableRateLimiting("mvc") ]
     public class ExportController  : ControllerBase 
     {
         private readonly IServicoExport _servicoExport;

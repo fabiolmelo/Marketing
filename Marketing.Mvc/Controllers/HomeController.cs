@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Marketing.Mvc.Controllers;
 
 [Authorize(Roles = "Root,Admin,DashBoard")]
-[EnableRateLimiting("mvc") ]
+
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
