@@ -80,11 +80,11 @@ namespace Marketing.Mvc.Controllers
             }
         }
 
-        public async Task<ActionResult> Contatos(string id, string redeNome, string? erro = null, string? sucesso = null)
+        public async Task<ActionResult> Contatos(string id, string nome, string? erro = null, string? sucesso = null)
         {
             ViewData["Erro"] = erro;
             ViewData["OK"] = sucesso;
-            var estabelecimento = await _servicoEstabelecimento.FindEstabelecimentoIncludeContatoRede(id, redeNome);
+            var estabelecimento = await _servicoEstabelecimento.FindEstabelecimentoIncludeContatoRede(id, nome);
             if (estabelecimento == null) return BadRequest();        
             return View(estabelecimento);
         }

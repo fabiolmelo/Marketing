@@ -201,7 +201,7 @@ namespace Marketing.Application.Servicos.LeituraDados
                             responseValidation.AdicionarDados(
                                 new DadosPlanilha(data, uf, cidade, cnpj, restaurante, totalPedidos, 
                                     totalPedidosCoca, incidencia, meta, precoUnitarioMedio, 
-                                    qtdPedidosNaoCapiturados, receitaNaoCapturada, rede, "", row, planilhaName)
+                                    qtdPedidosNaoCapiturados, receitaNaoCapturada, rede, telefone, row, planilhaName)
                             );
                             row++;
                         }
