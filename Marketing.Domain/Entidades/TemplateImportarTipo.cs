@@ -5,6 +5,7 @@ namespace Marketing.Domain.Entidades
         INDEFINIDO = 0,
         DOMINUS = 1,
         GRUPO_TRIGO = 2,
+        BOBS  = 3,
         Tratada = 99
     }
 }

@@ -45,7 +45,6 @@ namespace Marketing.Application.Servicos
                     new("KONI"),
                     new("CHINA IN BOX"),
                     new("GENDAI"),
-                    new("LEBONTON"),
                     new("GURUME"),
                     new("BOBS")
                 };
@@ -54,17 +53,15 @@ namespace Marketing.Application.Servicos
             }
 
             var existeTemplate = await _unitOfWork.GetRepository<TemplateImportarPlanilha>().GetAll();
-            if (existeTemplate.Count == 0)
+            var templates = new List<TemplateImportarPlanilha>
             {
-                var templates = new List<TemplateImportarPlanilha>
-                {
-                    new(1, "DOMINOS"),
-                    new(2, "GRUPO TRIGO")
-                };
-                
-                await _unitOfWork.GetRepository<TemplateImportarPlanilha>().AddRangeAsync(templates);
-                await _unitOfWork.CommitAsync();
-            }
+                new(1, "DOMINOS"),
+                new(2, "GRUPO TRIGO"),
+                new(3, "BOBS")
+            };
+            var templatesAdd = templates.Except(existeTemplate);
+            await _unitOfWork.GetRepository<TemplateImportarPlanilha>().AddRangeAsync(templatesAdd);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

@@ -1,11 +1,10 @@
 using Marketing.Domain.DTOs;
 using Marketing.Domain.Entidades;
 using Marketing.Domain.Extensoes;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Marketing.Application.Servicos.LeituraDados
 {
-    public class LeituraDadosDominos : LeituraDados
+    public class LeituraDadosBobs : LeituraDados
     {
         public override ResponseValidation LerDados(string pathArquivo)
         {
@@ -16,7 +15,7 @@ namespace Marketing.Application.Servicos.LeituraDados
             using(var excel = new ClosedXML.Excel.XLWorkbook(pathArquivo))
             {
                 var planilha = excel.Worksheet(1).RowsUsed();
-                var rede = "DOMINOS";
+                var rede = "BOBS";
 
                 DateTime data = DateTime.MaxValue;
                 String uf = String.Empty;
@@ -34,8 +33,8 @@ namespace Marketing.Application.Servicos.LeituraDados
 
                 foreach (var linha in planilha)
                 {
-                    if (linha.RowNumber() == 1 && linha.Cell("D").Value.ToString() != "ID_LOJA" 
-                        && !planilhaName.ToUpper().Contains("DOMINUS"))
+                    if (linha.RowNumber() == 1 && linha.Cell("B").Value.ToString().ToUpper() != "ID_LOJA"
+                        && !planilhaName.ToUpper().Contains("BOBS"))
                     {
                         responseValidation.FormatoInvalido = true;
                         return responseValidation;
@@ -86,7 +85,7 @@ namespace Marketing.Application.Servicos.LeituraDados
                         {
                             coluna = "Restaurante";
                             restaurante = linha.Cell("F").Value.ToString().ToUpper().Trim();
-                            if (restaurante.IsNullOrEmpty()) responseValidation.AdicionarErro(planilhaName, row, coluna, "Restaurante em branco!");
+                            if (String.IsNullOrEmpty(restaurante)) responseValidation.AdicionarErro(planilhaName, row, coluna, "Restaurante em branco!");
                         }
                         catch (Exception ex)
                         {
