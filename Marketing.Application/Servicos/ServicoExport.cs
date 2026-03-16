@@ -51,7 +51,7 @@ namespace Marketing.Application.Servicos
                     planilha.Row(2).InsertRowsBelow(totalRows);
                     foreach (var linha in linhaFechamento)
                     {
-                        planilha.Cell(row, 1).Value = linha.AnoMes.ToShortDateString();
+                        planilha.Cell(row, 1).Value = linha.AnoMes;
                         planilha.Cell(row, 2).Value = linha.UF;
                         planilha.Cell(row, 3).Value = linha.Cidade;
                         planilha.Cell(row, 4).Value = linha.CNPJ;
