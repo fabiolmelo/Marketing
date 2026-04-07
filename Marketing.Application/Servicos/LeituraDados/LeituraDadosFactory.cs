@@ -12,6 +12,8 @@ namespace Marketing.Application.Servicos.LeituraDados
                     return new LeituraDadosDominos();
                 case TemplateImportarTipo.GRUPO_TRIGO:
                     return new LeituraDadosGrupoTrigo();
+                case TemplateImportarTipo.BOBS:
+                    return new LeituraDadosBobs();
                 default:
                     throw new Exception("Template indefinido!");
             }
