@@ -14,7 +14,7 @@ namespace Marketing.Application.Servicos
     {
         public string GerarArquivoPdf(Estabelecimento estabelecimento, string arquivoPdf, int posicao, string contentRootPath, string caminhoApp)
         {
-            var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "FundoAtualizado.png");
+            var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "FundoCocaV4_1.png");
             var caminhoFontes = Path.Combine(contentRootPath, "DadosApp", "Fonts");
             //var caminhoFundo = Path.Combine(contentRootPath, "DadosApp", "CocaColaFundo.jpeg");
             var caminhoPdf = Path.Combine(contentRootPath, "DadosApp", "tmp.pdf");
@@ -35,6 +35,7 @@ namespace Marketing.Application.Servicos
            using (var image = File.OpenRead(caminhoFundo))
             {
                 if (File.Exists(caminhoPdf)) File.Delete(caminhoPdf);
+                if (File.Exists(caminhoPdfCompleto )) File.Delete(caminhoPdfCompleto);
                 using (FileStream filestream = new FileStream(caminhoPdf, FileMode.OpenOrCreate, FileAccess.Write))
                 {
                     Document document = new Document(PageSize.A4);

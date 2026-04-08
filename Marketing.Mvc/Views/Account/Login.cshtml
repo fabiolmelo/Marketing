@@ -1,3 +1,4 @@
+@using DocumentFormat.OpenXml.Wordprocessing
 @{
     Layout = null;
     ViewData["Title"] = "Login - Programa de Incidências";
@@ -56,6 +57,7 @@
                            class="form-control"
                            required
                            autocomplete="username"
+                           value=@ViewData["Email"]
                            placeholder="seuemail@exemplo.com" />
                 </div>
 

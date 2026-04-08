@@ -23,6 +23,7 @@ namespace ProgramaDeIncidencias.Controllers
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["Email"] = Request.Cookies["Email"];
             return View();
         }
 
@@ -54,6 +55,16 @@ namespace ProgramaDeIncidencias.Controllers
 
             if (result.Succeeded)
             {
+                var options = new CookieOptions
+                {
+                    Expires  = DateTimeOffset.Now.AddDays(30),
+                    HttpOnly = true,   // não acessível via JavaScript
+                    Secure   = true,   // apenas HTTPS
+                    SameSite = SameSiteMode.Strict
+                };
+
+                Response.Cookies.Append("Email", email, options);
+
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     return Redirect(returnUrl);
 
