@@ -30,7 +30,7 @@
                 <div class="form-group row align-items-center">
                     <div class="col-xs-12 col-sm-4 col-md-4">
                         @Html.LabelFor(model => model.OrigemCadastro, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(model => model.OrigemCadastro, Html.GetEnumSelectList<OrigemContato>(), "", new { htmlAttributes = new { @class = "form-control dropdown" } })
+                        @Html.DropDownListFor(model => model.OrigemCadastro, Html.GetEnumSelectList<OrigemContato>(), "", new { htmlAttributes = new { @class = "form-control" } })
                         @* <select class="form-control dropdown" asp-for="OrigemCadastro" asp-items="Html.GetEnumSelectList<OrigemContato>()" ></select>     *@
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4">

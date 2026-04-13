@@ -87,6 +87,7 @@ namespace Marketing.Mvc.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("Fechamento/Download/{id}")]
         public async Task<IActionResult> Download(string id)
         {
