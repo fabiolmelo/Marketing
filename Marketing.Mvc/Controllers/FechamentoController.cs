@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace Marketing.Mvc.Controllers
 {
-    [Authorize(Roles = "Root,Admin")]
-
+    [AllowAnonymous]
     public class FechamentoController : Controller
     {
         private readonly IServicoProcessamentoMensal _servicoProcessamentoMensal;
@@ -46,6 +45,7 @@ namespace Marketing.Mvc.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Roles = "Root,Admin")]
         public async Task<ActionResult> Index(string? erro = null, string? sucesso = null)
         {
             try
@@ -65,6 +65,7 @@ namespace Marketing.Mvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Root,Admin")]
         public async Task<IActionResult> Gerar(ProcessamentoMensalDto processamentoMensalDto)
         {
             try
@@ -87,8 +88,8 @@ namespace Marketing.Mvc.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet("Fechamento/Download/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Download(string id)
         {
             try

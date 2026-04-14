@@ -14,7 +14,7 @@ namespace Marketing.Mvc.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
+        
         public async Task<ActionResult> Index(string? erro = null, string? sucesso = null)
         {
             ViewData["Erro"] = erro;
