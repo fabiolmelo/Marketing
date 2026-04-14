@@ -4,11 +4,11 @@ using Marketing.Domain.Interfaces.IUnitOfWork;
 using Marketing.Domain.Interfaces.Servicos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 
 namespace Marketing.Mvc.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Root,Admin")]
+    [Route("Fechamento")]
     public class FechamentoController : Controller
     {
         private readonly IServicoProcessamentoMensal _servicoProcessamentoMensal;
@@ -86,7 +86,9 @@ namespace Marketing.Mvc.Controllers
             }
         }
 
-        [HttpGet("Fechamento/Download/{id}")]
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("Download/{id}")]
         public async Task<IActionResult> Download(string id)
         {
             try
