@@ -45,7 +45,6 @@ namespace Marketing.Mvc.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [Authorize(Roles = "Root,Admin")]
         public async Task<ActionResult> Index(string? erro = null, string? sucesso = null)
         {
             try
@@ -65,7 +64,6 @@ namespace Marketing.Mvc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Root,Admin")]
         public async Task<IActionResult> Gerar(ProcessamentoMensalDto processamentoMensalDto)
         {
             try
@@ -89,7 +87,6 @@ namespace Marketing.Mvc.Controllers
         }
 
         [HttpGet("Fechamento/Download/{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> Download(string id)
         {
             try
