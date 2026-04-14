@@ -82,15 +82,15 @@ builder.Services.ConfigureApplicationCookie(options =>
 
     options.Cookie.HttpOnly = true;
 
-    // 🔥 Correção principal
-    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
-        ? CookieSecurePolicy.SameAsRequest
-        : CookieSecurePolicy.Always;
+    // // 🔥 Correção principal
+    // options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+    //     ? CookieSecurePolicy.SameAsRequest
+    //     : CookieSecurePolicy.Always;
 
-    options.Cookie.SameSite = SameSiteMode.Lax;
+    // options.Cookie.SameSite = SameSiteMode.Lax;
 
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromHours(2);
+    // options.SlidingExpiration = true;
+    // options.ExpireTimeSpan = TimeSpan.FromHours(2);
 });
 
 #endregion
@@ -119,14 +119,14 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 
 #region Proxy / Forward Headers
 
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders =
-        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+// builder.Services.Configure<ForwardedHeadersOptions>(options =>
+// {
+//     options.ForwardedHeaders =
+//         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 
-    options.KnownNetworks.Clear();
-    options.KnownProxies.Clear();
-});
+//     options.KnownNetworks.Clear();
+//     options.KnownProxies.Clear();
+// });
 
 #endregion
 
