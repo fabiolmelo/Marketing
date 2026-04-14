@@ -95,7 +95,8 @@ namespace Marketing.Mvc.Controllers
             {
                 var envio = await _servicoEnvioMensagemMensal.GetByIdStringAsync(id);
                 if (envio == null || envio.MensagemId == null) throw new Exception("Mensagem enviada ao contato não localizada!");
-                var estabelecimento = await _servicoEstabelecimento.GetByIdStringAsync(envio.EstabelecimentoCnpj);
+                var estabelecimento = await _servicoEstabelecimento.GetEstabelecimentoPorIdComposto(envio.EstabelecimentoCnpj, 
+                                                                                                    envio.RedeNome);
                 if (estabelecimento == null ) throw new Exception("Mensagem enviada ao contato não localizada!");
                 var mensagemItem = new MensagemItem(envio.MensagemId, DateTime.Now, MensagemStatus.CLICKLINK);
                 await _unitOfWork.GetRepository<MensagemItem>().AddAsync(mensagemItem);
