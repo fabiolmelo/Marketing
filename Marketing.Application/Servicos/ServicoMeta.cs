@@ -58,7 +58,6 @@ namespace Marketing.Application.Servicos
             WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone, "extrato_v2", "pt_BR");
             var bodyComponent = new Component("body");
             bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.RazaoSocial });
-            bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.ExtratoMesCompetencia.Competencia.ToString("MMMM/yyyy")});
             requestBody.template.components.Add(bodyComponent);
             var buttonComponent = new Component("button");
             buttonComponent.sub_type = "url";
@@ -84,6 +83,7 @@ namespace Marketing.Application.Servicos
                                                         "extrato_incidencias_mensal", "pt_BR");
             var bodyComponent = new Component("body");
             bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.RazaoSocial });
+            bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.ExtratoMesCompetencia.Competencia.ToString("MMMM/yyyy")});
             requestBody.template.components.Add(bodyComponent);
             var buttonComponent = new Component("button");
             buttonComponent.sub_type = "url";
