@@ -71,7 +71,7 @@ namespace Marketing.Mvc.Controllers
             var envio = await _unitOfWork.GetRepository<EnvioMensagemMensal>().GetByIdStringAsync(id);
             if (envio != null)
             {
-                ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtratoV2(id);
+                ServicoExtratoResponseDto response = await _servicoMeta.EnviarExtratoV3(id);
                 var mensagem = new Mensagem();
                 if (response.IsSuccessStatusCode)
                 {

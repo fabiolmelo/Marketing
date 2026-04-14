@@ -58,6 +58,32 @@ namespace Marketing.Application.Servicos
             WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone, "extrato_v2", "pt_BR");
             var bodyComponent = new Component("body");
             bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.RazaoSocial });
+            bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.ExtratoMesCompetencia.Competencia.ToString("MMMM/yyyy")});
+            requestBody.template.components.Add(bodyComponent);
+            var buttonComponent = new Component("button");
+            buttonComponent.sub_type = "url";
+            buttonComponent.index = "0";
+            buttonComponent.parameters.Add(new Parameter("text") { text = urlExtrato });
+            requestBody.template.components.Add(buttonComponent);
+            var response = await _httpClient.PostAsJsonAsync<WhatsAppMessageTemplate>("", requestBody, JsonSerializerOptions.Default);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return new ServicoExtratoResponseDto(response.StatusCode, responseContent);
+        }
+
+        public async Task<ServicoExtratoResponseDto> EnviarExtratoV3(string idMensagem)
+        {
+            var urlExtrato = Path.Combine("Fechamento", "Download", idMensagem);
+            var envio = await _unitOfWork.repositorioEnvioMensagemMensal.GetByIdStringAsync(idMensagem);
+            if (envio == null) throw new Exception("Erro enviando status!");
+            var contato = await _unitOfWork.repositorioContato.GetByIdStringAsync(envio.ContatoTelefone);
+            var estabelecimento = await _unitOfWork.repositorioEstabelecimento
+                                                   .GetEstabelecimentoPorIdComposto(envio.EstabelecimentoCnpj, 
+                                                                                    envio.RedeNome);
+            if (contato == null || estabelecimento == null) throw new Exception("Erro enviando status!");
+            WhatsAppMessageTemplate requestBody = new WhatsAppMessageTemplate(contato.Telefone, 
+                                                        "extrato_incidencias_mensal", "pt_BR");
+            var bodyComponent = new Component("body");
+            bodyComponent.parameters.Add(new Parameter("text") { text = estabelecimento.RazaoSocial });
             requestBody.template.components.Add(bodyComponent);
             var buttonComponent = new Component("button");
             buttonComponent.sub_type = "url";
