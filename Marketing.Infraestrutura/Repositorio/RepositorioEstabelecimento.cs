@@ -116,7 +116,7 @@ namespace Marketing.Infraestrutura.Repositorio
         public async Task<Estabelecimento?> GetEstabelecimentoPorIdComposto(string Cnpj, string nomeRede)
         {
             var query = _context.Set<Estabelecimento>().AsQueryable();
-            return await query.FirstOrDefaultAsync(x => x.Cnpj == Cnpj && x.RedeNome == nomeRede);
+            return await query.Include(x=>x.ExtratoVendas).FirstOrDefaultAsync(x => x.Cnpj == Cnpj && x.RedeNome == nomeRede);
         }
     }
 }
