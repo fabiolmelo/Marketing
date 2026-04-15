@@ -50,7 +50,7 @@ namespace Marketing.Application.Servicos
                     // FONTES
                     var fontes = FontFactory.RegisteredFonts;
                     Font fontDadosEstabelecimento = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.WHITE);
-                    Font fontPosicaoRede = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
+                    Font fontPosicaoRede = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 26, Font.NORMAL, BaseColor.WHITE);
                     Font fontMesReferencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 11, Font.NORMAL, BaseColor.BLACK);
 
                     Font fontVendas = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
@@ -160,14 +160,14 @@ namespace Marketing.Application.Servicos
                     ColumnText totalPedidoCoca = new ColumnText(directContent);
                     string totalPedidosCoca = estabelecimento.ExtratoMesCompetencia.PedidosComCocaCola.ToString("N0");
                     var totalPedidoCocaPhrase = new Phrase(new Chunk(totalPedidosCoca, fontVendas));
-                    totalPedidoCoca.SetSimpleColumn(totalPedidoCocaPhrase, 190, 560, 105, 595, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    totalPedidoCoca.SetSimpleColumn(totalPedidoCocaPhrase, 170, 560, 95, 595, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     totalPedidoCoca.Go();
 
                     //INCIDENCIA
                     ColumnText incidenciaMes = new ColumnText(directContent);
                     string incidenciaText = ((int)(estabelecimento.ExtratoMesCompetencia.IncidenciaReal * 100)).ToString() + "%";
                     var incidenciaMesPhrase = new Phrase(new Chunk(incidenciaText, fontVendasBold));
-                    incidenciaMes.SetSimpleColumn(incidenciaMesPhrase, 270, 560, 185, 595, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    incidenciaMes.SetSimpleColumn(incidenciaMesPhrase, 280, 560, 200, 595, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     incidenciaMes.Go();
 
                     //RECEITA NAO CAPTURADA
@@ -197,25 +197,41 @@ namespace Marketing.Application.Servicos
                     PdfContentByte cb = worker.DirectContent;
                     ColumnText ct = new ColumnText(cb);
                     var posicaoPhrase = new Phrase(new Chunk($"{posicao.ToString()}º", fontPosicaoRede));
-                    ct.SetSimpleColumn(posicaoPhrase, 565, 555, 420, 590, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    ct.SetSimpleColumn(posicaoPhrase, 610, 525, 455, 565, 25, Element.ALIGN_LEFT | Element.ALIGN_TOP);
                     ct.Go();
 
-                    const int FATOR_FIXO = 31;
+                    const int FATOR_FIXO = 33;
+                    int qtdExtrato = estabelecimento.ExtratoVendas.Count;
+                    int fatorPosicao = (12 * FATOR_FIXO);
+
+                    // PERIODO
+                    ColumnText[] meses = new ColumnText[qtdExtrato];
+                    string[] mesesText = new string[qtdExtrato];
+                    Phrase[] mesesPhrase = new Phrase[qtdExtrato];
+
+                    for (var index = qtdExtrato-1; index >=0; index--)
+                    {
+                        meses[index] = new ColumnText(directContent);
+                        mesesText[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
+                        mesesPhrase[index] = new Phrase(new Chunk(mesesText[index], fontValoresGraf));
+                        fatorPosicao -= FATOR_FIXO;
+                        meses[index].SetSimpleColumn(mesesPhrase[index], 255 + fatorPosicao, 375, 170 + fatorPosicao, 405, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        meses[index].Go();
+                    }
 
                     // VOLUME PEDIDO
-                    int qtdExtrato = estabelecimento.ExtratoVendas.Count;
                     ColumnText[] volumePedido = new ColumnText[qtdExtrato];
                     string[] volumePedidoText = new string[qtdExtrato];
                     Phrase[] volumePedidoPhrase = new Phrase[qtdExtrato];
+                    fatorPosicao = (12 * FATOR_FIXO);
 
-                    int fatorPosicao = (12 * FATOR_FIXO);
                     for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         volumePedido[index] = new ColumnText(directContent);
                         volumePedidoText[index] = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidos.ToString("N0");
                         volumePedidoPhrase[index] = new Phrase(new Chunk(volumePedidoText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 285 + fatorPosicao, 352, 200 + fatorPosicao, 402, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 255 + fatorPosicao, 360, 170 + fatorPosicao, 390, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedido[index].Go();
                     }
 
@@ -231,11 +247,11 @@ namespace Marketing.Application.Servicos
                         volumePedidoCocaText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PedidosComCocaCola.ToString("N0");
                         volumePedidoCocaPhrase[index] = new Phrase(new Chunk(volumePedidoCocaText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 285 + fatorPosicao, 337, 200 + fatorPosicao, 387, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 255 + fatorPosicao, 335, 170 + fatorPosicao, 365, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedidoCoca[index].Go();
                     }
 
-                    // MESES 2
+                    // MESES ABAIXO DO GRAFICO
                     ColumnText[] meses2 = new ColumnText[qtdExtrato];
                     string[] mesesText2 = new string[qtdExtrato];
                     Phrase[] mesesPhrase2 = new Phrase[qtdExtrato];
@@ -247,24 +263,8 @@ namespace Marketing.Application.Servicos
                         mesesText2[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
                         mesesPhrase2[index] = new Phrase(new Chunk(mesesText2[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        meses2[index].SetSimpleColumn(mesesPhrase2[index], 285 + fatorPosicao, 367, 200 + fatorPosicao, 417, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        meses2[index].SetSimpleColumn(mesesPhrase2[index], 255 + fatorPosicao, 180, 170 + fatorPosicao, 210, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         meses2[index].Go();
-                    }
-
-                    // MESES
-                    ColumnText[] meses = new ColumnText[qtdExtrato];
-                    string[] mesesText = new string[qtdExtrato];
-                    Phrase[] mesesPhrase = new Phrase[qtdExtrato];
-
-                    fatorPosicao = (12 * FATOR_FIXO);
-                    for (var index = qtdExtrato-1; index >=0; index--)
-                    {
-                        meses[index] = new ColumnText(directContent);
-                        mesesText[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
-                        mesesPhrase[index] = new Phrase(new Chunk(mesesText[index], fontValoresGraf));
-                        fatorPosicao -= FATOR_FIXO;
-                        meses[index].SetSimpleColumn(mesesPhrase[index], 285 + fatorPosicao, 182, 200 + fatorPosicao, 242, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
-                        meses[index].Go();
                     }
 
                     // APROVEITAMENTO
@@ -356,9 +356,9 @@ namespace Marketing.Application.Servicos
 
                     //PLOTAR A IMAGEM DO GRAFICO
                     var graficoImage = iTextSharp.text.Image.GetInstance(caminhoGrafico);
-                    graficoImage.SetAbsolutePosition(190, 229);
-                    graficoImage.ScaleAbsoluteHeight(125);
-                    graficoImage.ScaleAbsoluteWidth(380);
+                    graficoImage.SetAbsolutePosition(155, 215);
+                    graficoImage.ScaleAbsoluteHeight(145);
+                    graficoImage.ScaleAbsoluteWidth(400);
                     document.Add(graficoImage);
 
                     //PLOTAR A IMAGEM DA SETA META
@@ -452,7 +452,7 @@ namespace Marketing.Application.Servicos
                     cb.SetLineDash(4.5f, 4.5f);
                     cb.SetRGBColorStroke(237, 34, 36);
                     cb.SetLineWidth(0.5f);
-                    cb.MoveTo(150, posicaoMetaY);
+                    cb.MoveTo(100, posicaoMetaY);
                     cb.LineTo(565, posicaoMetaY);
                     cb.Stroke();
                     cb.SetColorStroke(BaseColor.BLACK);
@@ -462,7 +462,7 @@ namespace Marketing.Application.Servicos
                     cb.SetColorStroke(BaseColor.GRAY);
                     //cb.MoveTo(100, 260);                    
                     //cb.LineTo(565, 260);
-                    cb.MoveTo(150, posicaoIncidenciaY);
+                    cb.MoveTo(100, posicaoIncidenciaY);
                     cb.LineTo(565, posicaoIncidenciaY);
                     cb.Stroke();
                     cb.SetColorStroke(BaseColor.BLACK);
@@ -471,14 +471,14 @@ namespace Marketing.Application.Servicos
                     // PALAVRA META NO GRAFICO
                     ColumnText textMeta = new ColumnText(directContent);
                     var textMetaPhrase = new Phrase(new Chunk("META", fontTextoMeta));
-                    textMeta.SetSimpleColumn(textMetaPhrase, 150, posicaoTextoMeta, 100,
+                    textMeta.SetSimpleColumn(textMetaPhrase, 100, posicaoTextoMeta, 50,
                                              posicaoTextoMeta, 0, Element.ALIGN_RIGHT);
                     textMeta.Go();
 
                     // PALAVRA INCIDENCIA NO GRAFICO
                     ColumnText textIncidencia = new ColumnText(directContent);
                     var textIncidenciaPhrase = new Phrase(new Chunk("INCIDÊNCIA REAL", fontTextoIncidencia));
-                    textIncidencia.SetSimpleColumn(textIncidenciaPhrase, 150, posicaoTextoIncidencia - 5, 40,
+                    textIncidencia.SetSimpleColumn(textIncidenciaPhrase, 100, posicaoTextoIncidencia - 5, 0,
                                                    posicaoTextoIncidencia - 5, 0, Element.ALIGN_RIGHT);
                     textIncidencia.Go();
 
