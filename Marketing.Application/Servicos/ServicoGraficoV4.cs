@@ -50,7 +50,7 @@ namespace Marketing.Application.Servicos
                     // FONTES
                     var fontes = FontFactory.RegisteredFonts;
                     Font fontDadosEstabelecimento = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.WHITE);
-                    Font fontPosicaoRede = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 28, Font.NORMAL, BaseColor.WHITE);
+                    Font fontPosicaoRede = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 27, Font.NORMAL, BaseColor.WHITE);
                     Font fontMesReferencia = FontFactory.GetFont("tccc-unityheadline-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 11, Font.NORMAL, BaseColor.BLACK);
 
                     Font fontVendas = FontFactory.GetFont("tccc unity", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, BaseColor.BLACK);
@@ -197,75 +197,58 @@ namespace Marketing.Application.Servicos
                     PdfContentByte cb = worker.DirectContent;
                     ColumnText ct = new ColumnText(cb);
                     var posicaoPhrase = new Phrase(new Chunk($"{posicao.ToString()}º", fontPosicaoRede));
-                    ct.SetSimpleColumn(posicaoPhrase, 565, 555, 420, 590, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    ct.SetSimpleColumn(posicaoPhrase, 565, 515, 410, 565, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     ct.Go();
 
-                    const int FATOR_FIXO = 31;
-
-                    // VOLUME PEDIDO
+                    const int FATOR_FIXO = 33;
                     int qtdExtrato = estabelecimento.ExtratoVendas.Count;
-                    ColumnText[] volumePedido = new ColumnText[qtdExtrato];
-                    string[] volumePedidoText = new string[qtdExtrato];
-                    Phrase[] volumePedidoPhrase = new Phrase[qtdExtrato];
-
                     int fatorPosicao = (12 * FATOR_FIXO);
-                    for (var index = qtdExtrato-1; index >=0; index--)
-                    {
-                        volumePedido[index] = new ColumnText(directContent);
-                        volumePedidoText[index] = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidos.ToString("N0");
-                        volumePedidoPhrase[index] = new Phrase(new Chunk(volumePedidoText[index], fontValoresGraf));
-                        fatorPosicao -= FATOR_FIXO;
-                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 285 + fatorPosicao, 352, 200 + fatorPosicao, 402, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
-                        volumePedido[index].Go();
-                    }
 
-                    // VOLUME PEDIDO COM COCA
-                    ColumnText[] volumePedidoCoca = new ColumnText[qtdExtrato];
-                    string[] volumePedidoCocaText = new string[qtdExtrato];
-                    Phrase[] volumePedidoCocaPhrase = new Phrase[qtdExtrato];
-
-                    fatorPosicao = (12 * FATOR_FIXO);
-                    for (var index = qtdExtrato-1; index >=0; index--)
-                    {
-                        volumePedidoCoca[index] = new ColumnText(directContent);
-                        volumePedidoCocaText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PedidosComCocaCola.ToString("N0");
-                        volumePedidoCocaPhrase[index] = new Phrase(new Chunk(volumePedidoCocaText[index], fontValoresGraf));
-                        fatorPosicao -= FATOR_FIXO;
-                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 285 + fatorPosicao, 337, 200 + fatorPosicao, 387, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
-                        volumePedidoCoca[index].Go();
-                    }
-
-                    // MESES 2
-                    ColumnText[] meses2 = new ColumnText[qtdExtrato];
-                    string[] mesesText2 = new string[qtdExtrato];
-                    Phrase[] mesesPhrase2 = new Phrase[qtdExtrato];
-
-                    fatorPosicao = (12 * FATOR_FIXO);
-                    for (var index = qtdExtrato-1; index >=0; index--)
-                    {
-                        meses2[index] = new ColumnText(directContent);
-                        mesesText2[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
-                        mesesPhrase2[index] = new Phrase(new Chunk(mesesText2[index], fontValoresGraf));
-                        fatorPosicao -= FATOR_FIXO;
-                        meses2[index].SetSimpleColumn(mesesPhrase2[index], 285 + fatorPosicao, 367, 200 + fatorPosicao, 417, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
-                        meses2[index].Go();
-                    }
-
-                    // MESES
+                    // MESES 
                     ColumnText[] meses = new ColumnText[qtdExtrato];
                     string[] mesesText = new string[qtdExtrato];
                     Phrase[] mesesPhrase = new Phrase[qtdExtrato];
 
-                    fatorPosicao = (12 * FATOR_FIXO);
                     for (var index = qtdExtrato-1; index >=0; index--)
                     {
                         meses[index] = new ColumnText(directContent);
                         mesesText[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
                         mesesPhrase[index] = new Phrase(new Chunk(mesesText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        meses[index].SetSimpleColumn(mesesPhrase[index], 285 + fatorPosicao, 182, 200 + fatorPosicao, 242, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        meses[index].SetSimpleColumn(mesesPhrase[index], 250 + fatorPosicao, 375, 170 + fatorPosicao, 405, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         meses[index].Go();
                     }
+
+                    // VOLUME PEDIDO
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    ColumnText[] volumePedido = new ColumnText[qtdExtrato];
+                    string[] volumePedidoText = new string[qtdExtrato];
+                    Phrase[] volumePedidoPhrase = new Phrase[qtdExtrato];
+                    for (var index = qtdExtrato-1; index >=0; index--)
+                    {
+                        volumePedido[index] = new ColumnText(directContent);
+                        volumePedidoText[index] = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidos.ToString("N0");
+                        volumePedidoPhrase[index] = new Phrase(new Chunk(volumePedidoText[index], fontValoresGraf));
+                        fatorPosicao -= FATOR_FIXO;
+                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 252 + fatorPosicao, 355, 172 + fatorPosicao, 385, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedido[index].Go();
+                    }
+
+                    // VOLUME PEDIDO COM COCA
+                    fatorPosicao = (12 * FATOR_FIXO);
+                    ColumnText[] volumePedidoCoca = new ColumnText[qtdExtrato];
+                    string[] volumePedidoCocaText = new string[qtdExtrato];
+                    Phrase[] volumePedidoCocaPhrase = new Phrase[qtdExtrato];
+                    for (var index = qtdExtrato-1; index >=0; index--)
+                    {
+                        volumePedidoCoca[index] = new ColumnText(directContent);
+                        volumePedidoCocaText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PedidosComCocaCola.ToString("N0");
+                        volumePedidoCocaPhrase[index] = new Phrase(new Chunk(volumePedidoCocaText[index], fontValoresGraf));
+                        fatorPosicao -= FATOR_FIXO;
+                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 252 + fatorPosicao, 335, 172 + fatorPosicao, 365, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedidoCoca[index].Go();
+                    }
+
 
                     // APROVEITAMENTO
                     ColumnText[] aproveitamento = new ColumnText[qtdExtrato];
@@ -298,7 +281,7 @@ namespace Marketing.Application.Servicos
                         naoCapituradosText[index] = qtde.ToString("N0");
                         naoCapituradosPhrase[index] = new Phrase(new Chunk(naoCapituradosText[index], fontNaoCap));
                         fatorPosicao -= FATOR_FIXO;
-                        naoCapiturados[index].SetSimpleColumn(naoCapituradosPhrase[index], 197 + fatorPosicao, 143, 217 + fatorPosicao, 198, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        naoCapiturados[index].SetSimpleColumn(naoCapituradosPhrase[index], 252 + fatorPosicao, 143, 165 + fatorPosicao, 198, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         naoCapiturados[index].Go();
                     }
 
@@ -314,27 +297,27 @@ namespace Marketing.Application.Servicos
                         precoMedioText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PrecoUnitarioMedio.ToString("C2");
                         precoMedioPhrase[index] = new Phrase(new Chunk(precoMedioText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 197 + fatorPosicao, 143, 217 + fatorPosicao, 181, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 252 + fatorPosicao, 143, 165 + fatorPosicao, 181, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         precoMedio[index].Go();
                     }
 
-                    // CIFRÃO FIXO
-                    ColumnText[] crifaofixo = new ColumnText[qtdExtrato];
-                    string[] crifaofixoText = new string[qtdExtrato];
-                    Phrase[] crifaofixoPhrase = new Phrase[qtdExtrato];
+                    // // CIFRÃO FIXO
+                    // ColumnText[] crifaofixo = new ColumnText[qtdExtrato];
+                    // string[] crifaofixoText = new string[qtdExtrato];
+                    // Phrase[] crifaofixoPhrase = new Phrase[qtdExtrato];
 
-                    fatorPosicao = (12 * FATOR_FIXO);
-                    for (var index = qtdExtrato-1; index >=0; index--)
-                    {
-                        decimal receita = estabelecimento.ExtratoVendas.ElementAt(index).ReceitaNaoCapturada * -1;
-                        Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
-                        crifaofixo[index] = new ColumnText(directContent);
-                        crifaofixoText[index] = "R$";
-                        crifaofixoPhrase[index] = new Phrase(new Chunk(crifaofixoText[index], fontNaoCap));
-                        fatorPosicao -= FATOR_FIXO;
-                        crifaofixo[index].SetSimpleColumn(crifaofixoPhrase[index], 203 + fatorPosicao, 137, 213 + fatorPosicao, 167, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
-                        crifaofixo[index].Go();
-                    }
+                    // fatorPosicao = (12 * FATOR_FIXO);
+                    // for (var index = qtdExtrato-1; index >=0; index--)
+                    // {
+                    //     decimal receita = estabelecimento.ExtratoVendas.ElementAt(index).ReceitaNaoCapturada * -1;
+                    //     Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
+                    //     crifaofixo[index] = new ColumnText(directContent);
+                    //     crifaofixoText[index] = "R$";
+                    //     crifaofixoPhrase[index] = new Phrase(new Chunk(crifaofixoText[index], fontNaoCap));
+                    //     fatorPosicao -= FATOR_FIXO;
+                    //     crifaofixo[index].SetSimpleColumn(crifaofixoPhrase[index], 252 + fatorPosicao, 137, 165 + fatorPosicao, 167, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
+                    //     crifaofixo[index].Go();
+                    // }
 
                     // RECEITA NAO CAPTURADOS
                     ColumnText[] receitaNaoCapiturados = new ColumnText[qtdExtrato];
@@ -347,10 +330,10 @@ namespace Marketing.Application.Servicos
                         decimal receita = estabelecimento.ExtratoVendas.ElementAt(index).ReceitaNaoCapturada * -1;
                         Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
                         receitaNaoCapiturados[index] = new ColumnText(directContent);
-                        receitaNaoCapituradosText[index] = receita.ToString("N2");
+                        receitaNaoCapituradosText[index] = receita.ToString("C2");
                         receitaNaoCapituradosPhrase[index] = new Phrase(new Chunk(receitaNaoCapituradosText[index], fontNaoCap));
                         fatorPosicao -= FATOR_FIXO;
-                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 197 + fatorPosicao, 127, 227 + fatorPosicao, 157, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
+                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 252 + fatorPosicao, 127, 165 + fatorPosicao, 157, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
                         receitaNaoCapiturados[index].Go();
                     }
 
