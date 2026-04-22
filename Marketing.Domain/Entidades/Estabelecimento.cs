@@ -67,12 +67,13 @@ namespace Marketing.Domain.Entidades
             if (obj == null) return false;
             if (this == obj) return true;
             var other = (Estabelecimento)obj;
-            return this.Cnpj == other.Cnpj;
+            return this.Cnpj == other.Cnpj && this.RedeNome == other.RedeNome;
         }
 
         public override int GetHashCode()
         {
-            return Cnpj?.GetHashCode(StringComparison.Ordinal) ?? 0;
+            var chave = String.Join(Cnpj,RedeNome);
+            return chave?.GetHashCode(StringComparison.Ordinal) ?? 0;
 
         }
     }

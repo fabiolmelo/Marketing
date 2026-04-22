@@ -31,7 +31,7 @@ namespace Marketing.Application.Servicos
             var caminhoSetaIncidencia95 = Path.Combine(contentRootPath, "DadosApp", "Seta", "SetaIncidencia95.png");
             var caminhoLogoRede = Path.Combine(contentRootPath, "DadosApp", "Logos", "LogoTmp.png"); 
 
-           using (var image = File.OpenRead(caminhoFundo))
+            using (var image = File.OpenRead(caminhoFundo))
             {
                 if (File.Exists(caminhoPdf)) File.Delete(caminhoPdf);
                 if (File.Exists(caminhoPdfCompleto )) File.Delete(caminhoPdfCompleto);
@@ -57,9 +57,9 @@ namespace Marketing.Application.Servicos
                     Font fontVendasReceitaMes = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, ((estabelecimento.ExtratoMesCompetencia.ReceitaNaoCapturada * -1) < 0) ? BaseColor.RED : new BaseColor(13, 163, 13));
                     Font fontVendasReceitaTotal = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 12, Font.NORMAL, ((estabelecimento.ExtratoVendas.Sum(x => x.ReceitaNaoCapturada) * -1)) < 0 ? BaseColor.RED : new BaseColor(13, 163, 13));
                     Font fontMes = FontFactory.GetFont("tcccunity-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 9, Font.NORMAL, BaseColor.BLACK);
-                    Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.BLACK);
-                    Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, BaseColor.RED);
-                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed-bold", BaseFont.CP1252, BaseFont.EMBEDDED, 8, Font.NORMAL, new BaseColor(13, 163, 13));
+                    Font fontValoresGraf = FontFactory.GetFont("tccc-unitycondensed", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.BLACK);
+                    Font fontValoresGrafRed = FontFactory.GetFont("tccc-unitycondensed", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, BaseColor.RED);
+                    Font fontValoresGrafGreen = FontFactory.GetFont("tccc-unitycondensed", BaseFont.CP1252, BaseFont.EMBEDDED, 7, Font.NORMAL, new BaseColor(13, 163, 13));
                     Font fontCorMeta = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, new BaseColor(0, 176, 76));
                     Font fontCorIncidencia = FontFactory.GetFont("tccc-unitytext bold", BaseFont.CP1252, BaseFont.EMBEDDED, 14, Font.NORMAL, new BaseColor(146, 39, 143));
                     
@@ -229,7 +229,7 @@ namespace Marketing.Application.Servicos
                         volumePedidoText[index] = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidos.ToString("N0");
                         volumePedidoPhrase[index] = new Phrase(new Chunk(volumePedidoText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 252 + fatorPosicao, 355, 172 + fatorPosicao, 385, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 252 + fatorPosicao, 360, 172 + fatorPosicao, 390, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedido[index].Go();
                     }
 
@@ -244,26 +244,26 @@ namespace Marketing.Application.Servicos
                         volumePedidoCocaText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PedidosComCocaCola.ToString("N0");
                         volumePedidoCocaPhrase[index] = new Phrase(new Chunk(volumePedidoCocaText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 252 + fatorPosicao, 335, 172 + fatorPosicao, 365, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 252 + fatorPosicao, 340, 172 + fatorPosicao, 370, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedidoCoca[index].Go();
                     }
 
-                    // APROVEITAMENTO
-                    ColumnText[] aproveitamento = new ColumnText[qtdExtrato];
-                    string[] aproveitamentoText = new string[qtdExtrato];
-                    Phrase[] aproveitamentoPhrase = new Phrase[qtdExtrato];
+                    // // APROVEITAMENTO
+                    // ColumnText[] aproveitamento = new ColumnText[qtdExtrato];
+                    // string[] aproveitamentoText = new string[qtdExtrato];
+                    // Phrase[] aproveitamentoPhrase = new Phrase[qtdExtrato];
 
-                    fatorPosicao = (12 * FATOR_FIXO);
-                    for (var index = qtdExtrato-1; index >=0; index--)
-                    {
-                        decimal aprovMeta = estabelecimento.ExtratoVendas.ElementAt(index).IncidenciaReal - estabelecimento.ExtratoVendas.ElementAt(index).Meta;
-                        aproveitamento[index] = new ColumnText(directContent);
-                        aproveitamentoText[index] = aprovMeta.ToString("P0");
-                        aproveitamentoPhrase[index] = new Phrase(new Chunk(aproveitamentoText[index], fontValoresGraf));
-                        fatorPosicao -= FATOR_FIXO;
-                        aproveitamento[index].SetSimpleColumn(aproveitamentoPhrase[index], 197 + fatorPosicao, 165, 217 + fatorPosicao, 222, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                        aproveitamento[index].Go();
-                    }
+                    // fatorPosicao = (12 * FATOR_FIXO);
+                    // for (var index = qtdExtrato-1; index >=0; index--)
+                    // {
+                    //     decimal aprovMeta = estabelecimento.ExtratoVendas.ElementAt(index).IncidenciaReal - estabelecimento.ExtratoVendas.ElementAt(index).Meta;
+                    //     aproveitamento[index] = new ColumnText(directContent);
+                    //     aproveitamentoText[index] = aprovMeta.ToString("P0");
+                    //     aproveitamentoPhrase[index] = new Phrase(new Chunk(aproveitamentoText[index], fontValoresGraf));
+                    //     fatorPosicao -= FATOR_FIXO;
+                    //     aproveitamento[index].SetSimpleColumn(aproveitamentoPhrase[index], 197 + fatorPosicao, 165, 217 + fatorPosicao, 222, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    //     aproveitamento[index].Go();
+                    // }
                     
                     // PEDIDOS NAO CAPTURADOS
                     ColumnText[] naoCapiturados = new ColumnText[qtdExtrato];
@@ -279,7 +279,7 @@ namespace Marketing.Application.Servicos
                         naoCapituradosText[index] = qtde.ToString("N0");
                         naoCapituradosPhrase[index] = new Phrase(new Chunk(naoCapituradosText[index], fontNaoCap));
                         fatorPosicao -= FATOR_FIXO;
-                        naoCapiturados[index].SetSimpleColumn(naoCapituradosPhrase[index], 252 + fatorPosicao, 143, 165 + fatorPosicao, 198, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        naoCapiturados[index].SetSimpleColumn(naoCapituradosPhrase[index], 220 + fatorPosicao, 140, 140 + fatorPosicao, 190, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         naoCapiturados[index].Go();
                     }
 
@@ -295,27 +295,9 @@ namespace Marketing.Application.Servicos
                         precoMedioText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PrecoUnitarioMedio.ToString("C2");
                         precoMedioPhrase[index] = new Phrase(new Chunk(precoMedioText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 252 + fatorPosicao, 143, 165 + fatorPosicao, 181, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 220 + fatorPosicao, 115, 140 + fatorPosicao, 165, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         precoMedio[index].Go();
                     }
-
-                    // // CIFRÃO FIXO
-                    // ColumnText[] crifaofixo = new ColumnText[qtdExtrato];
-                    // string[] crifaofixoText = new string[qtdExtrato];
-                    // Phrase[] crifaofixoPhrase = new Phrase[qtdExtrato];
-
-                    // fatorPosicao = (12 * FATOR_FIXO);
-                    // for (var index = qtdExtrato-1; index >=0; index--)
-                    // {
-                    //     decimal receita = estabelecimento.ExtratoVendas.ElementAt(index).ReceitaNaoCapturada * -1;
-                    //     Font fontNaoCap = receita < 0 ? fontValoresGrafRed : receita == 0 ? fontValoresGraf : fontValoresGrafGreen;
-                    //     crifaofixo[index] = new ColumnText(directContent);
-                    //     crifaofixoText[index] = "R$";
-                    //     crifaofixoPhrase[index] = new Phrase(new Chunk(crifaofixoText[index], fontNaoCap));
-                    //     fatorPosicao -= FATOR_FIXO;
-                    //     crifaofixo[index].SetSimpleColumn(crifaofixoPhrase[index], 252 + fatorPosicao, 137, 165 + fatorPosicao, 167, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
-                    //     crifaofixo[index].Go();
-                    // }
 
                     // RECEITA NAO CAPTURADOS
                     ColumnText[] receitaNaoCapiturados = new ColumnText[qtdExtrato];
@@ -331,20 +313,20 @@ namespace Marketing.Application.Servicos
                         receitaNaoCapituradosText[index] = receita.ToString("C2");
                         receitaNaoCapituradosPhrase[index] = new Phrase(new Chunk(receitaNaoCapituradosText[index], fontNaoCap));
                         fatorPosicao -= FATOR_FIXO;
-                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 252 + fatorPosicao, 127, 165 + fatorPosicao, 157, 25, Element.ALIGN_TOP | Element.ALIGN_CENTER);
+                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 200 + fatorPosicao, 155, 155 + fatorPosicao, 210, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         receitaNaoCapiturados[index].Go();
                     }
 
                     //PLOTAR A IMAGEM DO GRAFICO
                     var graficoImage = iTextSharp.text.Image.GetInstance(caminhoGrafico);
                     graficoImage.SetAbsolutePosition(155, 215);
-                    graficoImage.ScaleAbsoluteHeight(145);
-                    graficoImage.ScaleAbsoluteWidth(400);
+                    graficoImage.ScaleAbsoluteHeight(120);
+                    graficoImage.ScaleAbsoluteWidth(410);
                     document.Add(graficoImage);
 
                     //PLOTAR A IMAGEM DA SETA META
                     iTextSharp.text.Image setaMeta = iTextSharp.text.Image.GetInstance(caminhoSetaMeta);
-                    setaMeta.SetAbsolutePosition(425, 415);
+                    setaMeta.SetAbsolutePosition(425, 420);
                     document.Add(setaMeta);
 
                     // Plotar Valor Meta
@@ -352,14 +334,14 @@ namespace Marketing.Application.Servicos
                     var columnTextMeta = new ColumnText(directContent);
                     var metaValorText = $"{metaValor.ToString("N0")}%";
                     var metaValorPhrase = new Phrase(new Chunk(metaValorText, fontCorMeta));
-                    columnTextMeta.SetSimpleColumn(metaValorPhrase, 506, 480, 556, 450, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                    columnTextMeta.SetSimpleColumn(metaValorPhrase, 506, 485, 556, 455, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     columnTextMeta.Go();
 
 
-                    int[,] incidenciaValorPosicao = { { 236, 450, 276, 420 }, { 236, 470, 286, 420 },
-                                                      { 256, 490, 306, 460 }, { 310, 490, 350, 450 },
-                                                      { 345, 485, 395, 455 }, { 365, 470, 405, 430 },
-                                                      { 375, 450, 415, 420 }};
+                    int[,] incidenciaValorPosicao = { { 186, 450, 226, 420 }, { 196, 470, 246, 420 },
+                                                      { 216, 490, 266, 460 }, { 270, 490, 315, 450 },
+                                                      { 305, 485, 355, 455 }, { 325, 470, 365, 430 },
+                                                      { 335, 450, 375, 420 }};
                     int indicePosicaoIncidenciaValor = 0;
                     //PLOTAR A IMAGEM DA SETA INCIDENCIA
                     iTextSharp.text.Image setaIncidencia;
@@ -417,12 +399,12 @@ namespace Marketing.Application.Servicos
                                                   25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     columnTextInc.Go();
 
-                    setaIncidencia.SetAbsolutePosition(275, 415);
+                    setaIncidencia.SetAbsolutePosition(230, 420);
                     document.Add(setaIncidencia);
 
                     // DESENHAR A LINHA TRACEJADA DA META
-                    float posicaoMetaY = 230 + (float)(estabelecimento.ExtratoMesCompetencia.Meta * 110);
-                    float posicaoIncidenciaY = 230 + (float)(estabelecimento.IncidenciaMedia * 110);
+                    float posicaoMetaY = 210 + (float)(estabelecimento.ExtratoMesCompetencia.Meta * 110);
+                    float posicaoIncidenciaY = 210 + (float)(estabelecimento.IncidenciaMedia * 110);
                     float posicaoTextoMeta = (float)(estabelecimento.ExtratoMesCompetencia.Meta >=
                                               estabelecimento.ExtratoMesCompetencia.IncidenciaReal ?
                                               posicaoMetaY + 5 : posicaoMetaY - 5);
@@ -433,18 +415,16 @@ namespace Marketing.Application.Servicos
                     cb.SetLineDash(4.5f, 4.5f);
                     cb.SetRGBColorStroke(237, 34, 36);
                     cb.SetLineWidth(0.5f);
-                    cb.MoveTo(100, posicaoMetaY);
-                    cb.LineTo(565, posicaoMetaY);
+                    cb.MoveTo(90, posicaoMetaY);
+                    cb.LineTo(555, posicaoMetaY);
                     cb.Stroke();
                     cb.SetColorStroke(BaseColor.BLACK);
 
                     // DESENHAR A LINHA TRACEJADA DA INCIDENCIA
                     cb.SetLineDash(4.5f, 4.5f);
                     cb.SetColorStroke(BaseColor.GRAY);
-                    //cb.MoveTo(100, 260);                    
-                    //cb.LineTo(565, 260);
-                    cb.MoveTo(100, posicaoIncidenciaY);
-                    cb.LineTo(565, posicaoIncidenciaY);
+                    cb.MoveTo(90, posicaoIncidenciaY);
+                    cb.LineTo(555, posicaoIncidenciaY);
                     cb.Stroke();
                     cb.SetColorStroke(BaseColor.BLACK);
 
@@ -452,14 +432,14 @@ namespace Marketing.Application.Servicos
                     // PALAVRA META NO GRAFICO
                     ColumnText textMeta = new ColumnText(directContent);
                     var textMetaPhrase = new Phrase(new Chunk("META", fontTextoMeta));
-                    textMeta.SetSimpleColumn(textMetaPhrase, 100, posicaoTextoMeta, 50,
+                    textMeta.SetSimpleColumn(textMetaPhrase, 90, posicaoTextoMeta, 30,
                                              posicaoTextoMeta, 0, Element.ALIGN_RIGHT);
                     textMeta.Go();
 
                     // PALAVRA INCIDENCIA NO GRAFICO
                     ColumnText textIncidencia = new ColumnText(directContent);
                     var textIncidenciaPhrase = new Phrase(new Chunk("INCIDÊNCIA REAL", fontTextoIncidencia));
-                    textIncidencia.SetSimpleColumn(textIncidenciaPhrase, 100, posicaoTextoIncidencia - 5, 0,
+                    textIncidencia.SetSimpleColumn(textIncidenciaPhrase, 90, posicaoTextoIncidencia - 5, 0,
                                                    posicaoTextoIncidencia - 5, 0, Element.ALIGN_RIGHT);
                     textIncidencia.Go();
 
@@ -570,9 +550,9 @@ namespace Marketing.Application.Servicos
 
             int largura = 500;
             int altura = 268;
-            float margem = 7.5f;
-            float larguraBarra = 31f;
-            float espacamento = 9.5f;
+            float margem = 3.5f;
+            float larguraBarra = 32f;
+            float espacamento = 9.0f;
 
             using var imagem = new Image<Rgba32>(largura, altura);
             imagem.Mutate(ctx =>
@@ -585,8 +565,8 @@ namespace Marketing.Application.Servicos
                 {
                     // BARRA VERMELHA
                     float x = margem + posicaoGrafico * (larguraBarra + espacamento);
-                    float y = altura - margem - (int)(230 * estabelecimento.ExtratoVendas.ElementAt(i).CorVermelhaGrafico);
-                    var ret = new RectangleF(x, y, larguraBarra, (float)(230 * estabelecimento.ExtratoVendas.ElementAt(i).CorVermelhaGrafico));
+                    float y = altura - margem - (int)(210 * estabelecimento.ExtratoVendas.ElementAt(i).CorVermelhaGrafico);
+                    var ret = new RectangleF(x, y, larguraBarra, (float)(210 * estabelecimento.ExtratoVendas.ElementAt(i).CorVermelhaGrafico));
                     ctx.Fill(Color.FromRgb(237, 34, 36), ret);
 
                     // BARRA VERDE
@@ -594,7 +574,7 @@ namespace Marketing.Application.Servicos
                     {
                         float y2 = altura - margem - (float)(230 * estabelecimento.ExtratoVendas.ElementAt(i).CorVermelhaGrafico) -
                                    (float)(230 * estabelecimento.ExtratoVendas.ElementAt(i).CorVerdeGrafico * 1);
-                        var ret2 = new RectangleF(x, y2, larguraBarra, (float)(230 * estabelecimento.ExtratoVendas.ElementAt(i).CorVerdeGrafico));
+                        var ret2 = new RectangleF(x, y2, larguraBarra, (float)(210 * estabelecimento.ExtratoVendas.ElementAt(i).CorVerdeGrafico));
                         ctx.Fill(Color.FromRgb(13, 163, 13), ret2);
                     }
                     posicaoGrafico--;

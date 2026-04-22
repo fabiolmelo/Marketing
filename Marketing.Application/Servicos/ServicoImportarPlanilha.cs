@@ -120,6 +120,7 @@ namespace Marketing.Application.Servicos
                         };
                         await _unitOfWork.GetRepository<Estabelecimento>().AddAsync(estabelecimento);
                         await _unitOfWork.CommitAsync();
+                        estabelecimentosCadastrados.Add(estabelecimento);
                     }
                     index++;
                 }
