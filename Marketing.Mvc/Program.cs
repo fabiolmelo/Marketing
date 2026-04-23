@@ -42,18 +42,18 @@ builder.Services.AddDbContext<DataContext>(options =>
         options.EnableDetailedErrors();
 });
 
-var connectionStringMySql =
-    builder.Configuration.GetConnectionString("MySql")
-    ?? throw new InvalidOperationException("Connection string MySql not configured.");
+// var connectionStringMySql =
+//     builder.Configuration.GetConnectionString("MySql")
+//     ?? throw new InvalidOperationException("Connection string MySql not configured.");
 
-builder.Services.AddDbContext<DataContextMySql>(options =>
-{
-    options.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql));
-    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+// builder.Services.AddDbContext<DataContextMySql>(options =>
+// {
+//     options.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql));
+//     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
-    if (builder.Environment.IsDevelopment())
-        options.EnableDetailedErrors();
-});
+//     if (builder.Environment.IsDevelopment())
+//         options.EnableDetailedErrors();
+// });
 
 #endregion
 

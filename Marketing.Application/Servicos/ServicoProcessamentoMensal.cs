@@ -14,21 +14,22 @@ namespace Marketing.Application.Servicos
         private readonly IRepositorioEstabelecimento _repositorioEstabelecimento;
         private readonly IRepositorioEnvioMensagemMensal _repositorioEnvioMensagemMensal;
         private readonly IRepositorioRede _repositorioRede;
-        private readonly DataContextMySql _dataContextMySql;
+        //private readonly DataContextMySql _dataContextMySql;
 
         public ServicoProcessamentoMensal(IServicoGraficoRevisado servicoGraficoRevisado,
                                           ILogger<ServicoProcessamentoMensal> logger,
                                           IRepositorioEstabelecimento repositorioEstabelecimento,
                                           IRepositorioEnvioMensagemMensal repositorioEnvioMensagemMensal,
-                                          IRepositorioRede repositorioRede,
-                                          DataContextMySql dataContextMySql)
+                                          IRepositorioRede repositorioRede
+                                          //,DataContextMySql dataContextMySql
+                                          )
         {
             _servicoGraficoRevisado = servicoGraficoRevisado;
             _logger = logger;
             _repositorioEstabelecimento = repositorioEstabelecimento;
             _repositorioEnvioMensagemMensal = repositorioEnvioMensagemMensal;
             _repositorioRede = repositorioRede;
-            _dataContextMySql = dataContextMySql;
+            //_dataContextMySql = dataContextMySql;
         }
 
         public async Task GerarProcessamentoMensal(DateTime competencia,

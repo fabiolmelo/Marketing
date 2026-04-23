@@ -199,7 +199,7 @@ namespace Marketing.Application.Servicos
                     ct.SetSimpleColumn(posicaoPhrase, 565, 515, 410, 565, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                     ct.Go();
 
-                    const int FATOR_FIXO = 33;
+                    const int FATOR_FIXO = 35;
                     int qtdExtrato = estabelecimento.ExtratoVendas.Count;
                     int fatorPosicao = (12 * FATOR_FIXO);
 
@@ -214,7 +214,7 @@ namespace Marketing.Application.Servicos
                         mesesText[index] = estabelecimento.ExtratoVendas.ElementAt(index).Competencia.ToString("MMM yy").PriMaiuscula();
                         mesesPhrase[index] = new Phrase(new Chunk(mesesText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        meses[index].SetSimpleColumn(mesesPhrase[index], 250 + fatorPosicao, 375, 170 + fatorPosicao, 405, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        meses[index].SetSimpleColumn(mesesPhrase[index], 240 + fatorPosicao, 375, 160 + fatorPosicao, 405, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         meses[index].Go();
                     }
 
@@ -229,7 +229,7 @@ namespace Marketing.Application.Servicos
                         volumePedidoText[index] = estabelecimento.ExtratoVendas.ElementAt(index).TotalPedidos.ToString("N0");
                         volumePedidoPhrase[index] = new Phrase(new Chunk(volumePedidoText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 252 + fatorPosicao, 360, 172 + fatorPosicao, 390, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedido[index].SetSimpleColumn(volumePedidoPhrase[index], 240 + fatorPosicao, 360, 160 + fatorPosicao, 390, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedido[index].Go();
                     }
 
@@ -244,7 +244,7 @@ namespace Marketing.Application.Servicos
                         volumePedidoCocaText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PedidosComCocaCola.ToString("N0");
                         volumePedidoCocaPhrase[index] = new Phrase(new Chunk(volumePedidoCocaText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 252 + fatorPosicao, 340, 172 + fatorPosicao, 370, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
+                        volumePedidoCoca[index].SetSimpleColumn(volumePedidoCocaPhrase[index], 240 + fatorPosicao, 340, 160 + fatorPosicao, 370, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         volumePedidoCoca[index].Go();
                     }
 
@@ -279,7 +279,7 @@ namespace Marketing.Application.Servicos
                         naoCapituradosText[index] = qtde.ToString("N0");
                         naoCapituradosPhrase[index] = new Phrase(new Chunk(naoCapituradosText[index], fontNaoCap));
                         fatorPosicao -= FATOR_FIXO;
-                        naoCapiturados[index].SetSimpleColumn(naoCapituradosPhrase[index], 220 + fatorPosicao, 140, 140 + fatorPosicao, 190, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        naoCapiturados[index].SetSimpleColumn(naoCapituradosPhrase[index], 240 + fatorPosicao, 140, 160 + fatorPosicao, 190, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         naoCapiturados[index].Go();
                     }
 
@@ -295,7 +295,7 @@ namespace Marketing.Application.Servicos
                         precoMedioText[index] = estabelecimento.ExtratoVendas.ElementAt(index).PrecoUnitarioMedio.ToString("C2");
                         precoMedioPhrase[index] = new Phrase(new Chunk(precoMedioText[index], fontValoresGraf));
                         fatorPosicao -= FATOR_FIXO;
-                        precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 220 + fatorPosicao, 115, 140 + fatorPosicao, 165, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        precoMedio[index].SetSimpleColumn(precoMedioPhrase[index], 240 + fatorPosicao, 115, 160 + fatorPosicao, 165, 25, Element.ALIGN_BOTTOM | Element.ALIGN_CENTER);
                         precoMedio[index].Go();
                     }
 
@@ -313,7 +313,7 @@ namespace Marketing.Application.Servicos
                         receitaNaoCapituradosText[index] = receita.ToString("C2");
                         receitaNaoCapituradosPhrase[index] = new Phrase(new Chunk(receitaNaoCapituradosText[index], fontNaoCap));
                         fatorPosicao -= FATOR_FIXO;
-                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 200 + fatorPosicao, 155, 155 + fatorPosicao, 210, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                        receitaNaoCapiturados[index].SetSimpleColumn(receitaNaoCapituradosPhrase[index], 185 + fatorPosicao, 155, 155 + fatorPosicao, 210, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
                         receitaNaoCapiturados[index].Go();
                     }
 
@@ -457,61 +457,58 @@ namespace Marketing.Application.Servicos
                         incidenciaRealText[index] = $"{incidenciaRealValor.ToString("N0")}%";
                         incidenciaRealPhrase[index] = new Phrase(new Chunk(incidenciaRealText[index], fontValoresIncidencia));
 
-                        while (fatorPosicao > 0)
+                        switch (fatorPosicao)
                         {
-                            switch (fatorPosicao)
-                            {
-                                case 1:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 200, 235, 218, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 2:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 230, 235, 250, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 3:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 261, 235, 281, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 4:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 290, 235, 310, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 5:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 322, 235, 342, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 6:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 354, 235, 372, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 7:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 382, 235, 402, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go(); 
-                                    break;
-                                case 8:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 414, 235, 432, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 9:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 446, 235, 464, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 10:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 476, 235, 494, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 11:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 506, 235, 524, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                                case 12:
-                                    incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 536, 235, 555, 265, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
-                                    incidenciaReal[index].Go();
-                                    break;
-                            }
-                            fatorPosicao--;
+                            case 1:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 162, 215, 182, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 2:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 195, 215, 215, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 3:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 230, 215, 250, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 4:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 265, 215, 285, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 5:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 300, 215, 320, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 6:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 335, 215, 355, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 7:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 368, 215, 388, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go(); 
+                                break;
+                            case 8:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 405, 215, 425, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 9:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 440, 215, 460, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 10:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 472, 215, 492, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 11:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 508, 215, 528, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
+                            case 12:
+                                incidenciaReal[index].SetSimpleColumn(incidenciaRealPhrase[index], 540, 215, 565, 245, 25, Element.ALIGN_CENTER | Element.ALIGN_CENTER);
+                                incidenciaReal[index].Go();
+                                break;
                         }
+                        fatorPosicao--;
                     }
 
                     filestream.Flush();
@@ -551,7 +548,7 @@ namespace Marketing.Application.Servicos
             int largura = 500;
             int altura = 268;
             float margem = 3.5f;
-            float larguraBarra = 32f;
+            float larguraBarra = 33f;
             float espacamento = 9.0f;
 
             using var imagem = new Image<Rgba32>(largura, altura);

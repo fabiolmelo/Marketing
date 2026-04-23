@@ -23,7 +23,7 @@ namespace Marketing.Application.Servicos
                 using (var scope = Services.CreateScope())
                 {
                     _localContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-                    _cloudContext = scope.ServiceProvider.GetRequiredService<DataContextMySql>();
+                    //_cloudContext = scope.ServiceProvider.GetRequiredService<DataContextMySql>();
                     await SyncLocalWithCloud();
                 }
                 await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
