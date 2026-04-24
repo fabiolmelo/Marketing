@@ -57,7 +57,7 @@ namespace Marketing.Mvc.Controllers
             {
                 if (payload == null)
                 {
-                    return BadRequest();
+                    _logger.LogError("Payload vazio!");
                 }
                 // Processar o payload...
                 if (payload != null)
