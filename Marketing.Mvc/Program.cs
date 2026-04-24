@@ -2,7 +2,6 @@
 using System.Globalization;
 using Marketing.Infraestrutura.Contexto;
 using Marketing.Mvc.Extensoes;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -68,7 +67,7 @@ builder.Services.AddIdentity<UsuarioEntity, IdentityRole>(options =>
     options.Password.RequiredLength = 10;
 
     options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(6);
 
     options.User.RequireUniqueEmail = true;
 })
@@ -81,14 +80,14 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/Login";
     options.Cookie.HttpOnly = true;
 
-    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
-        ? CookieSecurePolicy.SameAsRequest
-        : CookieSecurePolicy.Always;
+    // options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+    //     ? CookieSecurePolicy.SameAsRequest
+    //     : CookieSecurePolicy.Always;
 
-    options.Cookie.SameSite = SameSiteMode.Lax;
+    // options.Cookie.SameSite = SameSiteMode.Lax;
 
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromHours(2);
+    // options.SlidingExpiration = true;
+    // options.ExpireTimeSpan = TimeSpan.FromHours(2);
 });
 
 #endregion
@@ -117,14 +116,14 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 
 #region Proxy / Forward Headers
 
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders =
-        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+// builder.Services.Configure<ForwardedHeadersOptions>(options =>
+// {
+//     options.ForwardedHeaders =
+//         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 
-    options.KnownNetworks.Clear();
-    options.KnownProxies.Clear();
-});
+//     options.KnownNetworks.Clear();
+//     options.KnownProxies.Clear();
+// });
 
 #endregion
 
@@ -164,19 +163,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Security Headers
-app.Use(async (context, next) =>
-{
-    context.Response.Headers.TryAdd("X-Content-Type-Options", "nosniff");
-    context.Response.Headers.TryAdd("X-Frame-Options", "DENY");
-    context.Response.Headers.TryAdd("Referrer-Policy", "no-referrer");
-    context.Response.Headers.TryAdd("X-XSS-Protection", "1; mode=block");
-    context.Response.Headers.TryAdd("Content-Security-Policy",
-        "default-src 'self'; object-src 'none'; frame-ancestors 'none';");
-
-    await next();
-});
 
 #endregion
 
