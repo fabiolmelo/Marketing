@@ -17,7 +17,6 @@ namespace Marketing.Mvc.Controllers
         private readonly IServicoMeta _servicoMeta;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
-        private readonly DataContextMySql _dataContextMySql;
         private readonly ILogger<ApiServicoController> _logger;
 
         public ApiServicoController(IServicoMeta servicoMeta, IUnitOfWork unitOfWork, IConfiguration configuration, DataContextMySql dataContextMySql, ILogger<ApiServicoController> logger)
@@ -25,7 +24,6 @@ namespace Marketing.Mvc.Controllers
             _servicoMeta = servicoMeta;
             _unitOfWork = unitOfWork;
             _configuration = configuration;
-            _dataContextMySql = dataContextMySql;
             _logger = logger;
         }
 
@@ -69,8 +67,8 @@ namespace Marketing.Mvc.Controllers
                     var metaWebhookResponse = new MetaWebhookResponse(jsonSerialize);
                     await _unitOfWork.GetRepository<MetaWebhookResponse>().AddAsync(metaWebhookResponse);
                     await _unitOfWork.CommitAsync(); 
-                    await _dataContextMySql.MetaWebhookResponses.AddAsync(metaWebhookResponse);
-                    await _dataContextMySql.SaveChangesAsync();
+                    // await _dataContextMySql.MetaWebhookResponses.AddAsync(metaWebhookResponse);
+                    // await _dataContextMySql.SaveChangesAsync();
 
                     foreach (var entry in payload.Entry)
                     {
