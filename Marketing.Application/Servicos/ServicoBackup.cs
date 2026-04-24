@@ -7,10 +7,8 @@ namespace Marketing.Application.Servicos
     public class ServicoBackup : BackgroundService
     {
         private DataContext? _localContext;
-        private DataContextMySql? _cloudContext;
+        //private DataContextMySql? _cloudContext;
         public IServiceProvider Services { get; }
-
-
         public ServicoBackup(IServiceProvider services)
         {
             Services = services;
