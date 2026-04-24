@@ -7,7 +7,6 @@ namespace Marketing.Application.Servicos
     public class ServicoBackup : BackgroundService
     {
         private DataContext? _localContext;
-        //private DataContextMySql? _cloudContext;
         public IServiceProvider Services { get; }
         public ServicoBackup(IServiceProvider services)
         {
@@ -21,7 +20,6 @@ namespace Marketing.Application.Servicos
                 using (var scope = Services.CreateScope())
                 {
                     _localContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-                    //_cloudContext = scope.ServiceProvider.GetRequiredService<DataContextMySql>();
                     await SyncLocalWithCloud();
                 }
                 await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
