@@ -1,3 +1,6 @@
+using System.Text;
+using Marketing.Domain.Extensoes;
+
 namespace Marketing.Domain.Entidades
 {
     public class Estabelecimento
@@ -19,7 +22,20 @@ namespace Marketing.Domain.Entidades
         public string MesCompetencia => $"{this.ExtratoMesCompetencia.Competencia.ToString("MMMM yyyy").ToUpper()}";
         public ExtratoVendas ExtratoMesCompetencia => this.ExtratoVendas.OrderByDescending(x => x.Competencia).ElementAt(0);
         public string? UltimoPdfGerado { get; set; }
-        
+
+        public string EnderecoCompleto()
+        {
+            var enderecoCompleto = new StringBuilder();
+            var enderecoPartes  = ($"{this.Endereco}, {this.Numero} - {this.Complemento}").ChunkString(30);
+            enderecoCompleto.AppendLine($"Loja: {this.RazaoSocial}");
+            enderecoCompleto.AppendLine($"Cidade: {this.Cidade} - {this.Uf}");
+            enderecoCompleto.AppendLine($"Endereço: {enderecoPartes.ElementAt(0)}");
+            for(int index = 1; index < enderecoPartes.Count(); index++)
+            {
+                enderecoCompleto.AppendLine($"{enderecoPartes.ElementAt(index)}");
+            }
+            return enderecoCompleto.ToString();
+        }
         public decimal IncidenciaMedia
         {
             get

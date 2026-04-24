@@ -29,5 +29,14 @@ namespace Marketing.Domain.Extensoes
             if (texto.Length <= length) return texto;
             return texto.Substring(texto.Length - length, length);
         }
+
+        public static IEnumerable<string> ChunkString(this string? input, int chunkSize)
+        {
+            if (string.IsNullOrEmpty(input))
+                yield break;
+
+            for (int i = 0; i < input.Length; i += chunkSize)
+                yield return input.Substring(i, Math.Min(chunkSize, input.Length - i));
+        }
     }
 }
