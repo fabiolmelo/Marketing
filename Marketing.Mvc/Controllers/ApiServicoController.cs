@@ -19,7 +19,8 @@ namespace Marketing.Mvc.Controllers
         private readonly IConfiguration _configuration;
         private readonly ILogger<ApiServicoController> _logger;
 
-        public ApiServicoController(IServicoMeta servicoMeta, IUnitOfWork unitOfWork, IConfiguration configuration, DataContextMySql dataContextMySql, ILogger<ApiServicoController> logger)
+        public ApiServicoController(IServicoMeta servicoMeta, IUnitOfWork unitOfWork, 
+                                    IConfiguration configuration, ILogger<ApiServicoController> logger)
         {
             _servicoMeta = servicoMeta;
             _unitOfWork = unitOfWork;
@@ -119,8 +120,8 @@ namespace Marketing.Mvc.Controllers
             }
             catch (System.Exception ex)
             {
-                _logger.LogCritical(ex.Message);
-                _logger.LogCritical(JsonSerializer.Serialize(payload));
+                _logger.LogError(ex.Message);
+                _logger.LogError(JsonSerializer.Serialize(payload));
             }
             return Ok();
         }
