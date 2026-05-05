@@ -71,7 +71,7 @@ namespace Marketing.Application.Servicos
                 _servicoGraficoRevisado.GerarArquivoPdf(estabelecimento, arquivoPdf,
                                                     posicaoNaRede, contentRootPath, caminhoApp);
                 var estabelecimentoUpdate = await _repositorioEstabelecimento.GetEstabelecimentoPorIdComposto(estabelecimento.Cnpj, estabelecimento.RedeNome);
-                if (estabelecimentoUpdate != null)
+                if (estabelecimentoUpdate != null && estabelecimentoUpdate.UltimoPdfGerado != $"{arquivoPdf}")
                 {
                     estabelecimentoUpdate.UltimoPdfGerado = $"{arquivoPdf}";
                     _repositorioEstabelecimento.Update(estabelecimentoUpdate);

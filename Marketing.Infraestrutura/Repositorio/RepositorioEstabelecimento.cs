@@ -81,8 +81,11 @@ namespace Marketing.Infraestrutura.Repositorio
                 competenciaVigente = _context.Set<ExtratoVendas>().Max(x=>x.Competencia);
             }
             IQueryable<Estabelecimento> query = from C in _context.Contatos.Where(x => x.Telefone == telefone)
-                                                join CE in _context.ContatoEstabelecimento on C.Telefone equals CE.ContatoTelefone
-                                                join E in _context.Estabelecimentos on CE.EstabelecimentoCnpj equals E.Cnpj
+                                                join CE in _context.ContatoEstabelecimento on C.Telefone 
+                                                    equals CE.ContatoTelefone
+                                                join E in _context.Estabelecimentos on 
+                                                    new {Cnpj = CE.EstabelecimentoCnpj, RedeNome = CE.EstabelecimentoRedeNome} equals 
+                                                    new {Cnpj = E.Cnpj, RedeNome = E.RedeNome}
                                                 join EXV in _context.ExtratosVendas on E.Cnpj equals EXV.EstabelecimentoCnpj
                                                 where EXV.Competencia == competenciaVigente
                                                 select E;
