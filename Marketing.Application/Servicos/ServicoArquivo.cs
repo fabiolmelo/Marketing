@@ -583,7 +583,9 @@ namespace Marketing.Application.Servicos
                                     {
                                         Nome = nome,
                                         DataCadastro = dataCadastro,
-                                        OrigemCadastro = OrigemContato.EmailMarketing
+                                        OrigemCadastro = OrigemContato.EmailMarketing,
+                                        AceitaMensagem = true,
+                                        DataAceite = DateTime.UtcNow 
                                     });
                             }
                         }

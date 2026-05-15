@@ -92,6 +92,8 @@ namespace Marketing.Application.Servicos
                     var contato = new Contato(telefone);
                     contato.OrigemCadastro = OrigemContato.PlanilhaIncidencia;
                     contato.DataCadastro = DateTime.UtcNow;
+                    contato.AceitaMensagem = true;
+                    contato.DataAceite = DateTime.UtcNow;
                     await _unitOfWork.repositorioContato.AddAsync(contato);
                     await _unitOfWork.CommitAsync();
                 }
