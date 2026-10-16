@@ -9,7 +9,7 @@ namespace Marketing.Application.Validation
         public override ResponseValidation Validate(List<DadosPlanilha> dadosPlanilhas)
         {
             //ValidateDuplicateCnpj(dadosPlanilhas);
-            ValidateDuplicateExtrato(dadosPlanilhas);
+            //ValidateDuplicateExtrato(dadosPlanilhas);
             return responseValidation;
         }
 

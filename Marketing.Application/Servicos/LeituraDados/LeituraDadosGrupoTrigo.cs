@@ -16,7 +16,7 @@ namespace Marketing.Application.Servicos.LeituraDados
             
             using(var excel = new ClosedXML.Excel.XLWorkbook(pathArquivo))
             {
-                for(int aba = 1; aba < excel.Worksheets.Count(); aba++)
+                for(int aba = 1; aba <= excel.Worksheets.Count(); aba++)
                 {
                     row=2;
                     coluna=String.Empty;
